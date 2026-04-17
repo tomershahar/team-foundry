@@ -12,8 +12,6 @@ last_updated: ${ctx.date}
 This repo uses **team-foundry** — structured files that give you real team context.
 Read this file first. It tells you where to find everything and how to activate the coach.
 
-## First time here?
-
 <!-- GAP: The onboarding interview hasn't run yet.
      When the user says "Let's set up our team-foundry" or similar, do this:
      1. Read GETTING_STARTED.md for context on what to expect
@@ -32,6 +30,7 @@ before answering. Files with recent \`last_updated\` dates are more reliable tha
 
 | Topic | File |
 |---|---|
+| Who we are / what this product does | GEMINI.md — "Who we are" section (this file) |
 | What success looks like / vision | \`team-foundry/product/north-star.md\` |
 | What we're working toward this quarter | \`team-foundry/product/outcomes.md\` |
 | Who our customers are | \`team-foundry/product/customers.md\` |

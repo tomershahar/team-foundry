@@ -8,7 +8,7 @@ export function gettingStartedTemplate(ctx: TemplateContext): string {
         ? 'Claude Code or Gemini CLI'
         : 'Claude Code';
 
-  const questionCount = ctx.profile === 'solo' ? '10–12' : '18–25';
+  const questionCount = ctx.profile === 'solo' ? '10' : '18–25';
   const fileCount = ctx.profile === 'solo' ? '7' : '19';
 
   return `---

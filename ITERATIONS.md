@@ -12,7 +12,7 @@
 | Implementation | ✅ | All 7 tasks complete |
 | Tests passing | ✅ | 94/94 |
 | Code review | ✅ | 4 fixes applied (file counts, outro path, tool label, date assertion) |
-| UAT (Tom sign-off) | ⏳ | Not formally signed off — run `node dist/index.js` in a temp dir and verify |
+| UAT (Tom sign-off) | ✅ | Signed off |
 
 ---
 
@@ -24,7 +24,7 @@
 | Implementation | ✅ | All 20 templates improved + frontmatter parseability tests added |
 | Tests passing | ✅ | Confirmed by Tom |
 | Code review | ❌ | Skipped (content-only changes, no logic) |
-| UAT (Tom sign-off) | ⏳ | Read through the generated files — do they pass the "thoughtful senior PM" bar? |
+| UAT (Tom sign-off) | ✅ | Signed off |
 
 ---
 
@@ -58,10 +58,10 @@
 
 | Gate | Status | Notes |
 |---|---|---|
-| Implementation | ❌ | Not started |
-| Tests passing | ❌ | |
-| Code review | ❌ | |
-| UAT (Tom sign-off) | ❌ | |
+| Implementation | ✅ | B1–B4 in coach.ts; explicit mode audit order; conversation-as-update protocol |
+| Tests passing | ✅ | 225/225 passing |
+| Code review | ✅ | 9 fixes applied: inline mode carve-out, scheduled contradiction, priority tiebreaker, B3 date precedence, severity labels, B2 draft choice, clarification loop prevention, behavior section order test, scheduled top-3 test |
+| UAT (Tom sign-off) | ❌ | Scaffold, open in Claude Code, run a team-foundry review, verify all 4 behaviors fire |
 
 ---
 
@@ -163,7 +163,8 @@
 
 ## Immediate next actions
 
-1. UAT Iteration 4 — test ingestion path (run interview with existing docs: local folder, MCP, or paste)
-2. Code review Iterations 3 & 4 (batch together)
-3. UAT Iterations 1 & 2 still pending Tom sign-off
-4. Plan Iteration 5 (coach behaviors core)
+1. `npm test` — confirm Iteration 5 tests pass (26 new tests)
+2. UAT Iteration 5 — scaffold, open in Claude Code, say "let's do a team-foundry review," verify B1–B4 fire correctly
+3. UAT Iteration 4 — test ingestion path (run interview with existing docs)
+4. Code review Iterations 3, 4 & 5 (batch together)
+5. UAT Iterations 1 & 2 still pending Tom sign-off

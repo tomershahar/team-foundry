@@ -132,7 +132,7 @@ describe('template stubs', () => {
 
   it('getting-started mentions solo question count for solo profile', () => {
     const soloCtx = { ...baseCtx, profile: 'solo' as const };
-    expect(gettingStartedTemplate(soloCtx)).toContain('10–12');
+    expect(gettingStartedTemplate(soloCtx)).toContain('10');
   });
 
   it('getting-started mentions full question count for full profile', () => {
@@ -187,9 +187,10 @@ describe('Iteration 3 — root routing and coach', () => {
     expect(output).toContain('team-foundry audit');
   });
 
-  it('coach contains trigger phrase for scheduled mode', () => {
+  it('coach scheduled mode has proactive session-open prompt', () => {
     const output = coachTemplate(baseCtx);
-    expect(output).toContain('run the weekly team-foundry review');
+    expect(output).toContain("It's been");
+    expect(output).toContain('run it now, skip, or snooze');
   });
 
   it('coach contains personality guardrails', () => {
@@ -206,10 +207,22 @@ describe('Iteration 3 — root routing and coach', () => {
     expect(output).toContain('empower');
   });
 
-  it('coach contains nudge memory section', () => {
+  it('coach contains nudge memory section scoped to inline mode only', () => {
     const output = coachTemplate(baseCtx);
     expect(output).toContain('## Nudge memory');
     expect(output).toContain('7 days');
+    expect(output).toContain('Applies to Mode 1 (inline) only');
+    expect(output).toContain('Modes 2 (explicit) and 3 (scheduled) ignore');
+  });
+
+  it('coach inline mode is always-on, not triggered', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('always on');
+    expect(output).toContain('silently evaluate');
+  });
+
+  it('coach scheduled mode can be turned off', () => {
+    expect(coachTemplate(baseCtx)).toContain('Can be turned off in configuration');
   });
 
   it('coach contains quarterly retrospective', () => {
@@ -255,9 +268,10 @@ describe('Iteration 4 — onboarding interview', () => {
     expect(coachTemplate(baseCtx)).toContain('18–25');
   });
 
-  it('coach solo profile mentions 10–12 questions', () => {
+  it('coach solo profile mentions exactly 10 questions', () => {
     const soloCtx = { ...baseCtx, profile: 'solo' as const };
-    expect(coachTemplate(soloCtx)).toContain('10–12');
+    expect(coachTemplate(soloCtx)).toContain('10 questions');
+    expect(coachTemplate(soloCtx)).not.toContain('10–12');
   });
 
   it('coach contains evidence demand for outcomes (outcome-shaped language)', () => {
@@ -330,7 +344,7 @@ describe('Iteration 4 — onboarding interview', () => {
     for (let i = 1; i <= 10; i++) {
       expect(output, `Q${i} missing in solo profile`).toContain(`**Q${i}`);
     }
-    expect(output).not.toContain('**Q11.');
+    expect(output).not.toContain('**Q11');
   });
 
   it('root-claude trigger phrases include coach mode', () => {
@@ -339,5 +353,207 @@ describe('Iteration 4 — onboarding interview', () => {
 
   it('root-gemini trigger phrases include coach mode', () => {
     expect(rootGeminiTemplate(baseCtx)).toContain('coach mode');
+  });
+});
+
+describe('Iteration 5 — Coach behaviors core (1–4)', () => {
+  // Behavior 1: outputs-vs-outcomes
+  it('coach contains Behavior 1 section heading', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 1: Outputs framed as outcomes');
+  });
+
+  it('coach B1 names the specific file', () => {
+    expect(coachTemplate(baseCtx)).toContain('product/outcomes.md');
+  });
+
+  it('coach B1 distinguishes output language from outcome language', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('Output language');
+    expect(output).toContain('Outcome language');
+  });
+
+  it('coach B1 offers to reframe', () => {
+    expect(coachTemplate(baseCtx)).toContain('reframe');
+  });
+
+  it('coach B1 defines inline trigger for prioritization questions', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('Inline trigger');
+    expect(output).toContain('prioritization');
+  });
+
+  // Behavior 2: customer contact staleness
+  it('coach contains Behavior 2 section heading', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 2: Customer contact staleness');
+  });
+
+  it('coach B2 names the 60-day threshold', () => {
+    expect(coachTemplate(baseCtx)).toContain('60');
+  });
+
+  it('coach B2 references the specific file', () => {
+    expect(coachTemplate(baseCtx)).toContain('product/customers.md');
+  });
+
+  it('coach B2 requires naming specific persona and date', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('last_contact');
+    expect(output).toContain('YYYY-MM-DD');
+  });
+
+  it('coach B2 prohibits vague language about customers', () => {
+    expect(coachTemplate(baseCtx)).toContain('Never say "some customers"');
+  });
+
+  // Behavior 3: stale assumptions
+  it('coach contains Behavior 3 section heading', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 3: Stale assumptions');
+  });
+
+  it('coach B3 names the 30-day threshold', () => {
+    expect(coachTemplate(baseCtx)).toContain('30 days');
+  });
+
+  it('coach B3 references the specific file', () => {
+    expect(coachTemplate(baseCtx)).toContain('product/assumptions.md');
+  });
+
+  it('coach B3 checks for tested status', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('status: tested');
+  });
+
+  it('coach B3 offers to draft test method or update', () => {
+    expect(coachTemplate(baseCtx)).toContain('needs testing');
+  });
+
+  // Behavior 4: decisions without rationale
+  it('coach contains Behavior 4 section heading', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 4: Decisions without rationale');
+  });
+
+  it('coach B4 references the decisions directory', () => {
+    expect(coachTemplate(baseCtx)).toContain('engineering/decisions/');
+  });
+
+  it('coach B4 describes what missing rationale looks like', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('gap marker');
+  });
+
+  it('coach B4 offers to draft rationale from context', () => {
+    expect(coachTemplate(baseCtx)).toContain('draft it from context');
+  });
+
+  it('coach B4 inline trigger mentions architectural decisions', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('architectural decision');
+  });
+
+  // Explicit mode audit order
+  it('coach explicit mode runs behaviors in priority order B1→B4 (summary line)', () => {
+    const output = coachTemplate(baseCtx);
+    const b1pos = output.indexOf('B1 (outputs-vs-outcomes)');
+    const b2pos = output.indexOf('B2 (customer staleness)');
+    const b3pos = output.indexOf('B3 (stale assumptions)');
+    const b4pos = output.indexOf('B4 (decisions without rationale)');
+    expect(b1pos).toBeGreaterThan(-1);
+    expect(b2pos).toBeGreaterThan(b1pos);
+    expect(b3pos).toBeGreaterThan(b2pos);
+    expect(b4pos).toBeGreaterThan(b3pos);
+  });
+
+  it('coach Behavior sections appear in priority order B1→B4', () => {
+    const output = coachTemplate(baseCtx);
+    const b1pos = output.indexOf('### Behavior 1:');
+    const b2pos = output.indexOf('### Behavior 2:');
+    const b3pos = output.indexOf('### Behavior 3:');
+    const b4pos = output.indexOf('### Behavior 4:');
+    expect(b1pos).toBeGreaterThan(-1);
+    expect(b2pos).toBeGreaterThan(b1pos);
+    expect(b3pos).toBeGreaterThan(b2pos);
+    expect(b4pos).toBeGreaterThan(b3pos);
+  });
+
+  it('coach explicit mode does not write files during audit', () => {
+    expect(coachTemplate(baseCtx)).toContain('audit is a report only');
+  });
+
+  it('coach scheduled mode runs all behaviors internally then surfaces top 3', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('Run all behaviors internally');
+    expect(output).toContain('top 3 findings');
+  });
+
+  it('coach inline mode uses priority order as tiebreaker', () => {
+    expect(coachTemplate(baseCtx)).toContain('highest-priority behavior whose inline trigger condition');
+  });
+
+  // Conversation-as-update protocol
+  it('coach contains conversation-as-update protocol section', () => {
+    expect(coachTemplate(baseCtx)).toContain('Conversation-as-update protocol');
+  });
+
+  it('coach protocol has inline mode carve-out', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('In inline mode:');
+    expect(output).toContain('Steps 2 and 3 only apply if the user replies');
+  });
+
+  it('coach protocol has three steps in order', () => {
+    const output = coachTemplate(baseCtx);
+    const step1 = output.indexOf('Step 1');
+    const step2 = output.indexOf('Step 2');
+    const step3 = output.indexOf('Step 3');
+    expect(step1).toBeGreaterThan(-1);
+    expect(step2).toBeGreaterThan(step1);
+    expect(step3).toBeGreaterThan(step2);
+  });
+
+  it('coach protocol diagnosis is a separate message from the draft', () => {
+    expect(coachTemplate(baseCtx)).toContain('Do not include the draft in the same message as the diagnosis');
+  });
+
+  it('coach protocol requires explicit confirmation before writing', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('Only after the team says yes');
+    expect(output).toContain('Silence is not confirmation');
+  });
+
+  it('coach protocol prevents clarification loops', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('clarification is also ambiguous');
+    expect(output).toContain('treat it as rejection');
+  });
+
+  it('coach protocol lists what counts as confirmation', () => {
+    expect(coachTemplate(baseCtx)).toContain('What counts as confirmation');
+  });
+
+  it('coach protocol lists what counts as rejection', () => {
+    expect(coachTemplate(baseCtx)).toContain('What counts as rejection');
+  });
+
+  // Severity labels
+  it('coach behaviors have severity labels', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('**Severity:**');
+  });
+
+  // B3 date precedence
+  it('coach B3 defines date field precedence', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('added_on:');
+    expect(output).toContain('Fall back to the file\'s');
+  });
+
+  // B2 draft offer as choice
+  it('coach B2 presents draft options as a choice', () => {
+    expect(coachTemplate(baseCtx)).toContain('Ask which they\'d prefer before drafting');
+  });
+
+  // GAP comment removed
+  it('coach no longer has the behaviors-pending GAP comment', () => {
+    expect(coachTemplate(baseCtx)).not.toContain('Coach behaviors (the 12 diagnostic checks) are added in a later iteration');
   });
 });
