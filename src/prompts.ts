@@ -43,7 +43,8 @@ export async function runPrompts(): Promise<PromptResult> {
   cancelIfNeeded(repoVisibility);
 
   const ingestion = await select({
-    message: 'Do you have existing docs to ingest?',
+    message:
+      'Do you have existing docs to ingest?\n  (Strategy docs, old roadmaps, customer research — the interview uses them to pre-populate answers)',
     options: [
       { value: 'local', label: 'Local folder  (exported docs on disk)' },
       { value: 'mcp', label: 'MCP source  (Notion, Confluence, Google Drive)' },

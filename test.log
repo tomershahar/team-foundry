@@ -1,0 +1,20 @@
+
+> create-team-foundry@0.1.0 test
+> vitest run
+
+
+ RUN  v1.6.1 /Users/tomershahar/Documents/Projects/team-foundry
+
+ ✓ src/__tests__/prompts.test.ts  (5 tests) 2ms
+ ✓ src/__tests__/gitignore.test.ts  (6 tests) 11ms
+ ❯ src/__tests__/templates.test.ts  (158 tests | 1 failed) 9ms
+   ❯ src/__tests__/templates.test.ts > Iteration 4 — onboarding interview > coach contains onboarding trigger phrases
+     → expected '---\npurpose: Full coach playbook — l…' to contain 'run the onboarding interview'
+ ✓ src/__tests__/scaffold.test.ts  (13 tests) 47ms
+ ✓ src/__tests__/cli.test.ts  (4 tests) 2506ms
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 185 passed (186)
+   Start at  17:44:54
+   Duration  2.72s (transform 157ms, setup 0ms, collect 269ms, tests 2.58s, environment 1ms, prepare 294ms)
+

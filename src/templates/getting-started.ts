@@ -61,6 +61,16 @@ team-foundry/
 ${ctx.profile === 'full' ? '├── team/        → trio, working agreement, AI practices\n' : ''}├── engineering/ → stack${ctx.profile === 'full' ? ', quality bar, decisions' : ''}
 ${ctx.profile === 'full' ? '├── design/      → principles\n├── data/        → metric definitions\n├── context/     → glossary and stakeholders\n' : ''}\`\`\`
 
+## Sharing these files
+
+team-foundry works best when everyone on the team is looking at the same files.
+If you commit this to a shared Git repo, sync it via a shared folder, or use any
+method your team already uses to share code — anyone using an AI tool will have
+the same context.
+
+If you're using a local or self-hosted AI tool, that's fine too. Just make sure
+the repo or folder is accessible to everyone who needs it.
+
 You can delete this file once the onboarding interview is complete.
 
 <!-- GAP: Onboarding interview not yet run. Open ${toolName} and say "Let's set up our team-foundry." -->

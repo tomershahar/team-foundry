@@ -2,49 +2,62 @@ import type { TemplateContext } from '../types.js';
 
 export function rootClaudeTemplate(ctx: TemplateContext): string {
   return `---
-purpose: Identity, routing map, and coach activation for Claude Code
-read_when: Every session — this is the root instruction file
+purpose: Identity, routing map, and coach activation — read at the start of every session
+read_when: Every Claude Code session in this repo — this is the root instruction file
 last_updated: ${ctx.date}
 ---
 
 # CLAUDE.md
 
-This repo uses **team-foundry** — a set of structured files that give you real team context.
-Read this file first. It tells you where to look for everything else.
+This repo uses **team-foundry** — structured files that give you real team context.
+Read this file first. It tells you where to find everything and how to activate the coach.
+
+## First time here?
+
+<!-- GAP: The onboarding interview hasn't run yet.
+     When the user says "Let's set up our team-foundry" or similar, do this:
+     1. Read GETTING_STARTED.md for context on what to expect
+     2. Load .team-foundry/coach.md — it contains the interview sequence
+     3. Begin the onboarding interview as described there
+     Do not improvise the interview. Follow the sequence in coach.md. -->
 
 ## Who we are
 
-<!-- GAP: Complete the onboarding interview to fill in team identity. Run: "Let's set up our team-foundry." -->
+<!-- Filled in during the onboarding interview. -->
 
 ## Routing map
 
-| You need to know… | Read… |
+When the user's question relates to any of the following, read the corresponding file
+before answering. Files with recent \`last_updated\` dates are more reliable than older ones.
+
+| Topic | File |
 |---|---|
-| What success looks like | \`team-foundry/product/north-star.md\` |
+| What success looks like / vision | \`team-foundry/product/north-star.md\` |
 | What we're working toward this quarter | \`team-foundry/product/outcomes.md\` |
 | Who our customers are | \`team-foundry/product/customers.md\` |
 | What we're building now / next / later | \`team-foundry/product/now-next-later.md\` |
-| Open assumptions and bets | \`team-foundry/product/assumptions.md\` |
-| Key risks | \`team-foundry/product/risks.md\` |
-| How the team is structured | \`team-foundry/team/trio.md\` |
-| How we work together | \`team-foundry/team/working-agreement.md\` |
-| How we use AI | \`team-foundry/team/ai-practices.md\` |
-| Our tech stack and conventions | \`team-foundry/engineering/stack.md\` |
-| Our stance on quality and tech debt | \`team-foundry/engineering/quality-bar.md\` |
+| Open assumptions and untested bets | \`team-foundry/product/assumptions.md\` |
+| Key product risks | \`team-foundry/product/risks.md\` |
+| How the product trio works | \`team-foundry/team/trio.md\` |
+| Team norms, DoD, ceremonies | \`team-foundry/team/working-agreement.md\` |
+| How we use AI tools | \`team-foundry/team/ai-practices.md\` |
+| Tech stack and conventions | \`team-foundry/engineering/stack.md\` |
+| Quality stance and tech debt policy | \`team-foundry/engineering/quality-bar.md\` |
 | Past architecture decisions | \`team-foundry/engineering/decisions/\` |
-| Design principles | \`team-foundry/design/principles.md\` |
+| Design principles and tone | \`team-foundry/design/principles.md\` |
 | Metric definitions | \`team-foundry/data/metrics.md\` |
 | Domain terms and acronyms | \`team-foundry/context/glossary.md\` |
 | Stakeholders and what they care about | \`team-foundry/context/stakeholders.md\` |
 
 ## Coach
 
-The team-foundry coach is in \`.team-foundry/coach.md\`. It activates in three ways:
+The team-foundry coach lives in \`.team-foundry/coach.md\`. Load it when:
 
-- **Inline** — when your question would benefit from an empty or stale file
-- **Explicit** — when you say "let's do a team-foundry review"
-- **Scheduled** — weekly audit (run it by saying "run the weekly team-foundry review")
+- The user says "let's do a team-foundry review," "coach mode," or "run a team-foundry audit" → load coach, run explicit mode
+- The user says "run the weekly team-foundry review" → load coach, run scheduled mode
+- You notice a file is empty or stale and it would improve your answer → inline mode
+  (brief nudge only — don't derail the user's current task)
 
-Load the coach with: "Load the team-foundry coach and run [mode]."
+To load the coach: read \`.team-foundry/coach.md\` fully before activating any mode.
 `;
 }

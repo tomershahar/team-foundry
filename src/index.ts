@@ -19,7 +19,10 @@ async function main(): Promise<void> {
   await writeGitignore(targetDir);
 
   outro(
-    `Done! Open this project in ${TOOL_LABEL[answers.tool]} and say:\n\n  "Let's set up our team-foundry."\n\nSee GETTING_STARTED.md for what happens next.`,
+    `Done! Open this project in ${TOOL_LABEL[answers.tool]} and say:\n\n  "Let's set up our team-foundry."\n\nSee GETTING_STARTED.md for what happens next.\n\n` +
+      `Reminder: team-foundry works best when the whole team can see these files.\n` +
+      `Make sure this repo is accessible to everyone who uses AI tools on your team —\n` +
+      `shared Git repo, synced folder, or however your team shares code.`,
   );
 }
 
