@@ -106,10 +106,10 @@
 
 | Gate | Status | Notes |
 |---|---|---|
-| Implementation | ❌ | Not started |
-| Tests passing | ❌ | |
-| Code review | ❌ | |
-| UAT (Tom sign-off) | ❌ | |
+| Implementation | ✅ | B5–B12 all implemented; explicit mode updated to B1→B12 |
+| Tests passing | ✅ | All passing |
+| Code review | ✅ | 3 fixes: B6 severity repo-observable only, B7 full-profile guard, B11 interview question wording |
+| UAT (Tom sign-off) | ✅ | Skipped — content-only, no runtime logic |
 
 ---
 
@@ -118,10 +118,10 @@
 
 | Gate | Status | Notes |
 |---|---|---|
-| Implementation | ❌ | Not started |
-| Tests passing | ❌ | |
-| Code review | ❌ | |
-| UAT (Tom sign-off) | ❌ | |
+| Implementation | ✅ | Trigger (last_retrospective), 5 questions with response guidance, response storage, nudge tuning table, decline path |
+| Tests passing | ✅ | All passing |
+| Code review | ✅ | 4 fixes: trigger fallback, log entry format, offer framing, Q4 reference |
+| UAT (Tom sign-off) | ✅ | Skipped — content-only, no runtime logic |
 
 ---
 
@@ -163,5 +163,5 @@
 
 ## Immediate next actions
 
-1. Spec and implement Iteration 9 — coach behaviors full set (5–12)
+1. Spec and implement Iteration 10 — quarterly retrospective
 2. UAT Iteration 4 pending item — test ingestion path with existing docs (local folder)

@@ -678,19 +678,131 @@ Drive, or GitHub and no relevant MCP server is responding.
 
 ## Quarterly retrospective
 
-Every 90 days, offer the team a 5-question self-assessment:
+### Trigger
 
-1. Can you describe your outcomes more clearly than you could 90 days ago?
-2. Do you know your customers better than you did 90 days ago?
-3. Has your quality bar become more honest?
-4. Have you made better-informed product decisions because of team-foundry?
-5. What's one thing in team-foundry that feels stale and needs attention?
+Check the root file (CLAUDE.md or GEMINI.md) for a \`last_retrospective\` field in
+the frontmatter or a \`## Retrospective log\` section with a dated entry.
 
-Frame it as: "It's been about 90 days since you set up team-foundry. Want to do a quick
-calibration — 5 questions, takes about 10 minutes?"
+- If \`last_retrospective\` is present and 90+ days old: offer the retro.
+- If \`last_retrospective\` is absent (fresh scaffold): fall back to \`last_updated\`
+  in the root file frontmatter. If that is 90+ days old, offer the retro.
+- If neither field exists or both are recent: do not offer.
 
-Use the answers to tune how you weight nudges going forward. If the team says outcomes
-are still unclear, surface outcomes-related gaps more aggressively.
+**Never offer the retrospective inline.** Explicit and scheduled modes only.
+
+**How to offer it:**
+> "It's been about 90 days since [your last retrospective / you set up team-foundry].
+> Time for a quick calibration — 5 questions, about 10 minutes. Want to do it now?"
+
+Use "your last retrospective" if a prior retro log entry exists; "you set up team-foundry"
+if this is the first time.
+
+If the team says no: "No problem — I'll check back in a week." Do not offer again for
+7 days.
+
+If the team says yes, run the 5 questions one at a time (never as a list).
+
+---
+
+### The 5 questions
+
+**Q1. Can you describe your team's outcomes more clearly than you could 90 days ago?**
+
+*What to listen for:*
+- Yes → outcomes are landing. No change to B1 weighting.
+- No / unclear → outcomes still fuzzy. For the next 30 days, lower the threshold for
+  surfacing B1 (outputs-vs-outcomes): flag even borderline output language, not just
+  clear violations.
+- "We haven't updated outcomes.md" → offer to run the outcomes section of the onboarding
+  interview now.
+
+---
+
+**Q2. Do you know your customers better than you did 90 days ago?**
+
+*What to listen for:*
+- Yes → customer contact is happening. No change to B2 weighting.
+- No / same → contact may be slipping. For the next 30 days, lower the staleness
+  threshold for B2 from 60 days to 45 days.
+- "We haven't talked to customers in a while" → offer to draft a prompt for scheduling
+  calls, using current outcomes and open assumptions as focus questions.
+
+---
+
+**Q3. Has your quality bar become more honest?**
+
+*What to listen for:*
+- Yes → the file reflects reality. No change to B6 weighting.
+- No → the stated bar still doesn't match practice. For the next 30 days, surface B6
+  (quality bar drift) on any code-quality or tech-debt question, not just when signals
+  are strong.
+- "We haven't touched quality-bar.md" → offer to run the quality section of the
+  onboarding interview now.
+
+---
+
+**Q4. Have you made better-informed product decisions because of team-foundry?**
+
+*What to listen for:*
+- Yes → files are being used. No change.
+- No / not sure → files may be stale or not referenced in practice. For the next 30 days,
+  be more proactive with B11 (gap-filling nudges) — surface the empty-file nudge even
+  for questions that are only loosely related to an empty file.
+- "The AI doesn't seem to read the files" → suggest opening GETTING_STARTED.md
+  for troubleshooting tips on how to make sure the AI is picking up the context files.
+
+---
+
+**Q5. What's one thing in team-foundry that feels stale or needs attention?**
+
+*What to listen for:*
+- Team names a specific file → offer to review and update that file now, or schedule
+  it as the next explicit review target.
+- Team names a theme (e.g., "our customer stuff") → offer to run the relevant section
+  of the onboarding interview.
+- "Everything feels fine" → no action. Note it in the log.
+- No answer / vague → note it in the log as "no specific gaps named."
+
+---
+
+### Response storage
+
+After the retrospective, append a dated entry to the \`## Retrospective log\` section
+of the root file. If the section doesn't exist, create it at the bottom of the file.
+
+**Log entry format:**
+
+\`\`\`
+#### [YYYY-MM-DD]
+- Q1 (outcomes clarity): [yes / no / not updated]
+- Q2 (customer knowledge): [yes / no / same]
+- Q3 (quality bar honesty): [yes / no / not updated]
+- Q4 (better decisions): [yes / no / not sure]
+- Q5 (what's stale): [free text or "nothing specific named"]
+- Nudge adjustments: [list any threshold changes, or "none"]
+\`\`\`
+
+Append this entry under \`## Retrospective log\` in the root file. Do not include the
+section heading inside the entry itself.
+
+Update \`last_retrospective\` in the frontmatter to today's date after writing the log.
+Follow the conversation-as-update protocol — show the draft entry and wait for
+confirmation before writing.
+
+---
+
+### Nudge tuning summary
+
+| Question | Response | Adjustment (next 30 days) |
+|---|---|---|
+| Q1 — outcomes | No / unclear | Lower B1 threshold: flag borderline output language |
+| Q2 — customers | No / same | Lower B2 staleness threshold: 45 days instead of 60 |
+| Q3 — quality bar | No | Surface B6 on any code-quality question |
+| Q4 — better decisions | No / not sure | Surface B11 more broadly |
+| Any | File named as stale | Prioritise that file in next explicit review |
+
+Adjustments are soft — they change when you surface a behavior, not whether you follow
+its protocol. They reset after 30 days or when the team addresses the gap.
 
 ---
 

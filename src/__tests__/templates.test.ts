@@ -900,3 +900,80 @@ describe('Iteration 8 — Artifact ingestion (MCP + paste)', () => {
     expect(coachTemplate(baseCtx)).not.toContain('Shared ingestion reference');
   });
 });
+
+describe('Iteration 10 — Quarterly retrospective', () => {
+  it('retro section has a trigger definition with last_retrospective and last_updated fallback', () => {
+    const output = coachTemplate(baseCtx);
+    const retroStart = output.indexOf('## Quarterly retrospective');
+    const onboardingStart = output.indexOf('## Onboarding interview');
+    const retro = output.slice(retroStart, onboardingStart);
+    expect(retro).toContain('last_retrospective');
+    expect(retro).toContain('last_updated');
+  });
+
+  it('retro trigger references 90-day threshold', () => {
+    const output = coachTemplate(baseCtx);
+    const retroStart = output.indexOf('## Quarterly retrospective');
+    const onboardingStart = output.indexOf('## Onboarding interview');
+    const retro = output.slice(retroStart, onboardingStart);
+    expect(retro).toContain('90');
+  });
+
+  it('retro is never offered inline', () => {
+    const output = coachTemplate(baseCtx);
+    const retroStart = output.indexOf('## Quarterly retrospective');
+    const onboardingStart = output.indexOf('## Onboarding interview');
+    expect(output.slice(retroStart, onboardingStart)).toContain('Never offer the retrospective inline');
+  });
+
+  it('retro has a decline path', () => {
+    const output = coachTemplate(baseCtx);
+    const retroStart = output.indexOf('## Quarterly retrospective');
+    const onboardingStart = output.indexOf('## Onboarding interview');
+    expect(output.slice(retroStart, onboardingStart)).toContain("check back in a week");
+  });
+
+  it('retro has all 5 questions', () => {
+    const output = coachTemplate(baseCtx);
+    const retroStart = output.indexOf('## Quarterly retrospective');
+    const onboardingStart = output.indexOf('## Onboarding interview');
+    const retro = output.slice(retroStart, onboardingStart);
+    expect(retro).toContain('Q1.');
+    expect(retro).toContain('Q2.');
+    expect(retro).toContain('Q3.');
+    expect(retro).toContain('Q4.');
+    expect(retro).toContain('Q5.');
+  });
+
+  it('retro has response storage format with Retrospective log', () => {
+    const output = coachTemplate(baseCtx);
+    const retroStart = output.indexOf('## Quarterly retrospective');
+    const onboardingStart = output.indexOf('## Onboarding interview');
+    expect(output.slice(retroStart, onboardingStart)).toContain('Retrospective log');
+  });
+
+  it('retro storage updates last_retrospective after writing', () => {
+    const output = coachTemplate(baseCtx);
+    const retroStart = output.indexOf('## Quarterly retrospective');
+    const onboardingStart = output.indexOf('## Onboarding interview');
+    const retro = output.slice(retroStart, onboardingStart);
+    expect(retro).toContain('last_retrospective');
+    expect(retro).toContain("today's date");
+  });
+
+  it('retro has nudge tuning table', () => {
+    const output = coachTemplate(baseCtx);
+    const retroStart = output.indexOf('## Quarterly retrospective');
+    const onboardingStart = output.indexOf('## Onboarding interview');
+    expect(output.slice(retroStart, onboardingStart)).toContain('Nudge tuning');
+  });
+
+  it('nudge tuning maps Q1 to B1 and Q2 to B2', () => {
+    const output = coachTemplate(baseCtx);
+    const retroStart = output.indexOf('## Quarterly retrospective');
+    const onboardingStart = output.indexOf('## Onboarding interview');
+    const retro = output.slice(retroStart, onboardingStart);
+    expect(retro).toContain('Lower B1 threshold');
+    expect(retro).toContain('Lower B2 staleness threshold');
+  });
+});
