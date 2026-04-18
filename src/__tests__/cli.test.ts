@@ -68,6 +68,32 @@ function runCli(cwd: string): Promise<{ code: number | null; stdout: string; std
   });
 }
 
+function runCliPaste(cwd: string): Promise<{ code: number | null; stdout: string }> {
+  return new Promise((resolve) => {
+    const proc = spawn('node', [DIST_ENTRY], {
+      cwd,
+      env: { ...process.env, FORCE_COLOR: '0' },
+    });
+    let stdout = '';
+    proc.stdout.on('data', (chunk: Buffer) => { stdout += chunk.toString(); });
+    proc.stderr.on('data', () => {});
+    // Q4: down ×2 → paste option
+    const inputs: (() => void)[] = [
+      () => proc.stdin.write('\r'),               // Q1: claude
+      () => proc.stdin.write('\r'),               // Q2: solo
+      () => proc.stdin.write('\r'),               // Q3: public
+      () => proc.stdin.write('\x1b[B\x1b[B\r'),  // Q4: down ×2 → paste
+    ];
+    let step = 0;
+    const sendNext = () => {
+      if (step < inputs.length) { inputs[step++](); setTimeout(sendNext, 150); }
+      else { proc.stdin.end(); }
+    };
+    setTimeout(sendNext, 200);
+    proc.on('close', (code) => { resolve({ code, stdout }); });
+  });
+}
+
 describe('CLI smoke test', () => {
   let tmpDir: string;
 
@@ -106,5 +132,31 @@ describe('CLI smoke test', () => {
     await runCli(tmpDir);
     const content = await fs.readFile(path.join(tmpDir, '.gitignore'), 'utf-8');
     expect(content).toContain('team-foundry/private/');
+  }, 15_000);
+
+  it('outro includes the target directory path', async () => {
+    const { stdout } = await runCli(tmpDir);
+    expect(stdout).toContain(tmpDir);
+  }, 15_000);
+});
+
+describe('CLI paste ingestion', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => { tmpDir = await makeTempDir(); });
+  afterEach(async () => { await cleanup(tmpDir); });
+
+  it('creates .team-foundry/paste-content.md when paste is selected', async () => {
+    await runCliPaste(tmpDir);
+    const exists = await fs
+      .access(path.join(tmpDir, '.team-foundry', 'paste-content.md'))
+      .then(() => true)
+      .catch(() => false);
+    expect(exists).toBe(true);
+  }, 15_000);
+
+  it('outro tells user to fill in paste-content.md', async () => {
+    const { stdout } = await runCliPaste(tmpDir);
+    expect(stdout).toContain('paste-content.md');
   }, 15_000);
 });

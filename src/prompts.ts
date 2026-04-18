@@ -48,7 +48,7 @@ export async function runPrompts(): Promise<PromptResult> {
     options: [
       { value: 'local', label: 'Local folder  (exported docs on disk)' },
       { value: 'mcp', label: 'MCP source  (Notion, Confluence, Google Drive)' },
-      { value: 'paste', label: 'Paste content  (copy-paste into the interview)' },
+      { value: 'paste', label: 'Paste content  (we\'ll create a file for you to fill in)' },
       { value: 'skip', label: 'Skip  (start fresh)' },
     ],
   });

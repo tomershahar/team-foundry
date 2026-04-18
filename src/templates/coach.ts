@@ -1099,7 +1099,7 @@ outdated. Every answer needs the user's confirmation before it becomes a file.
 A clear one-sentence description grounds everything that follows.*
 
 Example answers:
-- "Swappie — a recommerce marketplace for refurbished iPhones, operating across 12 European markets."
+- "Clearflow — a B2B SaaS platform helping ops teams close their monthly reconciliation without engineering escalations."
 - "Owner.com — an all-in-one platform helping independent restaurant owners run their online presence."
 - "Interval — a B2B SaaS tool that helps ops teams automate their weekly reporting workflows."
 
