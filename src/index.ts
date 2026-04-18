@@ -76,7 +76,8 @@ async function main(): Promise<void> {
   await scaffold({ ...answers, targetDir, date });
   await writeGitignore(targetDir);
 
-  let pasteNote = '';
+  let ingestionNote = '';
+
   if (answers.ingestion === 'paste') {
     const pastePath = path.join(targetDir, '.team-foundry', 'paste-content.md');
     try {
@@ -84,17 +85,23 @@ async function main(): Promise<void> {
     } catch {
       await fs.writeFile(pastePath, PASTE_PLACEHOLDER, 'utf-8');
     }
-    pasteNote =
-      `\n⚠  Before opening Claude Code:\n` +
-      `   Open and fill in this file with your existing docs:\n\n` +
+    ingestionNote =
+      `\n⚠  Before opening ${TOOL_LABEL[answers.tool]}:\n` +
+      `   Paste your existing docs into:\n\n` +
       `   ${pastePath}\n\n` +
-      `   The coach will use it during the onboarding interview.\n`;
+      `   Then tell the AI: "I've added docs to paste-content.md — use them to pre-populate answers."\n`;
+  } else if (answers.ingestion === 'mcp') {
+    ingestionNote =
+      `\n⚠  Before running the interview:\n` +
+      `   Make sure your MCP server is connected (Notion, Confluence, or Google Drive).\n` +
+      `   Then tell the AI: "Pull any relevant strategy, roadmap, or customer research\n` +
+      `   from [your source] and use them to pre-populate answers."\n`;
   }
 
   outro(
     `Done! Your files are in:\n\n  ${targetDir}\n\n` +
-      (pasteNote ? pasteNote + '\nThen open' : 'Open') +
-      ` that directory in ${TOOL_LABEL[answers.tool]} and say:\n\n  "Let's set up our team-foundry."\n\n` +
+      ingestionNote +
+      `\nOpen that directory in ${TOOL_LABEL[answers.tool]} and say:\n\n  "Let's set up our team-foundry."\n\n` +
       `See GETTING_STARTED.md for what happens next.\n\n` +
       `Reminder: team-foundry works best when the whole team can see these files.\n` +
       `Make sure this repo is accessible to everyone who uses AI tools on your team —\n` +
