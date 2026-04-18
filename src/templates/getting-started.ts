@@ -12,7 +12,7 @@ export function gettingStartedTemplate(ctx: TemplateContext): string {
   const fileCount = ctx.profile === 'solo' ? '7' : '19';
 
   const ingestionNote =
-    ctx.ingestion === 'local' && ctx.ingestionPath
+    ctx.ingestionPath
       ? `\n> **Before running the setup**, tell ${toolName}:\n> "Read the docs in \`${ctx.ingestionPath}\` before we begin — use them to pre-populate answers."\n`
       : ctx.ingestion === 'paste'
         ? `\n> **Before running the setup**, open \`.team-foundry/paste-content.md\`, paste your existing docs into it, and save. Then tell ${toolName}: "I've added docs to paste-content.md — use them to pre-populate answers."\n`
