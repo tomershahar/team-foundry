@@ -35,6 +35,7 @@ before answering. Files with recent \`last_updated\` dates are more reliable tha
 | What we're working toward this quarter | \`team-foundry/product/outcomes.md\` |
 | Who our customers are | \`team-foundry/product/customers.md\` |
 | What we're building now / next / later | \`team-foundry/product/now-next-later.md\` |
+| Strategic logic and guiding policy | \`team-foundry/product/strategy.md\` |
 | Open assumptions and untested bets | \`team-foundry/product/assumptions.md\` |
 | Key product risks | \`team-foundry/product/risks.md\` |
 | How the product trio works | \`team-foundry/team/trio.md\` |

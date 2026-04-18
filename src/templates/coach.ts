@@ -696,7 +696,7 @@ Drive, or GitHub and no relevant MCP server is responding.
 
 ### Behavior 13: Build-trap detector
 
-**Severity:** Blocker. Raise immediately.
+**Severity:** Important. Raise before the item ships, not as a hard block.
 
 **Trigger condition:** An item appears in \`now-next-later.md\` under Now or Next with no
 corresponding assumption in \`assumptions.md\` — or with an assumption present whose
@@ -715,20 +715,23 @@ referencing any discovery evidence or validated assumption.
 
 ---
 
+<!-- B14 is reserved — deferred to v2 (agent-augmented team feature). -->
+
 ### Behavior 15 Phase 2: Experiment readout
 
 **Severity:** Blocker when gap exceeds threshold. Warning otherwise.
 
 **Trigger condition:** An assumption in \`assumptions.md\` has been marked Tested with
-experiment results but no readout section exists — or the readout gap between expected
-and actual exceeds 20% (20 percentage points) without a gap analysis.
+experiment results but no readout entry exists in \`## Experiment readouts\` — or the
+readout gap between expected and actual exceeds 20pp (percentage points) without a gap
+analysis.
 
 **What to say (gap ≤ 20pp):**
 > "Results came back for [experiment name]. I'll draft a readout in the Experiment
 > readouts section — want me to proceed?"
 
 **What to say (gap > 20pp or unexpected segment split):**
-> "Results came back for [experiment name] and there's a [X]pp gap vs. expected.
+> "Results came back for [experiment name] and there's a [X]pp (percentage point) gap vs. expected.
 > Before we move on, I want to flag: [segment] went [direction] while [segment]
 > went [direction]. That split is worth understanding before we act on the overall
 > number. I can draft a gap analysis and readout — want me to?"
@@ -741,6 +744,8 @@ expected → actual table, segment breakdown if applicable, gap analysis, conclu
 confirms the actual numbers.
 
 **Inline trigger:** User shares experiment results or mentions that a test concluded.
+Also fires when an assumption in \`assumptions.md\` is marked Tested with no corresponding
+entry in \`## Experiment readouts\`.
 
 ---
 
