@@ -10,13 +10,15 @@ npx create-team-foundry
 
 That's it. Answer 4 questions. Files appear in your repo.
 
+**Run this in your shared product/engineering repo** — the one the whole team commits to. That's how everyone's AI tool picks up the same context automatically. Running it in a personal or feature branch repo works for solo use but misses the point for teams.
+
 ---
 
 ## What it does
 
 Most teams use AI tools for code. The AI gives better answers when it knows what the product is for, who the customers are, and what quality means to this team.
 
-team-foundry puts that context in your repo — not in a wiki, not in Notion, not in someone's head. The AI reads it every session, automatically.
+team-foundry puts that context in your shared repo — not in a wiki, not in Notion, not in someone's head. Every team member's AI tool reads the same files every session, automatically.
 
 It also installs a coach: a set of behaviors that notice when your files go stale, when your roadmap outpaces your assumptions, or when your strategy has drifted from your execution. The coach flags gaps inline while you work. You confirm; it writes.
 
