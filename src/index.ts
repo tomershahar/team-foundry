@@ -92,7 +92,7 @@ async function main(): Promise<void> {
       `   Then tell the AI: "I've added docs to paste-content.md — use them to pre-populate answers."\n`;
   } else if (answers.ingestion === 'mcp') {
     ingestionNote =
-      `\n⚠  Before running the interview:\n` +
+      `\n⚠  Before running the setup:\n` +
       `   Make sure your MCP server is connected (Notion, Confluence, or Google Drive).\n` +
       `   Then tell the AI: "Pull any relevant strategy, roadmap, or customer research\n` +
       `   from [your source] and use them to pre-populate answers."\n`;

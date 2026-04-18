@@ -13,11 +13,11 @@ export function gettingStartedTemplate(ctx: TemplateContext): string {
 
   const ingestionNote =
     ctx.ingestion === 'local' && ctx.ingestionPath
-      ? `\n> **Before starting the interview**, tell ${toolName}:\n> "Read the docs in \`${ctx.ingestionPath}\` before we begin — use them to pre-populate answers."\n`
+      ? `\n> **Before running the setup**, tell ${toolName}:\n> "Read the docs in \`${ctx.ingestionPath}\` before we begin — use them to pre-populate answers."\n`
       : ctx.ingestion === 'paste'
-        ? `\n> **Before starting the interview**, open \`.team-foundry/paste-content.md\`, paste your existing docs into it, and save. Then tell ${toolName}: "I've added docs to paste-content.md — use them to pre-populate answers."\n`
+        ? `\n> **Before running the setup**, open \`.team-foundry/paste-content.md\`, paste your existing docs into it, and save. Then tell ${toolName}: "I've added docs to paste-content.md — use them to pre-populate answers."\n`
         : ctx.ingestion === 'mcp'
-          ? `\n> **Before starting the interview**, make sure your MCP server is connected (Notion, Confluence, or Google Drive). Then tell ${toolName}: "Before we begin, pull any relevant strategy, roadmap, or customer research docs from [your MCP source] and use them to pre-populate answers."\n`
+          ? `\n> **Before running the setup**, make sure your MCP server is connected (Notion, Confluence, or Google Drive). Then tell ${toolName}: "Before we begin, pull any relevant strategy, roadmap, or customer research docs from [your MCP source] and use them to pre-populate answers."\n`
           : '';
 
   return `---
