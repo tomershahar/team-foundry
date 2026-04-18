@@ -132,7 +132,7 @@
 |---|---|---|
 | Implementation | ✅ | strategy.md template + scaffold wiring; assumptions.md new fields + experiment readouts section; B13/B15 Phase 2/B16 coach behaviors; F4.9 context priority section |
 | Tests passing | ✅ | 335/335 passing |
-| Code review | ⏳ | |
+| Code review | ✅ | 5 fixes: nested HTML comment, strategy.md routing map, B13 severity, B14 placeholder, B15 trigger + unit consistency |
 | UAT (Tom sign-off) | ⏳ | |
 
 ---
@@ -154,10 +154,10 @@
 
 | Gate | Status | Notes |
 |---|---|---|
-| Implementation | ❌ | Not started |
-| Tests passing | ❌ | n/a |
-| Code review | ❌ | |
-| UAT (Tom sign-off) | ❌ | |
+| Implementation | ✅ | README, CONTRIBUTING, CODE_OF_CONDUCT, 3 issue templates, methodology doc, HN/LinkedIn/Lenny's launch drafts |
+| Tests passing | ✅ | n/a — content only |
+| Code review | ⏳ | |
+| UAT (Tom sign-off) | ⏳ | |
 
 ---
 
