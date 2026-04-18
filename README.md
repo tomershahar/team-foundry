@@ -1,8 +1,8 @@
 # team-foundry
 
-**Give your AI coding tool the context it needs to be a real product partner.**
+**Stop the "Context Drift." Give your AI coding tools a shared product brain.**
 
-`npx create-team-foundry` scaffolds a `team-foundry/` directory of structured files — outcomes, customers, decisions, quality bar, strategy — in a format that Claude Code, Gemini CLI, and other AI tools read natively as context.
+`npx create-team-foundry` scaffolds a structured context layer in your repo. It ensures every AI tool used by every team member—PM, Engineer, or Designer—is grounded in the same strategy, outcomes, and engineering decisions..
 
 ```
 npx create-team-foundry
