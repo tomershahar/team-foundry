@@ -21,7 +21,9 @@ import {
   metricsTemplate,
   glossaryTemplate,
   stakeholdersTemplate,
+  strategyTemplate,
 } from '../templates/index.js';
+import { expectedPaths } from '../scaffold.js';
 
 const baseCtx: TemplateContext = {
   profile: 'full',
@@ -51,6 +53,7 @@ const allTemplates = [
   ['metrics', metricsTemplate],
   ['glossary', glossaryTemplate],
   ['stakeholders', stakeholdersTemplate],
+  ['strategy', strategyTemplate],
 ] as const;
 
 /**
@@ -975,5 +978,246 @@ describe('Iteration 10 — Quarterly retrospective', () => {
     const retro = output.slice(retroStart, onboardingStart);
     expect(retro).toContain('Lower B1 threshold');
     expect(retro).toContain('Lower B2 staleness threshold');
+  });
+});
+
+describe('Iteration 9b — strategy.md template', () => {
+  const output = () => strategyTemplate(baseCtx);
+
+  it('has parseable frontmatter with required fields', () => {
+    const fm = parseFrontmatter(output());
+    expect(fm).not.toBeNull();
+    expect(fm!.purpose).toBeTruthy();
+    expect(fm!.read_when).toBeTruthy();
+    expect(fm!.last_updated).toBeTruthy();
+  });
+
+  it('contains Diagnosis section', () => {
+    expect(output()).toContain('## Diagnosis');
+  });
+
+  it('contains Guiding Policy section', () => {
+    expect(output()).toContain('## Guiding Policy');
+  });
+
+  it('contains Coherent Actions section', () => {
+    expect(output()).toContain('## Coherent Actions');
+  });
+
+  it('contains first-open framing about saying no', () => {
+    expect(output().toLowerCase()).toMatch(/only useful if it says no/);
+  });
+
+  it('contains coach interrogation instruction for platitude policies', () => {
+    expect(output().toLowerCase()).toMatch(/all yes|says no to something/);
+  });
+
+  it('contains BAD example in Coherent Actions', () => {
+    expect(output()).toMatch(/BAD/);
+  });
+
+  it('contains GOOD example in Coherent Actions', () => {
+    expect(output()).toMatch(/GOOD/);
+  });
+
+  it('anchors Diagnosis to north-star', () => {
+    expect(output().toLowerCase()).toMatch(/north.star/);
+  });
+});
+
+describe('Iteration 9b — assumptions.md new fields', () => {
+  const output = () => assumptionsTemplate(baseCtx);
+
+  it('contains Last Validated field', () => {
+    expect(output()).toMatch(/Last Validated:/);
+  });
+
+  it('contains Evidence field', () => {
+    expect(output()).toMatch(/Evidence:/);
+  });
+
+  it('contains Experiment readouts section', () => {
+    expect(output()).toContain('## Experiment readouts');
+  });
+
+  it('readout section has do-not-pre-fill instruction', () => {
+    const readoutIdx = output().indexOf('## Experiment readouts');
+    expect(readoutIdx).toBeGreaterThan(-1);
+    const readoutSection = output().slice(readoutIdx);
+    expect(readoutSection.toLowerCase()).toMatch(/do not pre.fill|not pre.fill/);
+  });
+});
+
+describe('Iteration 9b — B13 build-trap detector', () => {
+  const output = () => coachTemplate(baseCtx);
+
+  it('coach contains B13 build-trap section', () => {
+    expect(output()).toMatch(/B13|build.trap/i);
+  });
+
+  it('B13 trigger references now-next-later.md Now section', () => {
+    const coachOutput = output();
+    const b13Start = coachOutput.search(/B13|build.trap/i);
+    const b13Section = coachOutput.slice(b13Start, b13Start + 800);
+    expect(b13Section.toLowerCase()).toMatch(/now.next.later|"now"/);
+  });
+
+  it('B13 references Last Validated in assumptions.md', () => {
+    const coachOutput = output();
+    const b13Start = coachOutput.search(/B13|build.trap/i);
+    const b13Section = coachOutput.slice(b13Start, b13Start + 800);
+    expect(b13Section).toMatch(/Last Validated/);
+  });
+
+  it('B13 offers to draft an assumption entry', () => {
+    const coachOutput = output();
+    const b13Start = coachOutput.search(/B13|build.trap/i);
+    const b13Section = coachOutput.slice(b13Start, b13Start + 800);
+    expect(b13Section.toLowerCase()).toMatch(/draft.*assumption|assumption.*entry/);
+  });
+
+  it('B13 does not block — no "will not proceed" language', () => {
+    const coachOutput = output();
+    const b13Start = coachOutput.search(/B13|build.trap/i);
+    const b13Section = coachOutput.slice(b13Start, b13Start + 800);
+    expect(b13Section.toLowerCase()).not.toMatch(/will not proceed|blocked|cannot proceed/);
+  });
+});
+
+describe('Iteration 9b — B15 Phase 2 experiment readout', () => {
+  const output = () => coachTemplate(baseCtx);
+
+  it('coach contains B15 Phase 2 section', () => {
+    expect(output()).toMatch(/B15|experiment readout/i);
+  });
+
+  it('B15 trigger references experiment result signals', () => {
+    const coachOutput = output();
+    const b15Start = coachOutput.search(/B15|experiment readout/i);
+    const b15Section = coachOutput.slice(b15Start, b15Start + 1000);
+    expect(b15Section.toLowerCase()).toMatch(/results came back|we saw|experiment ended/);
+  });
+
+  it('B15 includes gap analysis for >20% delta', () => {
+    const coachOutput = output();
+    const b15Start = coachOutput.search(/B15|experiment readout/i);
+    const b15Section = coachOutput.slice(b15Start, b15Start + 1000);
+    expect(b15Section).toMatch(/20%|gap analysis/i);
+  });
+
+  it('B15 includes segment check instruction', () => {
+    const coachOutput = output();
+    const b15Start = coachOutput.search(/B15|experiment readout/i);
+    const b15Section = coachOutput.slice(b15Start, b15Start + 1000);
+    expect(b15Section.toLowerCase()).toMatch(/segment/);
+  });
+
+  it('B15 draft format includes expected/actual table', () => {
+    const coachOutput = output();
+    const b15Start = coachOutput.search(/B15|experiment readout/i);
+    const b15Section = coachOutput.slice(b15Start, b15Start + 1200);
+    expect(b15Section).toMatch(/Expected.*Actual|expected.*actual/i);
+  });
+
+  it('B15 does not block', () => {
+    const coachOutput = output();
+    const b15Start = coachOutput.search(/B15|experiment readout/i);
+    const b15Section = coachOutput.slice(b15Start, b15Start + 1000);
+    expect(b15Section.toLowerCase()).not.toMatch(/will not proceed|blocked|cannot proceed/);
+  });
+});
+
+describe('Iteration 9b — B16 strategy coherence', () => {
+  const output = () => coachTemplate(baseCtx);
+
+  it('coach contains B16 strategy coherence section', () => {
+    expect(output()).toMatch(/B16|strategy coherence/i);
+  });
+
+  it('B16 trigger references now-next-later.md and strategy.md', () => {
+    const coachOutput = output();
+    const b16Start = coachOutput.search(/B16|strategy coherence/i);
+    const b16Section = coachOutput.slice(b16Start, b16Start + 1000);
+    expect(b16Section.toLowerCase()).toMatch(/now.next.later/);
+    expect(b16Section.toLowerCase()).toMatch(/strategy\.md/);
+  });
+
+  it('B16 includes solo fallback (one question, no file required)', () => {
+    const coachOutput = output();
+    const b16Start = coachOutput.search(/B16|strategy coherence/i);
+    const b16Section = coachOutput.slice(b16Start, b16Start + 1000);
+    expect(b16Section.toLowerCase()).toMatch(/solo|strategy\.md.*absent|no strategy/);
+  });
+
+  it('B16 never blocks', () => {
+    const coachOutput = output();
+    const b16Start = coachOutput.search(/B16|strategy coherence/i);
+    const b16Section = coachOutput.slice(b16Start, b16Start + 1000);
+    expect(b16Section.toLowerCase()).not.toMatch(/will not add|blocked|cannot add/);
+  });
+
+  it('B16 affirms aligned items briefly', () => {
+    const coachOutput = output();
+    const b16Start = coachOutput.search(/B16|strategy coherence/i);
+    const b16Section = coachOutput.slice(b16Start, b16Start + 1000);
+    expect(b16Section.toLowerCase()).toMatch(/aligns|affirm|connects/);
+  });
+});
+
+describe('Iteration 9b — F4.9 context priority hierarchy', () => {
+  const output = () => coachTemplate(baseCtx);
+
+  it('coach contains context priority section', () => {
+    expect(output()).toMatch(/[Cc]ontext priority/);
+  });
+
+  it('priority hierarchy lists north-star first', () => {
+    const coachOutput = output();
+    const priorityStart = coachOutput.search(/[Cc]ontext priority/);
+    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 600);
+    expect(prioritySection.toLowerCase()).toMatch(/north.star/);
+  });
+
+  it('priority hierarchy lists strategy.md second', () => {
+    const coachOutput = output();
+    const priorityStart = coachOutput.search(/[Cc]ontext priority/);
+    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 600);
+    const northStarPos = prioritySection.toLowerCase().indexOf('north-star');
+    const strategyPos = prioritySection.toLowerCase().indexOf('strategy');
+    expect(strategyPos).toBeGreaterThan(northStarPos);
+  });
+
+  it('priority hierarchy includes outcomes and now-next-later', () => {
+    const coachOutput = output();
+    const priorityStart = coachOutput.search(/[Cc]ontext priority/);
+    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 600);
+    expect(prioritySection.toLowerCase()).toMatch(/outcomes/);
+    expect(prioritySection.toLowerCase()).toMatch(/now.next.later/);
+  });
+
+  it('instructs coach to name conflicts explicitly', () => {
+    const coachOutput = output();
+    const priorityStart = coachOutput.search(/[Cc]ontext priority/);
+    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 600);
+    expect(prioritySection.toLowerCase()).toMatch(/name.*conflict|conflict.*explicit/);
+  });
+});
+
+describe('Iteration 9b — scaffold strategy.md wiring', () => {
+  it('full profile includes strategy.md', () => {
+    const fullPaths = expectedPaths('full', 'claude');
+    expect(fullPaths).toContain('team-foundry/product/strategy.md');
+  });
+
+  it('solo profile does not include strategy.md', () => {
+    const soloPaths = expectedPaths('solo', 'claude');
+    expect(soloPaths).not.toContain('team-foundry/product/strategy.md');
+  });
+
+  it('full profile has one more file than before (strategy.md added)', () => {
+    const fullPaths = expectedPaths('full', 'claude');
+    const soloPaths = expectedPaths('solo', 'claude');
+    // full has all solo files + 13 full-only files (was 12, now 13 with strategy.md)
+    expect(fullPaths.length - soloPaths.length).toBe(13);
   });
 });

@@ -22,6 +22,7 @@ import {
   metricsTemplate,
   glossaryTemplate,
   stakeholdersTemplate,
+  strategyTemplate,
 } from './templates/index.js';
 
 interface FileEntry {
@@ -57,6 +58,7 @@ const FULL_ONLY_ENTRIES: FileEntry[] = [
   { relativePath: 'team-foundry/data/metrics.md', content: metricsTemplate },
   { relativePath: 'team-foundry/context/glossary.md', content: glossaryTemplate },
   { relativePath: 'team-foundry/context/stakeholders.md', content: stakeholdersTemplate },
+  { relativePath: 'team-foundry/product/strategy.md', content: strategyTemplate },
 ];
 
 /** Returns the root instruction file entry/entries based on tool choice */

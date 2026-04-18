@@ -125,15 +125,27 @@
 
 ---
 
+## Iteration 9b — v2.1 additions (strategy coherence, build-trap, experiment readout)
+**Goal:** Add strategy.md (full profile), B13 build-trap detector, B15 Phase 2 experiment readout, B16 strategy coherence, F4.9 context priority hierarchy, assumptions.md Last Validated + Evidence fields.
+
+| Gate | Status | Notes |
+|---|---|---|
+| Implementation | ✅ | strategy.md template + scaffold wiring; assumptions.md new fields + experiment readouts section; B13/B15 Phase 2/B16 coach behaviors; F4.9 context priority section |
+| Tests passing | ✅ | 335/335 passing |
+| Code review | ⏳ | |
+| UAT (Tom sign-off) | ⏳ | |
+
+---
+
 ## Iteration 11 — Worked example repo
 **Goal:** Fully populated team-foundry for a fictional product team. Internally consistent, passes Cagan-literate review.
 
 | Gate | Status | Notes |
 |---|---|---|
-| Implementation | ❌ | Not started — identity of fictional team TBD |
-| Tests passing | ❌ | |
-| Code review | ❌ | |
-| UAT (Tom sign-off) | ❌ | |
+| Implementation | ✅ | Clearflow — 15 files + coach.md + root; B13/B15/B16 scenarios wired |
+| Tests passing | ✅ | 52 example tests passing |
+| Code review | ⏳ | |
+| UAT (Tom sign-off) | ⏳ | |
 
 ---
 

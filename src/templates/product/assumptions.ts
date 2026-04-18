@@ -35,6 +35,8 @@ last_updated: ${ctx.date}
      Example:
      ### Ops managers will self-serve report fixes without training
      **Added:** 2026-03-01
+     **Last Validated:** *(never tested)*
+     **Evidence:** *(none yet)*
      **What's at stake:** The entire "no-support-required" positioning depends on this.
        If they can't self-serve, we need a customer success layer.
      **How to test:** Give 5 ops managers access to the new fix-flow with no documentation.
@@ -43,11 +45,31 @@ last_updated: ${ctx.date}
 ## Tested
 
 <!-- Assumptions you've gathered real evidence on. Include what you did and what you learned.
-     "We tested X by doing Y and found Z" is the pattern. -->
+     Each entry should include:
+     - The claim
+     - Last Validated: YYYY-MM-DD
+     - Evidence: link to transcript, note, or experiment result
+     - What you changed because of it -->
 
 ## Invalidated
 
 <!-- Assumptions you proved wrong. Don't delete these — they're your most valuable history.
      Record what you assumed, what you found instead, and what you changed because of it. -->
+
+## Experiment readouts
+
+<!-- Populated by the coach after experiment results arrive.
+     Format: expected → actual, segment breakdown, conclusion, next step.
+     Do not pre-fill — the coach drafts this after confirming results with you.
+
+     Example structure:
+     ### Experiment readout — [name] ([date])
+     | | Expected | Actual |
+     |---|---|---|
+     | Overall | +X | +Y |
+     | Segment: [primary] | +X | +Y |
+     **Gap analysis:** [why the delta happened]
+     **Conclusion:** validated / invalidated / inconclusive
+     **Next:** [action] -->
 `;
 }

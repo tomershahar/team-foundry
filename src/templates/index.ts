@@ -18,3 +18,4 @@ export { principlesTemplate } from './design/principles.js';
 export { metricsTemplate } from './data/metrics.js';
 export { glossaryTemplate } from './context/glossary.js';
 export { stakeholdersTemplate } from './context/stakeholders.js';
+export { strategyTemplate } from './strategy.js';
