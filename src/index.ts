@@ -26,7 +26,24 @@ You can paste multiple documents — just separate them with a heading like:
 When you're done, save this file and start the onboarding interview.
 `;
 
-async function warnIfDevDirectory(targetDir: string): Promise<void> {
+async function checkDirectory(targetDir: string): Promise<void> {
+  // Hard block: running inside the team-foundry source repo itself
+  const prdPath = path.join(targetDir, 'team-foundry-prd-v2.md');
+  const scaffoldPath = path.join(targetDir, 'src', 'scaffold.ts');
+  let isSourceRepo = false;
+  try { await fs.access(prdPath); isSourceRepo = true; } catch { /* ok */ }
+  try { await fs.access(scaffoldPath); isSourceRepo = true; } catch { /* ok */ }
+
+  if (isSourceRepo) {
+    log.error(
+      "You're running create-team-foundry inside the team-foundry source repo.\n" +
+      'This will overwrite development files.\n\n' +
+      'cd to your product repo first, then run this command again.',
+    );
+    process.exit(1);
+  }
+
+  // Soft warn: looks like a Node.js project
   const pkgPath = path.join(targetDir, 'package.json');
   const srcPath = path.join(targetDir, 'src');
   let hasPkg = false;
@@ -36,9 +53,9 @@ async function warnIfDevDirectory(targetDir: string): Promise<void> {
 
   if (hasPkg && hasSrc) {
     log.warn(
-      'This directory already has a package.json and src/ folder — it looks like a Node.js project.\n' +
-      'team-foundry should be run in your product/engineering repo, not a Node.js library repo.\n' +
-      'If this is correct, continue. Otherwise Ctrl-C and cd to your product repo first.',
+      'This directory has a package.json and src/ — it looks like a Node.js project.\n' +
+      'team-foundry works best in your product repo, not inside a library or CLI repo.\n' +
+      'If this is the right place, continue. Otherwise Ctrl-C and cd to your product repo.',
     );
     const ok = await confirm({ message: 'Continue anyway?' });
     if (!ok) {
@@ -51,7 +68,7 @@ async function warnIfDevDirectory(targetDir: string): Promise<void> {
 async function main(): Promise<void> {
   const targetDir = process.cwd();
 
-  await warnIfDevDirectory(targetDir);
+  await checkDirectory(targetDir);
 
   const answers = await runPrompts();
   const date = new Date().toISOString().split('T')[0];
