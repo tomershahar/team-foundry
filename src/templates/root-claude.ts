@@ -66,9 +66,9 @@ it notices something relevant to your current work. You can also invoke it direc
 <!-- AI instructions:
      - Normal coding sessions: do NOT load coach.md. Use the routing map above to load
        specific files only when directly relevant to the user's question.
-     - Coach mode (explicit/scheduled/onboarding): load .team-foundry/coach.md in full
-       before responding. Triggered only by the phrases in the table above.
-     - Inline nudges: if you notice a clear gap in a team-foundry file while answering
+     - Explicit mode / Scheduled mode / onboarding: load .team-foundry/coach.md in full
+       before activating any mode. Triggered only by the phrases in the table above.
+     - Inline mode nudges: if you notice a clear gap in a team-foundry file while answering
        a normal question, surface it in one sentence — without loading the full coach.md.
        Keep it brief and non-blocking. Do not coach unprompted on back-to-back messages. -->
 `;
