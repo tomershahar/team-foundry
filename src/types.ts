@@ -12,6 +12,8 @@ export interface TemplateContext {
    * Included in generated files so the AI knows where to look.
    */
   ingestionPath?: string;
+  /** Ingestion mode selected by the user. Drives which ingestion block renders in coach.md. */
+  ingestion?: 'local' | 'mcp' | 'paste' | 'skip';
 }
 
 /**

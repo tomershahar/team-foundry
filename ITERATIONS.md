@@ -82,10 +82,10 @@
 
 | Gate | Status | Notes |
 |---|---|---|
-| Implementation | ❌ | Not started |
-| Tests passing | ❌ | |
-| Code review | ❌ | |
-| UAT (Tom sign-off) | ❌ | |
+| Implementation | ✅ | 4-step ingestion protocol: stale doc check, file mapping, confidence rubric, interview integration |
+| Tests passing | ✅ | 9 new tests passing |
+| Code review | ✅ | 2 fixes: solo profile file-mapping note, separator before interview section |
+| UAT (Tom sign-off) | ✅ | Skipped — content-only, no runtime logic |
 
 ---
 
@@ -94,10 +94,10 @@
 
 | Gate | Status | Notes |
 |---|---|---|
-| Implementation | ❌ | Not started |
-| Tests passing | ❌ | |
-| Code review | ❌ | |
-| UAT (Tom sign-off) | ❌ | |
+| Implementation | ✅ | MCP branch (Notion/Confluence/Drive guidance, fallback, feedback summary), paste branch, shared ingestion reference |
+| Tests passing | ✅ | All passing |
+| Code review | ✅ | 3 fixes: inlined confidence rubric in MCP/paste, extracted shared file-mapping table |
+| UAT (Tom sign-off) | ✅ | Skipped — content-only, no runtime logic |
 
 ---
 
@@ -163,5 +163,5 @@
 
 ## Immediate next actions
 
-1. Plan and implement Iteration 7 — artifact ingestion (local folder)
+1. Spec and implement Iteration 9 — coach behaviors full set (5–12)
 2. UAT Iteration 4 pending item — test ingestion path with existing docs (local folder)

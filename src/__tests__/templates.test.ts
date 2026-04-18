@@ -157,7 +157,7 @@ describe('Ingestion path', () => {
     const output = coachTemplate(ingestionCtx);
     expect(output).toContain('./uat-mock-docs');
     expect(output).toContain('Existing docs');
-    expect(output).toContain('verify each answer');
+    expect(output).toContain("Every answer needs the user's confirmation");
   });
 
   it('coach has no ingestion docs section when ingestionPath is absent', () => {
@@ -655,5 +655,248 @@ describe('Iteration 6 — Conversation-as-update', () => {
     const b4Start = output.indexOf('Behavior 4:');
     const quarterlyStart = output.indexOf('Quarterly retrospective');
     expect(output.slice(b4Start, quarterlyStart)).toContain('Draft looks like');
+  });
+});
+
+describe('Iteration 9 — Coach behaviors B5–B12', () => {
+  it('explicit mode instruction references all 12 behaviors', () => {
+    expect(coachTemplate(baseCtx)).toContain('B1→B12');
+  });
+
+  it('coach has Behavior 5 section', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 5: Reality drift');
+  });
+
+  it('B5 references git commits and PRs', () => {
+    const output = coachTemplate(baseCtx);
+    const b5Start = output.indexOf('Behavior 5:');
+    const b6Start = output.indexOf('Behavior 6:');
+    const b5 = output.slice(b5Start, b6Start);
+    expect(b5).toContain('commit');
+    expect(b5).toContain('signals available in the repo');
+  });
+
+  it('coach has Behavior 6 section', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 6: Quality bar drift');
+  });
+
+  it('B6 references engineering/quality-bar.md', () => {
+    const output = coachTemplate(baseCtx);
+    const b6Start = output.indexOf('Behavior 6:');
+    const b7Start = output.indexOf('Behavior 7:');
+    expect(output.slice(b6Start, b7Start)).toContain('quality-bar.md');
+  });
+
+  it('coach has Behavior 7 section', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 7: Metrics without definitions');
+  });
+
+  it('B7 references data/metrics.md', () => {
+    const output = coachTemplate(baseCtx);
+    const b7Start = output.indexOf('Behavior 7:');
+    const b8Start = output.indexOf('Behavior 8:');
+    expect(output.slice(b7Start, b8Start)).toContain('data/metrics.md');
+  });
+
+  it('coach has Behavior 8 section', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 8: Risks listed but never revisited');
+  });
+
+  it('B8 references product/risks.md', () => {
+    const output = coachTemplate(baseCtx);
+    const b8Start = output.indexOf('Behavior 8:');
+    const b9Start = output.indexOf('Behavior 9:');
+    expect(output.slice(b8Start, b9Start)).toContain('product/risks.md');
+  });
+
+  it('coach has Behavior 9 section', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 9: Four alignment questions audit');
+  });
+
+  it('B9 has quarterly cadence note', () => {
+    const output = coachTemplate(baseCtx);
+    const b9Start = output.indexOf('Behavior 9:');
+    const b10Start = output.indexOf('Behavior 10:');
+    const b9 = output.slice(b9Start, b10Start);
+    expect(b9).toContain('quarterly');
+    expect(b9).toContain('90');
+  });
+
+  it('B9 is not an inline behavior', () => {
+    const output = coachTemplate(baseCtx);
+    const b9Start = output.indexOf('Behavior 9:');
+    const b10Start = output.indexOf('Behavior 10:');
+    expect(output.slice(b9Start, b10Start)).toContain('Not an inline behavior');
+  });
+
+  it('coach has Behavior 10 section', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 10: Bedrock need challenge');
+  });
+
+  it('B10 mentions underlying need', () => {
+    const output = coachTemplate(baseCtx);
+    const b10Start = output.indexOf('Behavior 10:');
+    const b11Start = output.indexOf('Behavior 11:');
+    expect(output.slice(b10Start, b11Start)).toContain('underlying need');
+  });
+
+  it('B10 is periodic not constant', () => {
+    const output = coachTemplate(baseCtx);
+    const b10Start = output.indexOf('Behavior 10:');
+    const b11Start = output.indexOf('Behavior 11:');
+    expect(output.slice(b10Start, b11Start)).toContain('periodic');
+  });
+
+  it('coach has Behavior 11 section', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 11: Gap-filling nudges');
+  });
+
+  it('B11 nudge memory applies', () => {
+    const output = coachTemplate(baseCtx);
+    const b11Start = output.indexOf('Behavior 11:');
+    const b12Start = output.indexOf('Behavior 12:');
+    expect(output.slice(b11Start, b12Start)).toContain('nudge memory');
+  });
+
+  it('coach has Behavior 12 section', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 12: MCP suggestions');
+  });
+
+  it('B12 mentions Notion, Confluence, Google Drive', () => {
+    const output = coachTemplate(baseCtx);
+    const b12Start = output.indexOf('Behavior 12:');
+    const quarterlyStart = output.indexOf('Quarterly retrospective');
+    const b12 = output.slice(b12Start, quarterlyStart);
+    expect(b12).toContain('Notion MCP');
+    expect(b12).toContain('Confluence MCP');
+    expect(b12).toContain('Google Drive MCP');
+  });
+
+  it('each of B5–B12 has a Draft looks like block', () => {
+    const output = coachTemplate(baseCtx);
+    for (let i = 5; i <= 12; i++) {
+      const bStart = output.indexOf(`Behavior ${i}:`);
+      const bEnd = i < 12
+        ? output.indexOf(`Behavior ${i + 1}:`)
+        : output.indexOf('Quarterly retrospective');
+      const section = output.slice(bStart, bEnd);
+      // B10, B11, B12 have draft looks like or "Nothing to draft" / offer
+      if (i <= 9) {
+        expect(section).toContain('Draft looks like');
+      }
+    }
+  });
+});
+
+describe('Iteration 7 — Artifact ingestion (local folder)', () => {
+  const ingestionCtx: TemplateContext = { ...baseCtx, ingestionPath: './docs' };
+
+  it('ingestion block does not render when ingestionPath is absent', () => {
+    expect(coachTemplate(baseCtx)).not.toContain('Shared ingestion reference');
+  });
+
+  it('ingestion block renders when ingestionPath is set', () => {
+    expect(coachTemplate(ingestionCtx)).toContain('Shared ingestion reference');
+  });
+
+  it('ingestion block includes the stale doc check step', () => {
+    expect(coachTemplate(ingestionCtx)).toContain('Stale doc check');
+  });
+
+  it('ingestion block includes file-mapping table', () => {
+    const output = coachTemplate(ingestionCtx);
+    expect(output).toContain('product/north-star.md');
+    expect(output).toContain('product/outcomes.md');
+    expect(output).toContain('product/customers.md');
+    expect(output).toContain('engineering/decisions/');
+    expect(output).toContain('context/glossary.md');
+  });
+
+  it('ingestion block defines all three confidence levels', () => {
+    const output = coachTemplate(ingestionCtx);
+    expect(output).toContain('High confidence');
+    expect(output).toContain('Medium confidence');
+    expect(output).toContain('Low confidence');
+  });
+
+  it('ingestion block enforces no silent writes', () => {
+    expect(coachTemplate(ingestionCtx)).toContain('No silent writes from ingestion');
+  });
+
+  it('ingestion block says never skip questions', () => {
+    expect(coachTemplate(ingestionCtx)).toContain('Do not skip questions just because the docs seem to cover them');
+  });
+
+  it('ingestion block flags stale as 6 months', () => {
+    expect(coachTemplate(ingestionCtx)).toContain('6 months');
+  });
+
+  it('ingestion block warns to only map files that exist on disk', () => {
+    expect(coachTemplate(ingestionCtx)).toContain('Only map content to files that were materialised on disk');
+  });
+});
+
+describe('Iteration 8 — Artifact ingestion (MCP + paste)', () => {
+  const mcpCtx: TemplateContext = { ...baseCtx, ingestion: 'mcp' };
+  const pasteCtx: TemplateContext = { ...baseCtx, ingestion: 'paste' };
+  const skipCtx: TemplateContext = { ...baseCtx, ingestion: 'skip' };
+
+  it('MCP block renders when ingestion is mcp', () => {
+    expect(coachTemplate(mcpCtx)).toContain('MCP source guidance');
+  });
+
+  it('MCP block does not render for local, paste, or skip', () => {
+    expect(coachTemplate(baseCtx)).not.toContain('MCP source guidance');
+    expect(coachTemplate(pasteCtx)).not.toContain('MCP source guidance');
+    expect(coachTemplate(skipCtx)).not.toContain('MCP source guidance');
+  });
+
+  it('MCP block includes Notion, Confluence, Google Drive guidance', () => {
+    const output = coachTemplate(mcpCtx);
+    expect(output).toContain('Notion MCP');
+    expect(output).toContain('Confluence MCP');
+    expect(output).toContain('Google Drive MCP');
+  });
+
+  it('MCP block includes fallback when no servers respond', () => {
+    expect(coachTemplate(mcpCtx)).toContain('If no MCP servers respond at all');
+  });
+
+  it('MCP block includes feedback summary before interview', () => {
+    expect(coachTemplate(mcpCtx)).toContain('Feedback summary');
+  });
+
+  it('MCP block enforces no silent writes', () => {
+    expect(coachTemplate(mcpCtx)).toContain('No silent writes from ingestion');
+  });
+
+  it('paste block renders when ingestion is paste', () => {
+    expect(coachTemplate(pasteCtx)).toContain('paste content');
+  });
+
+  it('paste block does not render for mcp, local, or skip', () => {
+    expect(coachTemplate(mcpCtx)).not.toContain('Paste them now');
+    expect(coachTemplate(skipCtx)).not.toContain('Paste them now');
+  });
+
+  it('paste block instructs AI to wait for paste before interview', () => {
+    expect(coachTemplate(pasteCtx)).toContain('Paste them now');
+  });
+
+  it('paste block includes feedback summary after paste', () => {
+    expect(coachTemplate(pasteCtx)).toContain('Feedback summary');
+  });
+
+  it('paste block has fallback if nothing is pasted', () => {
+    expect(coachTemplate(pasteCtx)).toContain("No problem — I'll ask each question fresh");
+  });
+
+  it('paste block enforces no silent writes', () => {
+    expect(coachTemplate(pasteCtx)).toContain('No silent writes from ingestion');
+  });
+
+  it('skip and absent produce no ingestion block', () => {
+    expect(coachTemplate(skipCtx)).not.toContain('Shared ingestion reference');
+    expect(coachTemplate(baseCtx)).not.toContain('Shared ingestion reference');
   });
 });

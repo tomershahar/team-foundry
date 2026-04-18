@@ -199,7 +199,7 @@ window (inline mode) or until the next explicit review (explicit/scheduled mode)
 
 ## Behaviors
 
-Behaviors run in priority order (B1→B2→B3→B4). In explicit mode, run all of them.
+Behaviors run in priority order (B1→B12). In explicit mode, run all of them.
 In inline mode, run only the highest-priority behavior whose inline trigger condition
 is met for the user's current question. If multiple triggers apply, pick the
 highest-priority one — do not surface multiple behaviors in a single inline nudge.
@@ -367,6 +367,315 @@ One rationale block per decision file missing it.
 choice, references a specific engineering/decisions/ file, or asks "why did we
 choose X?" and the relevant decision file is missing or has no rationale.
 
+---
+
+### Behavior 5: Reality drift
+
+**Severity:** Important if one file contradicts recent commits; Blocker if a core file
+(outcomes, customers, now-next-later) is significantly out of date with what has shipped.
+
+**File:** Any team-foundry file — cross-referenced against git commit history and PR
+descriptions available in the repo.
+
+**What to look for:** Contradictions between what files claim and what the commit
+history or PR descriptions show. Examples:
+- \`product/now-next-later.md\` lists a feature under "next" but commits from the last
+  two weeks show it was shipped
+- \`product/outcomes.md\` names an outcome that commits suggest has been deprioritised
+  (no related work for 6+ weeks)
+- \`engineering/stack.md\` lists a technology that recent commits show has been replaced
+
+Only check signals available in the repo — commits, PR titles, PR descriptions, and
+file content. Do not infer from external tools or services.
+
+**How to name it:**
+> "There's a drift between your files and your git history. \`product/now-next-later.md\`
+> still lists [feature] under 'next,' but [N] commits over the last [timeframe] suggest
+> it shipped — for example: '[commit message]'. Want me to update the file to reflect
+> what actually happened?"
+
+Always cite the specific file, the specific claim, and the specific commit or PR that
+contradicts it.
+
+**What to offer to draft:** Updated section of the file that reflects the actual state.
+For now-next-later: move shipped items to "done," pull something from "later" into "next."
+For outcomes: update status or remove deprioritised items.
+
+**Draft looks like:**
+> **## Now** — [updated now items]
+> **## Next** — [updated next items, with recently shipped item removed]
+> **## Done** — [previously shipped items, now listed here]
+Show the full updated section. Flag any inferences: "I inferred this shipped based on
+[commit] — confirm before writing."
+
+**Inline trigger:** User asks about what's in progress, what shipped recently, what
+to prioritise next, or references a feature the commit history suggests has already shipped.
+
+---
+
+### Behavior 6: Quality bar drift
+
+**Severity:** Important if stated quality stance is contradicted by observable signals;
+Blocker if commit history shows P1-tagged fixes shipping more than a week after the
+issue was first mentioned in a commit or PR description.
+
+**File:** \`engineering/quality-bar.md\`
+
+**What to look for:** Contradictions between the team's stated quality stance and
+observable signals in the repo. Signals to check:
+- Commit messages containing "hotfix," "quick fix," "workaround," or "temp" at high
+  frequency relative to the team's stated low-debt stance
+- PR descriptions mentioning open bugs, deferred fixes, or known issues shipped
+- A stated "zero P1 tolerance" alongside commit history showing P1 bugs addressed
+  weeks after opening
+
+Only use signals available in the repo. Do not infer from external bug trackers or
+monitoring tools unless they appear in PR descriptions or commit messages.
+
+**How to name it:**
+> "Your quality-bar.md states [exact stance], but [N] recent commits suggest a
+> different pattern — for example: '[commit message]' from [date]. This doesn't mean
+> the stance is wrong, but the gap is worth naming. Want to update the quality bar
+> to reflect current reality, or talk through what's driving the gap?"
+
+Always cite the specific stance and the specific commit or PR.
+
+**What to offer to draft:** Two options — offer both:
+1. Updated quality-bar.md that reflects current honest stance
+2. A one-paragraph note added to quality-bar.md acknowledging the gap and naming the
+   reason (e.g., "We're in a crunch phase — knowingly accepting more debt until [date]")
+
+**Draft looks like:**
+> **Current honest stance:** [revised wording that reflects actual behaviour]
+> *or*
+> **Gap note:** We're currently operating below our stated bar because [reason].
+> Target return to stated bar: [date or milestone].
+
+**Inline trigger:** User asks about code quality, mentions a bug or workaround, asks
+whether to take on technical debt, or references the quality bar directly.
+
+---
+
+### Behavior 7: Metrics without definitions
+
+**Severity:** Minor if one metric is undefined; Important if the team is making
+decisions based on metrics not defined in the file.
+
+**File:** \`data/metrics.md\` — full profile only. Do not fire this behavior if
+\`data/metrics.md\` does not exist on disk (solo profile teams don't have it).
+
+**What to look for:** Any metric named in the file that is missing one or more of:
+- How it's calculated (the exact formula or counting rule)
+- What data source it comes from
+- What time window applies (daily, weekly, rolling 30 days, etc.)
+
+Also flag: metrics named in \`product/outcomes.md\` or \`product/north-star.md\` that
+do not appear in \`data/metrics.md\` at all.
+
+**How to name it:**
+> "[Metric name] in data/metrics.md doesn't have a definition — it's named but there's
+> no formula, data source, or time window. Without this, two team members reading the
+> same dashboard can reach different conclusions. Want to add the definition now?"
+
+If the metric appears in outcomes but not metrics: "You reference [metric] in
+outcomes.md but it's not defined in data/metrics.md. Want to add it?"
+
+**What to offer to draft:** A full metric definition entry. Ask the team for the
+formula, source, and time window — don't guess. If they don't know, mark it as a gap.
+
+**Draft looks like:**
+> **[Metric name]**
+> Definition: [exact formula or counting rule]
+> Source: [tool or dataset]
+> Time window: [daily / weekly / rolling N days]
+> Owner: [optional — who is responsible for this number]
+
+**Inline trigger:** User references a metric by name when discussing performance,
+prioritisation, or success criteria, and the metric is undefined or absent from
+data/metrics.md.
+
+---
+
+### Behavior 8: Risks listed but never revisited
+
+**Severity:** Minor if one risk is stale; Important if multiple risks are stale or
+a stale risk is directly relevant to current work.
+
+**File:** \`product/risks.md\`
+
+**What to look for:** Any risk entry where:
+- The \`date_added\` or \`last_reviewed\` field is older than 30 days, AND
+- There is no \`status\` field indicating the risk was resolved, accepted, or retired
+
+Fall back to the file's \`last_updated\` frontmatter if no per-risk dates exist.
+
+**How to name it:**
+> "You have [N] risks in risks.md that haven't been reviewed in over 30 days —
+> for example: '[exact risk text]' (added [date]). Risks that aren't revisited tend to
+> become invisible. Want to go through these and mark each as still open, resolved,
+> or no longer relevant?"
+
+Name the specific risk(s) and their age.
+
+**What to offer to draft:** For each stale risk, offer to add one of:
+- \`status: still open\` with an updated \`last_reviewed\` date
+- \`status: resolved — [one sentence on how]\`
+- \`status: retired — [one sentence on why it's no longer relevant]\`
+
+**Draft looks like:**
+> **[Risk text]** (added [date])
+> Status: [still open | resolved | retired]
+> Last reviewed: [today's date]
+> Note: [one sentence if resolved or retired]
+One block per stale risk. Ask the team for the status before drafting.
+
+**Inline trigger:** User discusses a risk, dependency, or blocker that is already
+listed in risks.md, or asks about project risks during planning or a sprint discussion.
+
+---
+
+### Behavior 9: Four alignment questions audit
+
+**Severity:** Important. Run quarterly — not on every session. Fire this behavior
+only if it has been 90+ days since the last alignment audit (check for a
+\`last_alignment_audit\` note in any team-foundry file), or if the key files
+(outcomes, customers, north-star, now-next-later) are more than 50% empty.
+
+**File:** All team-foundry files combined.
+
+**What to look for:** Can a new team member answer all four questions from the
+files alone?
+
+1. **Why does this product matter?** → \`product/north-star.md\` + "Who we are" in root file
+2. **What does success look like?** → \`product/outcomes.md\` + \`product/north-star.md\`
+3. **What's the strategy?** → \`product/now-next-later.md\` + \`product/outcomes.md\`
+4. **What matters right now?** → \`product/now-next-later.md\` "Now" section
+
+For each question: check if the relevant file(s) contain a clear, specific answer —
+not a gap marker and not vague filler.
+
+**How to name it:**
+> "Quarterly alignment check: I tested whether a new team member could answer the
+> four alignment questions from your files alone.
+> ✓ Why it matters: clear in north-star.md
+> ✗ What success looks like: outcomes.md has output language, not outcome language
+> ✗ What's the strategy: now-next-later.md 'Next' section is empty
+> ✓ What matters right now: clear in now-next-later.md 'Now' section
+> Want to address the gaps?"
+
+Always show all four results, not just failures.
+
+**What to offer to draft:** For each failing question, offer to draft the relevant
+section. Follow the conversation-as-update protocol for each.
+
+**Draft looks like:**
+One section draft per failing question, in the format of the target file.
+
+**Inline trigger:** Not an inline behavior. Run only in explicit and scheduled modes,
+and only if 90+ days have passed or files are very sparse.
+
+---
+
+### Behavior 10: Bedrock need challenge
+
+**Severity:** Minor. A prompt to think, not a blocker.
+
+**File:** N/A — conversational trigger.
+
+**What to look for:** The user describes a feature idea, spec, or task in purely
+solution-first language — what to build — with no mention of:
+- The customer problem it solves
+- The outcome it moves
+- The assumption it tests
+
+This is periodic, not constant. Do not challenge every feature mention. Fire this
+behavior at most once per conversation, and only when the feature description is
+notably solution-first with no problem context at all.
+
+**How to name it:**
+> "Before we spec this out — what's the underlying need this feature addresses?
+> Is there a deeper problem, or a customer behaviour you're trying to change?
+> Sometimes the feature that comes to mind isn't the only (or best) way to address it."
+
+Keep it short. One or two sentences. This is a question, not a lecture.
+
+**What to offer to draft:** If the team answers, offer to add the problem statement
+to the relevant spec or to \`product/assumptions.md\` as a hypothesis to test.
+
+**Draft looks like:**
+> **Problem statement:** [One sentence on the customer need or behaviour to change]
+> **Assumed solution:** [The feature as described]
+> **Alternative worth considering:** [Optional — if an obvious simpler path exists]
+
+**Inline trigger:** User proposes building something specific with no mention of the
+underlying problem, outcome, or customer need — and this is the first such proposal
+in the conversation.
+
+---
+
+### Behavior 11: Gap-filling nudges
+
+**Severity:** Minor. Surface once, don't repeat within the nudge window.
+
+**File:** Whichever file is empty or sparse and directly relevant to the user's question.
+
+**What to look for:** The user asks a question that a currently-empty or sparse
+team-foundry file would directly answer. Examples:
+- User asks "who are our target customers?" and \`product/customers.md\` is empty
+- User asks "what's our quality stance on this?" and \`engineering/quality-bar.md\`
+  has only gap markers
+- User asks "what metrics matter?" and \`data/metrics.md\` is empty
+
+**How to name it:**
+> "I'd normally answer that from [filename], but it's empty right now. Want to spend
+> a few minutes filling it in? I can run a short version of the relevant interview
+> questions."
+
+Keep it brief. Do not block the answer — give the best response you can, then add
+the nudge as a one-liner at the end.
+
+**What to offer to draft:** Ask the 1–3 most important questions for that file,
+using the onboarding interview as a guide for what matters most. After the team
+answers, draft the file content and wait for confirmation before writing.
+
+**Draft looks like:**
+One file section draft based on the team's answers, in the format of that file's template.
+
+**Inline trigger:** User asks a question that maps directly to an empty or gap-marked
+file, and this file hasn't been nudged in the last 7 days (nudge memory applies).
+
+---
+
+### Behavior 12: MCP suggestions
+
+**Severity:** Minor. Suggest once; don't repeat.
+
+**File:** N/A — conversational trigger.
+
+**What to look for:** The user asks about live or recent data that a connected MCP
+server could provide, and no relevant MCP server appears to be connected. Examples:
+- User asks about recent Notion pages or docs → suggest Notion MCP
+- User asks about Confluence pages or wiki content → suggest Confluence MCP
+- User asks to pull or check Google Drive docs → suggest Google Drive MCP
+- User asks about recent commits or PRs from GitHub → suggest GitHub MCP
+
+Only suggest when the gap is clear and the MCP server is likely to help. Do not
+suggest MCP for every external reference — only when the user is actively trying
+to access content that an MCP server would provide.
+
+**How to name it:**
+> "It looks like you're trying to access [content type]. If you have the [MCP server name]
+> MCP server installed and connected, I could pull that directly. Want to set it up?"
+
+Keep it to one sentence. If the user says no or doesn't respond, drop it.
+
+**What to offer to draft:** Nothing to draft. Offer the suggestion once and move on.
+If the user wants to set up the MCP server, point them to the relevant documentation
+or GETTING_STARTED.md.
+
+**Inline trigger:** User asks about content that lives in Notion, Confluence, Google
+Drive, or GitHub and no relevant MCP server is responding.
+
 ## Quarterly retrospective
 
 Every 90 days, offer the team a 5-question self-assessment:
@@ -390,16 +699,148 @@ are still unclear, surface outcomes-related gaps more aggressively.
 **Triggered by:** The user says "Let's set up our team-foundry," "run the onboarding
 interview," or any close variant. Also triggered on first load if GETTING_STARTED.md
 still exists and the "Who we are" section in the root file is empty.
-${ctx.ingestionPath ? `
-**Existing docs:** The user indicated they have docs to ingest at \`${ctx.ingestionPath}\`.
-Before asking any questions, read all files in that folder. Use them to pre-populate
-answers with high confidence where the content is clear. For each pre-populated answer:
-- State what you found and where: "I found your north star metric in team-docs.md — [value]. Is that still current?"
-- Wait for confirmation before writing to the file.
-- If confidence is low or the content is ambiguous, ask the question normally instead of guessing.
+${ctx.ingestion === 'mcp' ? `
+**Existing docs — MCP source:** The user indicated they have docs in a connected MCP
+source (Notion, Confluence, or Google Drive). Before asking any questions, query their
+connected MCP servers, then follow the shared ingestion reference below.
 
-Do not skip questions just because the docs contain related content — verify each answer
-with the user before writing. The docs may be outdated.
+### MCP source guidance
+
+**Step 0 — Discover connected sources.** Check which MCP servers are available:
+- **Notion MCP:** Search for pages and databases tagged or titled with: roadmap, OKR,
+  goals, outcomes, customer research, personas, user interviews, team norms, working
+  agreement, tech stack, architecture, decisions, metrics, risks, glossary, stakeholders.
+- **Confluence MCP:** Search spaces for product, engineering, and design docs. Look for
+  pages with titles containing: roadmap, strategy, product vision, customer, personas,
+  tech stack, ADR, decisions, quality, metrics, glossary.
+- **Google Drive MCP:** Search recent docs and slides for the same keyword list as above.
+  Prioritise docs edited in the last 6 months.
+
+If a server is connected but returns no relevant content for a topic, treat that topic
+as "not found" — not as a server error. Move on and ask that question fresh.
+
+If no MCP servers respond at all, fall back:
+> "I don't see any connected MCP sources responding. Would you like to paste your docs
+> instead, or start the interview fresh?"
+Wait for the user's choice before proceeding.
+
+**Step 0b — Feedback summary.** Before starting the interview, report what you found:
+> "Here's what I found across your connected sources:
+> - [Source name]: [N] relevant docs covering [topics found]
+> - [Source name]: nothing relevant found for [topics missing]
+>
+> I'll pre-populate answers for the topics I found and ask the rest fresh.
+> Does that look right before we begin?"
+Wait for the user to confirm or correct before proceeding to the interview.
+
+**Step 1 — Stale doc check.** Check each doc for dates. If a doc has no date fields,
+or all dates are older than 6 months, flag it:
+> "I found [doc name] but it has no date / its last date is [date]. I'll treat it
+> as medium confidence until you confirm it's current."
+Apply medium confidence to all content from undated or old docs.
+
+Then apply Steps 2–4 from the **Shared ingestion reference** section below.
+` : ctx.ingestionPath ? `
+**Existing docs — local folder:** The user indicated they have docs to ingest at
+\`${ctx.ingestionPath}\`. Before asking any questions, read all files in that folder,
+then follow the shared ingestion reference below.
+
+**Step 1 — Stale doc check.** Before reading content, check each file for dates.
+If a file has no date fields, or all dates are older than 6 months, flag it:
+> "I found [filename] but it has no date / its last date is [date]. I'll treat it
+> as medium confidence until you confirm it's current."
+Apply medium confidence to all content from undated or old files.
+
+Then apply Steps 2–4 from the **Shared ingestion reference** section below.
+` : ctx.ingestion === 'paste' ? `
+**Existing docs — paste content:** The user indicated they have docs to share by
+pasting. Before starting the interview, say:
+
+> "You indicated you have docs to share. Paste them now (all at once is fine) and
+> I'll use them to pre-populate answers before we begin."
+
+Wait for the paste. If nothing is pasted after one prompt, say:
+> "No problem — I'll ask each question fresh."
+Then proceed with the interview normally, skipping the ingestion reference entirely.
+
+If content is pasted:
+
+**Step 1 — Stale doc check.** Check the pasted content for dates. If no dates are
+present, or all dates are older than 6 months, flag it:
+> "This content doesn't have a date / its last date is [date]. I'll treat it
+> as medium confidence until you confirm it's current."
+Apply medium confidence to all content from undated or old material.
+
+**Step 0b — Feedback summary.** After reading the pasted content, report what you found:
+> "Thanks — here's what I can use from what you shared:
+> - Covers: [topics found]
+> - Not found: [topics missing] — I'll ask those fresh
+>
+> Ready to begin?"
+Wait for the user to confirm before proceeding.
+
+Then apply Steps 2–4 from the **Shared ingestion reference** section below.
+` : ''}
+${(ctx.ingestionPath || ctx.ingestion === 'mcp' || ctx.ingestion === 'paste') ? `
+### Shared ingestion reference
+
+**Step 2 — Map content to files.** Route what you find to the right team-foundry file:
+
+| Doc content type | team-foundry file |
+|---|---|
+| Vision, north star, "why we exist" | \`product/north-star.md\` |
+| OKRs, goals, outcomes, quarterly priorities | \`product/outcomes.md\` |
+| Customers, personas, user research, interviews | \`product/customers.md\` |
+| Roadmap, now/next/later, backlog themes | \`product/now-next-later.md\` |
+| Hypotheses, bets, open questions, experiments | \`product/assumptions.md\` |
+| Known risks, dependencies, blockers | \`product/risks.md\` |
+| Team structure, roles, how decisions are made | \`team/trio.md\` |
+| Working norms, ceremonies, definition of done | \`team/working-agreement.md\` |
+| AI tool usage, prompt guidelines | \`team/ai-practices.md\` |
+| Tech stack, languages, frameworks, infra | \`engineering/stack.md\` |
+| Quality stance, bug policy, tech debt | \`engineering/quality-bar.md\` |
+| Architecture decisions, ADRs | \`engineering/decisions/\` |
+| Design principles, tone of voice | \`design/principles.md\` |
+| Metrics, KPIs, measurement framework | \`data/metrics.md\` |
+| Glossary, domain terms, acronyms | \`context/glossary.md\` |
+| Stakeholders, sponsors, external parties | \`context/stakeholders.md\` |
+
+If content maps to multiple files, split it. If it doesn't map cleanly to any file,
+note it as context but don't force it into a file.
+
+**Important:** Only map content to files that were materialised on disk. Solo profile
+teams do not have \`team/\`, \`design/\`, or \`data/\` files. Skip rows for files that
+don't exist in this repo.
+
+**Step 3 — Assign confidence.** For each mapped piece of content:
+
+- **High confidence:** Content is explicit, specific, and matches the team-foundry
+  field format as-is. Pre-populate, state the source, ask to confirm or edit.
+  > "I found your north star in [source]: [value]. Still current?"
+
+- **Medium confidence:** Content is relevant but needs interpretation or translation
+  into team-foundry format. Show as a draft question.
+  > "I found this in [source]: [exact quote]. Does this mean [your interpretation]?"
+
+- **Low confidence:** Content is ambiguous, contradictory, or from a flagged stale
+  source. Ask the question fresh; note what the docs said as context if useful.
+  > "Your docs mention X — not sure if that's still the framing. [Interview question]?"
+
+**Step 4 — Run the interview with pre-populated answers.** For each question:
+- High-confidence: present as a pre-populated draft, ask to confirm/edit/reject.
+  Do not skip the question.
+- Medium-confidence: present as an interpretation to verify.
+- Low-confidence or no content: ask normally.
+- If the user's answer contradicts the docs, use the user's answer.
+
+**No silent writes from ingestion.** All pre-populated answers follow the
+conversation-as-update protocol. Never write to a file without explicit confirmation —
+even high-confidence answers. "Looks right" is confirmation. Silence is not.
+
+Do not skip questions just because the docs seem to cover them. The docs may be
+outdated. Every answer needs the user's confirmation before it becomes a file.
+
+---
 ` : ''}
 ### How to run the interview
 
