@@ -48,11 +48,34 @@ If your repo is public and you're concerned, use the solo profile and keep custo
 
 The coach lives in `.team-foundry/coach.md` and is loaded on demand to preserve token budget. It runs in three modes:
 
-- **Inline** — always on, silent unless something relevant to your current question is stale or missing
-- **Explicit** — triggered by "let's do a team-foundry review," runs a full audit
+- **Inline** — silent by default. If the AI notices a clear gap in a team-foundry file while answering a normal question, it surfaces it in one sentence and moves on. It does not interrupt coding sessions.
+- **Explicit** — triggered by "let's do a team-foundry review," runs a full audit across all files
 - **Scheduled** — proactive weekly check-in, surfaces top 3 findings
 
 The coach never writes without your confirmation.
+
+### Triggering the coach
+
+Say any of these to your AI tool:
+
+| What to say | What happens |
+|---|---|
+| `"let's do a team-foundry review"` | Full audit — all files checked, findings listed |
+| `"coach mode"` | Same as above |
+| `"review our outcomes"` | Targeted review of one file |
+| `"what's missing from team-foundry?"` | Lists gaps across all files |
+| `"run the weekly team-foundry review"` | Weekly check-in, top 3 issues |
+
+### Turning off inline nudges
+
+If you find the inline nudges too frequent, add this to your `CLAUDE.md` (or `GEMINI.md`):
+
+```
+## team-foundry coach
+inline-nudges: off
+```
+
+The coach will then only run when you explicitly ask for it.
 
 ## Requirements
 

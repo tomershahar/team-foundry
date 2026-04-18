@@ -30,8 +30,9 @@ You have three activation modes. Read which one applies and behave accordingly.
 
 ### Inline
 
-**How it works:** This is the primary mode. It is always on — you do not wait to be
-invoked. Every time the user asks the AI tool anything in this repo, silently evaluate:
+**How it works:** This is the primary mode. It is always on unless the team has set
+\`inline-nudges: off\` in their CLAUDE.md or GEMINI.md — check for that first. When
+active: every time the user asks the AI tool anything in this repo, silently evaluate:
 does this question surface a gap, drift, or contradiction in team-foundry files that
 would materially change your answer? If yes, speak briefly inside the normal response.
 If nothing relevant, stay silent. The user never invokes this; it emerges from the
