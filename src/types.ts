@@ -7,6 +7,11 @@ export interface TemplateContext {
   repoVisibility: 'public' | 'internal' | 'private';
   /** ISO date string YYYY-MM-DD */
   date: string;
+  /**
+   * Path to local docs folder for ingestion, if the user selected 'local'.
+   * Included in generated files so the AI knows where to look.
+   */
+  ingestionPath?: string;
 }
 
 /**

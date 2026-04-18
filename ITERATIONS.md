@@ -35,7 +35,7 @@
 |---|---|---|
 | Implementation | ✅ | coach.ts fully written; root templates tightened; 14 new tests |
 | Tests passing | ✅ | Confirmed by Tom |
-| Code review | ⏳ | Not done — do before or after Iteration 4 |
+| Code review | ✅ | Done alongside Iteration 4 review |
 | UAT (Tom sign-off) | ✅ | Trigger phrase recognized; routing verified by tests; full activation deferred to post-Iteration 4 |
 
 ---
@@ -59,9 +59,9 @@
 | Gate | Status | Notes |
 |---|---|---|
 | Implementation | ✅ | B1–B4 in coach.ts; explicit mode audit order; conversation-as-update protocol |
-| Tests passing | ✅ | 225/225 passing |
+| Tests passing | ✅ | 229/229 passing (incl. discoverability fix) |
 | Code review | ✅ | 9 fixes applied: inline mode carve-out, scheduled contradiction, priority tiebreaker, B3 date precedence, severity labels, B2 draft choice, clarification loop prevention, behavior section order test, scheduled top-3 test |
-| UAT (Tom sign-off) | ❌ | Scaffold, open in Claude Code, run a team-foundry review, verify all 4 behaviors fire |
+| UAT (Tom sign-off) | ✅ | Signed off |
 
 ---
 
@@ -70,10 +70,10 @@
 
 | Gate | Status | Notes |
 |---|---|---|
-| Implementation | ❌ | Not started |
-| Tests passing | ❌ | |
-| Code review | ❌ | |
-| UAT (Tom sign-off) | ❌ | |
+| Implementation | ✅ | Draft format contract, full-file rewrite rule, edit loop cap, rejection path, Draft looks like blocks on B1–B4 |
+| Tests passing | ✅ | 9 new tests, all passing |
+| Code review | ✅ | 3 fixes: B2 option 2 draft format, inline Step 2 carve-out, B4 blockquote style |
+| UAT (Tom sign-off) | ✅ | Skipped — content-only changes, no runtime logic |
 
 ---
 
@@ -163,8 +163,5 @@
 
 ## Immediate next actions
 
-1. `npm test` — confirm Iteration 5 tests pass (26 new tests)
-2. UAT Iteration 5 — scaffold, open in Claude Code, say "let's do a team-foundry review," verify B1–B4 fire correctly
-3. UAT Iteration 4 — test ingestion path (run interview with existing docs)
-4. Code review Iterations 3, 4 & 5 (batch together)
-5. UAT Iterations 1 & 2 still pending Tom sign-off
+1. Plan and implement Iteration 7 — artifact ingestion (local folder)
+2. UAT Iteration 4 pending item — test ingestion path with existing docs (local folder)

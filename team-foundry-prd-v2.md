@@ -154,7 +154,7 @@ When the coach notices drift, it offers to draft the update: *"I notice you ship
 The coach activates in three modes. Only one requires explicit user action.
 
 - **Inline** — Primary mode. Always on. Every time the user asks the AI tool anything in the repo, the coach silently evaluates whether the question surfaces a gap, drift, or contradiction in team-foundry files. If yes, it speaks briefly inside the normal response — cites the specific file, names the issue, offers to draft a fix. If nothing relevant, it stays silent. The user does not invoke this; it emerges from the context of their actual work. Nudge memory applies here only.
-- **Explicit** — User types "let's do a team-foundry review," "coach me on our outcomes," "what's missing from team-foundry," or equivalent. Runs the full audit (all twelve behaviors) or a targeted one if scoped. Ignores nudge memory — user wants the full picture.
+- **Explicit** — User types a trigger phrase. Runs the full audit (all twelve behaviors) or a targeted one if scoped. Ignores nudge memory — user wants the full picture. Trigger phrases are listed in the generated `CLAUDE.md`/`GEMINI.md` Coach section so users can find them without reading docs. Key phrases: "let's do a team-foundry review," "coach mode," "review our [file]," "what's missing from team-foundry?"
 - **Scheduled** — Proactive. When the user opens a session on or after the scheduled review day (weekly default), coach opens with: "It's been N days since our last review — run it now, skip, or snooze?" Can be turned off in configuration; Modes 1 and 2 remain. Ignores nudge memory when run.
 
 Coaching behaviors, in priority order:
@@ -240,7 +240,7 @@ This is also the primary user-facing success metric (Goal 4).
 
 - F4.0 — **Root-file routing map.** Root `CLAUDE.md` / `GEMINI.md` contains only identity, routing map (which file to read for which query type), and coach activation pattern. Full coach playbook lives in `.team-foundry/coach.md`, loaded on demand. This preserves token budget.
 - F4.1 — Lives as instructions embedded in team-foundry files. No separate runtime. Activates whenever the user interacts with the AI tool in the repo.
-- F4.2 — Three activation modes: **inline** (always-on, silently evaluates every interaction), **explicit** (user-invoked, full or targeted audit), **scheduled** (proactive session-open prompt, weekly default, configurable). Only explicit requires user action. See User Journey section for full mode descriptions.
+- F4.2 — Three activation modes: **inline** (always-on, silently evaluates every interaction), **explicit** (user-invoked, full or targeted audit), **scheduled** (proactive session-open prompt, weekly default, configurable). Only explicit requires user action. Trigger phrases for explicit mode are surfaced in the generated root file (`CLAUDE.md`/`GEMINI.md`) and `GETTING_STARTED.md` so users can discover them without reading documentation. See User Journey section for full mode descriptions.
 - F4.3 — Twelve coaching behaviors, in priority order as listed in the User Journey section above.
 - F4.4 — **Conversation-as-update mechanism.** Coach offers to draft fixes for every drift it flags. User confirms, edits, or rejects. Coach writes the file after confirmation. No silent writes.
 - F4.5 — **Nudge memory applies to inline mode only.** Coach tracks recently-flagged issues and doesn't repeat within a configurable window (default 7 days). Explicit and scheduled modes ignore memory — when the user asks for a review, they get the full picture.

@@ -78,9 +78,9 @@ function rootEntries(tool: ScaffoldOptions['tool']): FileEntry[] {
  * Skips files that already exist (no silent overwrites).
  */
 export async function scaffold(options: ScaffoldOptions): Promise<void> {
-  const { targetDir, profile, tool, repoVisibility, date } = options;
+  const { targetDir, profile, tool, repoVisibility, date, ingestionPath } = options;
 
-  const ctx: TemplateContext = { profile, tool, repoVisibility, date };
+  const ctx: TemplateContext = { profile, tool, repoVisibility, date, ingestionPath };
 
   const entries: FileEntry[] = [
     ...rootEntries(tool),

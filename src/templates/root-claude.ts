@@ -50,13 +50,20 @@ before answering. Files with recent \`last_updated\` dates are more reliable tha
 
 ## Coach
 
-The team-foundry coach lives in \`.team-foundry/coach.md\`. Load it when:
+The team-foundry coach keeps these files honest over time. It runs automatically when
+it notices something relevant to your current work. You can also invoke it directly:
 
-- The user says "let's do a team-foundry review," "coach mode," or "run a team-foundry audit" → load coach, run explicit mode
-- The user says "run the weekly team-foundry review" → load coach, run scheduled mode
-- You notice a file is empty or stale and it would improve your answer → inline mode
-  (brief nudge only — don't derail the user's current task)
+| What to say | What happens |
+|---|---|
+| "Let's set up our team-foundry" | Runs the onboarding interview (first time only) |
+| "let's do a team-foundry review" | Full audit — all files checked, findings listed |
+| "coach mode" | Same as above |
+| "review our [outcomes / customers / stack / etc.]" | Targeted review of one file |
+| "what's missing from team-foundry?" | Lists gaps across all files |
+| "run the weekly team-foundry review" | Weekly check-in, top 3 issues surfaced |
 
-To load the coach: read \`.team-foundry/coach.md\` fully before activating any mode.
+<!-- AI instructions: load .team-foundry/coach.md fully before activating any mode.
+     Inline mode is always on — silently evaluate every question for relevant gaps.
+     Explicit mode: triggered by the phrases above. Scheduled mode: proactive session open. -->
 `;
 }

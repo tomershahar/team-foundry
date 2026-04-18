@@ -149,6 +149,8 @@ It has three steps and must be followed in order — no shortcuts.
 **In inline mode:** Step 1 is the one- or two-sentence nudge woven into the normal
 response. Steps 2 and 3 only apply if the user replies and asks for the draft.
 Do not pre-emptively produce a draft inline — just the nudge and the offer.
+In inline mode, the Step 2 draft is also produced in a follow-up message after
+the user asks — not in the same response as the nudge.
 
 **In explicit and scheduled modes:** All three steps apply in full.
 
@@ -157,26 +159,41 @@ this is its own message. Do not include the draft in the same message as the dia
 The team needs to agree there is a problem before they review a solution.
 
 **Step 2 — Draft.** After the team confirms they want to see a fix (or asks for one),
-produce the draft. Show exactly what you will write — the full section or file content,
-not a summary of it. Mark it clearly as a draft:
+produce the draft. Show exactly what you will write — the full file content, not a
+summary of it. Always use this format:
 
-> "Here's a draft for [section] in [file]:"
->
-> [full draft content]
->
-> "Write this, edit it, or skip it?"
+\`\`\`
+### File: team-foundry/[path/to/file.md]
+
+[complete file content, ready to write as-is]
+\`\`\`
+
+Then ask: "Write this, edit it, or skip it?"
+
+**Draft format rules:**
+- Always show the complete file, not just the changed section. Partial drafts cause
+  accidental overwrites of sections the team didn't intend to touch.
+- Update \`last_updated\` in the YAML frontmatter to today's date.
+- Preserve every section not being changed. Only the relevant section + \`last_updated\` change.
+- Do not summarise or describe the draft. Show the actual content.
 
 **Step 3 — Write.** Only after the team says yes (or makes edits and says yes) do you
-write the file. If they say "edit it," incorporate their changes and show the revised
-draft before writing. Never write in response to a maybe or a non-answer.
+write the file. Write the complete file as shown in the draft — no further changes.
+Update \`last_updated\` to today's date if you haven't already in the draft.
+
+**Edit loop:** If the team says "change X" or "edit it," produce a revised draft and
+ask for confirmation again. This loop runs once. If after one revision the team is
+still making changes, ask them to edit the file directly and offer to re-review
+afterward.
 
 **What counts as confirmation:** "yes," "do it," "write it," "looks good," or any
 clear affirmative. Silence is not confirmation. Ambiguity ("I guess so," "maybe")
 is not confirmation — ask once to clarify. If the clarification is also ambiguous,
 treat it as rejection and move on.
 
-**What counts as rejection:** "no," "skip," "not now," "let me think about it." Mark
-the issue as noted and move on.
+**What counts as rejection:** "no," "skip," "not now," "let me think about it."
+Respond with: "Got it — skipping that one." Do not resurface it within the nudge
+window (inline mode) or until the next explicit review (explicit/scheduled mode).
 
 ---
 
@@ -223,6 +240,11 @@ Outcome language signals:
 **What to offer to draft:** Reframed outcome statements for each output-heavy item.
 Show the original and the reframe side by side. Wait for confirmation before writing.
 
+**Draft looks like:**
+> Original: "Launch the new kiosk flow by end of Q2."
+> Reframe: "Sellers using the kiosk flow complete their first listing in under 3 minutes (baseline: 8 min)."
+One pair per output-heavy item. Show all pairs before asking for confirmation.
+
 **Inline trigger:** User asks a prioritization question ("should we build X or Y?",
 "what should we focus on this sprint?") and outcomes.md is empty or contains
 predominantly output language.
@@ -255,6 +277,15 @@ Name the specific persona(s) and the exact date(s). Never say "some customers" o
 2. Add a \`needs_contact: true\` flag to each stale persona in customers.md.
 
 Ask which they'd prefer before drafting.
+
+**Draft looks like (option 1):**
+> **Marcus** — last contact YYYY-MM-DD ([N] days ago)
+> Suggested focus: [one question tied to current outcomes or open assumptions]
+One block per stale persona. If multiple personas, list them in order of staleness.
+
+**Draft looks like (option 2):**
+> \`needs_contact: true\` added to the [persona name] entry in customers.md.
+Show the full updated entry (not just the flag) so the team can verify nothing else changed.
 
 **Inline trigger:** User asks about a customer segment, is writing a spec that
 references customer behavior, or is discussing prioritization, and at least one
@@ -290,6 +321,11 @@ the oldest ones and note how many total are stale.
 - A "needs testing" action item with a suggested test method (user interview question,
   data pull, prototype, etc.) based on the assumption's content
 
+**Draft looks like:**
+> **[Assumption text]** (added YYYY-MM-DD)
+> Status update: needs_testing | Suggested method: [one sentence test approach]
+One block per stale assumption. Ask "tested or needs testing?" for each before drafting the update.
+
 **Inline trigger:** User is writing a spec, planning a sprint, or discussing a feature
 that relates to an area covered by a stale assumption.
 
@@ -320,6 +356,13 @@ that relates to an area covered by a stale assumption.
 
 After drafting, show the proposed rationale and wait for confirmation before writing.
 
+**Draft looks like:**
+> **## Rationale**
+> [One paragraph: the problem, the options considered, why this option won, known tradeoffs]
+>
+> *Inferred from context — please verify before confirming.*
+One rationale block per decision file missing it.
+
 **Inline trigger:** User asks about an architectural decision, mentions a technology
 choice, references a specific engineering/decisions/ file, or asks "why did we
 choose X?" and the relevant decision file is missing or has no rationale.
@@ -347,7 +390,17 @@ are still unclear, surface outcomes-related gaps more aggressively.
 **Triggered by:** The user says "Let's set up our team-foundry," "run the onboarding
 interview," or any close variant. Also triggered on first load if GETTING_STARTED.md
 still exists and the "Who we are" section in the root file is empty.
+${ctx.ingestionPath ? `
+**Existing docs:** The user indicated they have docs to ingest at \`${ctx.ingestionPath}\`.
+Before asking any questions, read all files in that folder. Use them to pre-populate
+answers with high confidence where the content is clear. For each pre-populated answer:
+- State what you found and where: "I found your north star metric in team-docs.md — [value]. Is that still current?"
+- Wait for confirmation before writing to the file.
+- If confidence is low or the content is ambiguous, ask the question normally instead of guessing.
 
+Do not skip questions just because the docs contain related content — verify each answer
+with the user before writing. The docs may be outdated.
+` : ''}
 ### How to run the interview
 
 1. Open with a one-paragraph framing (see below). Do not skip this.

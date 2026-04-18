@@ -5,10 +5,11 @@ vi.mock('@clack/prompts', () => ({
   intro: vi.fn(),
   outro: vi.fn(),
   select: vi.fn(),
+  text: vi.fn(),
   isCancel: vi.fn().mockReturnValue(false),
 }));
 
-import { intro, select } from '@clack/prompts';
+import { intro, select, text } from '@clack/prompts';
 import { runPrompts } from '../prompts.js';
 
 describe('runPrompts()', () => {
@@ -33,12 +34,13 @@ describe('runPrompts()', () => {
     });
   });
 
-  it('returns correct options for gemini/solo/public/local', async () => {
+  it('returns ingestionPath when local folder is selected', async () => {
     vi.mocked(select)
       .mockResolvedValueOnce('gemini')
       .mockResolvedValueOnce('solo')
       .mockResolvedValueOnce('public')
       .mockResolvedValueOnce('local');
+    vi.mocked(text).mockResolvedValueOnce('./uat-mock-docs');
 
     const result = await runPrompts();
 
@@ -47,10 +49,12 @@ describe('runPrompts()', () => {
       profile: 'solo',
       repoVisibility: 'public',
       ingestion: 'local',
+      ingestionPath: './uat-mock-docs',
     });
+    expect(text).toHaveBeenCalledTimes(1);
   });
 
-  it('returns correct options for both/full/private/mcp', async () => {
+  it('does not ask for path when ingestion is not local', async () => {
     vi.mocked(select)
       .mockResolvedValueOnce('both')
       .mockResolvedValueOnce('full')
@@ -65,6 +69,7 @@ describe('runPrompts()', () => {
       repoVisibility: 'private',
       ingestion: 'mcp',
     });
+    expect(text).not.toHaveBeenCalled();
   });
 
   it('calls intro at the start', async () => {
@@ -79,7 +84,7 @@ describe('runPrompts()', () => {
     expect(intro).toHaveBeenCalledWith('create-team-foundry');
   });
 
-  it('calls select exactly 4 times', async () => {
+  it('calls select exactly 4 times for non-local ingestion', async () => {
     vi.mocked(select)
       .mockResolvedValueOnce('claude')
       .mockResolvedValueOnce('solo')

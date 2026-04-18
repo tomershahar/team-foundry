@@ -11,6 +11,10 @@ export function gettingStartedTemplate(ctx: TemplateContext): string {
   const questionCount = ctx.profile === 'solo' ? '10' : '18–25';
   const fileCount = ctx.profile === 'solo' ? '7' : '19';
 
+  const ingestionNote = ctx.ingestionPath
+    ? `\n> **Heads up:** Before starting the interview, tell ${toolName}:\n> "Read the docs in \`${ctx.ingestionPath}\` before we begin — use them to pre-populate answers."\n`
+    : '';
+
   return `---
 purpose: First-run instructions — what to do immediately after scaffolding
 read_when: First time setting up team-foundry; onboarding a new team member to the repo
@@ -22,7 +26,7 @@ last_updated: ${ctx.date}
 You've scaffolded ${fileCount} files. They're mostly empty. One thing to do now:
 
 > Open this project in **${toolName}** and say: **"Let's set up our team-foundry."**
-
+${ingestionNote}
 The AI will run the onboarding interview — ${questionCount} questions, about 30 minutes.
 By the end, most files will be meaningfully populated.
 
@@ -48,10 +52,17 @@ Anything you skip gets marked as a gap — not silently omitted.
 
 ## After the interview
 
-- **Edit files directly** — the AI reads updated content in the next session
-- **Update via conversation** — tell ${toolName} to update a file; it drafts, you confirm, it writes
-- **Run a review** — say "let's do a team-foundry review" for a full audit at any time
-- **Weekly** — the coach will surface drift and gaps in your normal work sessions
+The coach keeps running. Things you can say at any time in ${toolName}:
+
+| What to say | What happens |
+|---|---|
+| "let's do a team-foundry review" | Full audit — all files checked, findings listed |
+| "review our outcomes" | Targeted review of one file (works for any file) |
+| "what's missing from team-foundry?" | Lists gaps across all files |
+| "run the weekly team-foundry review" | Weekly check-in, top 3 issues surfaced |
+
+You can also just work normally — the coach surfaces gaps inline when they're relevant
+to what you're doing, without you asking.
 
 ## File structure
 

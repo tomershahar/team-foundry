@@ -140,6 +140,31 @@ describe('template stubs', () => {
   });
 });
 
+describe('Ingestion path', () => {
+  const ingestionCtx = { ...baseCtx, ingestionPath: './uat-mock-docs' };
+
+  it('getting-started includes ingestion path hint when ingestionPath is set', () => {
+    const output = gettingStartedTemplate(ingestionCtx);
+    expect(output).toContain('./uat-mock-docs');
+    expect(output).toContain('pre-populate answers');
+  });
+
+  it('getting-started has no ingestion hint when ingestionPath is absent', () => {
+    expect(gettingStartedTemplate(baseCtx)).not.toContain('pre-populate answers');
+  });
+
+  it('coach includes ingestion docs section when ingestionPath is set', () => {
+    const output = coachTemplate(ingestionCtx);
+    expect(output).toContain('./uat-mock-docs');
+    expect(output).toContain('Existing docs');
+    expect(output).toContain('verify each answer');
+  });
+
+  it('coach has no ingestion docs section when ingestionPath is absent', () => {
+    expect(coachTemplate(baseCtx)).not.toContain('Existing docs:');
+  });
+});
+
 describe('Iteration 3 — root routing and coach', () => {
   it('root-claude contains routing map table', () => {
     const output = rootClaudeTemplate(baseCtx);
@@ -157,20 +182,21 @@ describe('Iteration 3 — root routing and coach', () => {
   it('root-claude contains coach pointer with load instruction', () => {
     const output = rootClaudeTemplate(baseCtx);
     expect(output).toContain('.team-foundry/coach.md');
-    expect(output).toContain('explicit mode');
-    expect(output).toContain('scheduled mode');
-    expect(output).toContain('inline mode');
+    expect(output).toContain('Explicit mode');
+    expect(output).toContain('Scheduled mode');
+    expect(output).toContain('Inline mode');
   });
 
   it('root-gemini contains coach pointer with load instruction', () => {
     const output = rootGeminiTemplate(baseCtx);
     expect(output).toContain('.team-foundry/coach.md');
-    expect(output).toContain('explicit mode');
+    expect(output).toContain('Explicit mode');
   });
 
-  it('root files instruct AI to read coach.md before activating', () => {
+  it('root files instruct AI to load coach.md before activating', () => {
     for (const output of [rootClaudeTemplate(baseCtx), rootGeminiTemplate(baseCtx)]) {
-      expect(output).toContain('read `.team-foundry/coach.md` fully before activating');
+      expect(output).toContain('.team-foundry/coach.md');
+      expect(output).toContain('before activating any mode');
     }
   });
 
@@ -353,6 +379,20 @@ describe('Iteration 4 — onboarding interview', () => {
 
   it('root-gemini trigger phrases include coach mode', () => {
     expect(rootGeminiTemplate(baseCtx)).toContain('coach mode');
+  });
+
+  it('root files have user-facing trigger phrase table', () => {
+    for (const output of [rootClaudeTemplate(baseCtx), rootGeminiTemplate(baseCtx)]) {
+      expect(output).toContain("let's do a team-foundry review");
+      expect(output).toContain("what's missing from team-foundry");
+      expect(output).toContain('run the weekly team-foundry review');
+    }
+  });
+
+  it('getting-started has user-facing trigger phrase table', () => {
+    const output = gettingStartedTemplate(baseCtx);
+    expect(output).toContain("let's do a team-foundry review");
+    expect(output).toContain("what's missing from team-foundry");
   });
 });
 
@@ -555,5 +595,65 @@ describe('Iteration 5 — Coach behaviors core (1–4)', () => {
   // GAP comment removed
   it('coach no longer has the behaviors-pending GAP comment', () => {
     expect(coachTemplate(baseCtx)).not.toContain('Coach behaviors (the 12 diagnostic checks) are added in a later iteration');
+  });
+});
+
+describe('Iteration 6 — Conversation-as-update', () => {
+  it('protocol has a draft format block with File: header', () => {
+    expect(coachTemplate(baseCtx)).toContain('### File: team-foundry/');
+  });
+
+  it('protocol has inline mode carve-out for Step 2', () => {
+    expect(coachTemplate(baseCtx)).toContain('Step 2 draft is also produced in a follow-up message');
+  });
+
+  it('protocol specifies full file rewrite, not partial patch', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('Always show the complete file');
+  });
+
+  it('write step instructs updating last_updated to today', () => {
+    expect(coachTemplate(baseCtx)).toContain('last_updated');
+    expect(coachTemplate(baseCtx)).toContain("today's date");
+  });
+
+  it('edit loop is capped at one round', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain('This loop runs once');
+  });
+
+  it('rejection path tells AI not to resurface within nudge window', () => {
+    const output = coachTemplate(baseCtx);
+    expect(output).toContain("Got it — skipping that one");
+  });
+
+  it('B1 has a Draft looks like block', () => {
+    const output = coachTemplate(baseCtx);
+    const b1Start = output.indexOf('Behavior 1:');
+    const b2Start = output.indexOf('Behavior 2:');
+    expect(output.slice(b1Start, b2Start)).toContain('Draft looks like');
+  });
+
+  it('B2 has a Draft looks like block for both options', () => {
+    const output = coachTemplate(baseCtx);
+    const b2Start = output.indexOf('Behavior 2:');
+    const b3Start = output.indexOf('Behavior 3:');
+    const b2Section = output.slice(b2Start, b3Start);
+    expect(b2Section).toContain('Draft looks like (option 1)');
+    expect(b2Section).toContain('Draft looks like (option 2)');
+  });
+
+  it('B3 has a Draft looks like block', () => {
+    const output = coachTemplate(baseCtx);
+    const b3Start = output.indexOf('Behavior 3:');
+    const b4Start = output.indexOf('Behavior 4:');
+    expect(output.slice(b3Start, b4Start)).toContain('Draft looks like');
+  });
+
+  it('B4 has a Draft looks like block', () => {
+    const output = coachTemplate(baseCtx);
+    const b4Start = output.indexOf('Behavior 4:');
+    const quarterlyStart = output.indexOf('Quarterly retrospective');
+    expect(output.slice(b4Start, quarterlyStart)).toContain('Draft looks like');
   });
 });

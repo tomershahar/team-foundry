@@ -39,19 +39,28 @@ function runCli(cwd: string): Promise<{ code: number | null; stdout: string; std
       stderr += chunk.toString();
     });
 
-    // Send Enter after a brief delay to accept default option for each prompt
-    // @clack/prompts renders immediately and waits for input
-    let entersSent = 0;
-    const sendEnter = () => {
-      if (entersSent < 4) {
-        proc.stdin.write('\r');
-        entersSent++;
-        setTimeout(sendEnter, 100);
+    // Send inputs for each prompt:
+    // Q1 tool (select): Enter → claude (default)
+    // Q2 profile (select): Enter → solo (default)
+    // Q3 repoVisibility (select): Enter → public (default)
+    // Q4 ingestion (select): arrow-down ×3 then Enter → skip (last option, avoids path prompt)
+    // @clack/prompts uses arrow keys for select navigation
+    const inputs: (() => void)[] = [
+      () => proc.stdin.write('\r'),               // Q1: select claude
+      () => proc.stdin.write('\r'),               // Q2: select solo
+      () => proc.stdin.write('\r'),               // Q3: select public
+      () => proc.stdin.write('\x1b[B\x1b[B\x1b[B\r'), // Q4: down ×3 → skip
+    ];
+    let step = 0;
+    const sendNext = () => {
+      if (step < inputs.length) {
+        inputs[step++]();
+        setTimeout(sendNext, 150);
       } else {
         proc.stdin.end();
       }
     };
-    setTimeout(sendEnter, 200);
+    setTimeout(sendNext, 200);
 
     proc.on('close', (code) => {
       resolve({ code, stdout, stderr });

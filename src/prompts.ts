@@ -1,4 +1,4 @@
-import { intro, select, outro, isCancel } from '@clack/prompts';
+import { intro, select, text, outro, isCancel } from '@clack/prompts';
 import type { ScaffoldOptions } from './types.js';
 
 type PromptResult = Omit<ScaffoldOptions, 'targetDir' | 'date'>;
@@ -54,10 +54,24 @@ export async function runPrompts(): Promise<PromptResult> {
   });
   cancelIfNeeded(ingestion);
 
+  let ingestionPath: string | undefined;
+  if (ingestion === 'local') {
+    const rawPath = await text({
+      message: 'Path to the folder containing your docs?',
+      placeholder: './docs  or  /Users/you/exports',
+      validate: (value) => {
+        if (!value.trim()) return 'Please enter a path.';
+      },
+    });
+    cancelIfNeeded(rawPath);
+    ingestionPath = (rawPath as string).trim();
+  }
+
   return {
     tool: tool as ScaffoldOptions['tool'],
     profile: profile as ScaffoldOptions['profile'],
     repoVisibility: repoVisibility as ScaffoldOptions['repoVisibility'],
     ingestion: ingestion as ScaffoldOptions['ingestion'],
+    ingestionPath,
   };
 }
