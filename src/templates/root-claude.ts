@@ -63,8 +63,13 @@ it notices something relevant to your current work. You can also invoke it direc
 | "what's missing from team-foundry?" | Lists gaps across all files |
 | "run the weekly team-foundry review" | Weekly check-in, top 3 issues surfaced |
 
-<!-- AI instructions: load .team-foundry/coach.md fully before activating any mode.
-     Inline mode is always on — silently evaluate every question for relevant gaps.
-     Explicit mode: triggered by the phrases above. Scheduled mode: proactive session open. -->
+<!-- AI instructions:
+     - Normal coding sessions: do NOT load coach.md. Use the routing map above to load
+       specific files only when directly relevant to the user's question.
+     - Coach mode (explicit/scheduled/onboarding): load .team-foundry/coach.md in full
+       before responding. Triggered only by the phrases in the table above.
+     - Inline nudges: if you notice a clear gap in a team-foundry file while answering
+       a normal question, surface it in one sentence — without loading the full coach.md.
+       Keep it brief and non-blocking. Do not coach unprompted on back-to-back messages. -->
 `;
 }
