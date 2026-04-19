@@ -4,6 +4,8 @@
 
 `npx create-team-foundry` scaffolds a structured context layer in your repo. It ensures every AI tool used by every team member—PM, Engineer, or Designer—is grounded in the same strategy, outcomes, and engineering decisions..
 
+team-foundry is agent-agnostic by design. The context files are the product. The AI tool reading them is a replaceable component.
+
 ```
 npx create-team-foundry
 ```
@@ -103,6 +105,12 @@ The coach will then only run when you explicitly ask for it.
 
 - Node 18+
 - Claude Code, Gemini CLI, or any AI tool that reads files from your repo as context
+
+## What's next
+
+team-foundry v1 supports Claude Code and Gemini CLI. Cursor is the highest-priority v2 addition — it has the largest active user base of any AI coding tool and fits the same file-based context model.
+
+v2 shortlist: Cursor support, scheduled coach runs via cron, and a `team-lessons.md` mechanism for teams to accumulate their own coaching rules.
 
 ## Contributing
 
