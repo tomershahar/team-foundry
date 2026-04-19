@@ -110,7 +110,7 @@ The coach will then only run when you explicitly ask for it.
 
 team-foundry v1 supports Claude Code and Gemini CLI. Cursor is the highest-priority v2 addition — it has the largest active user base of any AI coding tool and fits the same file-based context model.
 
-v2 shortlist: Cursor support, scheduled coach runs via cron, and a `team-lessons.md` mechanism for teams to accumulate their own coaching rules.
+v2 shortlist: Cursor support and scheduled coach runs via cron.
 
 ## Contributing
 
