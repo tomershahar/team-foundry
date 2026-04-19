@@ -42,6 +42,20 @@ It does not cap what individuals do above that baseline. A senior PM can add the
 
 The floor is shared. The ceiling is individual. That's the point.
 
+## What drift looks like
+
+The coach catches specific, named patterns. These are the most common:
+
+| Pattern | What it is | Example |
+|---|---|---|
+| **Output-as-outcome drift** | An outcome that's actually a shipped feature | `outcomes.md` says "ship the new dashboard" instead of "reduce time-to-insight for SMB analysts" |
+| **Assumption fossilization** | A core assumption logged long ago, never revisited, still driving decisions | `assumptions.md` lists "users want faster checkout" dated 94 days ago. Three roadmap items cite it. No one's tested it. |
+| **Customer ghost syndrome** | A persona with no direct team contact in 60+ days, while roadmap items still claim to serve them | Enterprise persona last interviewed in February. Three Q2 features built "for enterprise." |
+| **Metric ambiguity** | A metric cited across files without an agreed definition | "Active user" in `outcomes.md` and `metrics.md` with no shared definition. PM means weekly; engineer means daily. |
+| **Decision amnesia** | A previous ADR rejecting an approach is invisible to a discussion heading the same direction | Q1 ADR rejects microservices migration. Q3 discussion reopens it with no reference to what changed. |
+| **Output roadmap disguised as strategy** | `strategy.md` guiding policy is all "yes" — doesn't name what the team is deliberately not pursuing | "We will be the best tool for product teams." No "we will not build X for Y." |
+| **Build-trap signal** | An item moves into "Now" with no linked experiment and no validated assumption | "Add collaborative editing" moves to Now. No assumption linked. Last validation: none. |
+
 ## Strategy in Git
 
 Putting strategy and product context in a repo might feel wrong. A few things worth knowing:
