@@ -13,11 +13,11 @@ export function gettingStartedTemplate(ctx: TemplateContext): string {
 
   const ingestionNote =
     ctx.ingestionPath
-      ? `\n> **Before running the setup**, tell ${toolName}:\n> "Read the docs in \`${ctx.ingestionPath}\` before we begin — use them to pre-populate answers."\n`
+      ? `\n> **Tip:** Before saying the phrase above, tell ${toolName}:\n> "Read the docs in \`${ctx.ingestionPath}\` before we begin — use them to pre-populate answers."\n`
       : ctx.ingestion === 'paste'
-        ? `\n> **Before running the setup**, open \`.team-foundry/paste-content.md\`, paste your existing docs into it, and save. Then tell ${toolName}: "I've added docs to paste-content.md — use them to pre-populate answers."\n`
+        ? `\n> **Tip:** Paste your existing docs into \`.team-foundry/paste-content.md\` before saying the phrase above. Then add: "I've added docs to paste-content.md — use them to pre-populate answers."\n`
         : ctx.ingestion === 'mcp'
-          ? `\n> **Before running the setup**, make sure your MCP server is connected (Notion, Confluence, or Google Drive). Then tell ${toolName}: "Before we begin, pull any relevant strategy, roadmap, or customer research docs from [your MCP source] and use them to pre-populate answers."\n`
+          ? `\n> **Tip:** Connect your MCP server in ${toolName} settings first. Then add to your message: "Pull any relevant strategy, roadmap, or customer research from [your MCP source] and use them to pre-populate answers."\n`
           : '';
 
   return `---
@@ -32,10 +32,10 @@ You've scaffolded ${fileCount} files. They're mostly empty. One thing to do now:
 
 > Open this project in **${toolName}** and say: **"Let's set up our team-foundry."**
 ${ingestionNote}
-The AI will run the onboarding interview — ${questionCount} questions, about 30 minutes.
+The AI will walk you through a setup conversation — ${questionCount} questions, about 30 minutes.
 By the end, most files will be meaningfully populated.
 
-## What the interview covers
+## What the setup covers
 
 Questions are grouped into themes, in this order:
 

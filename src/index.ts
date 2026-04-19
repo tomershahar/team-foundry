@@ -76,8 +76,6 @@ async function main(): Promise<void> {
   await scaffold({ ...answers, targetDir, date });
   await writeGitignore(targetDir);
 
-  let ingestionNote = '';
-
   if (answers.ingestion === 'paste') {
     const pastePath = path.join(targetDir, '.team-foundry', 'paste-content.md');
     try {
@@ -85,27 +83,53 @@ async function main(): Promise<void> {
     } catch {
       await fs.writeFile(pastePath, PASTE_PLACEHOLDER, 'utf-8');
     }
+  }
+
+  const tool = TOOL_LABEL[answers.tool];
+  let ingestionNote: string;
+
+  if (answers.ingestion === 'paste') {
     ingestionNote =
-      `\n⚠  Before opening ${TOOL_LABEL[answers.tool]}:\n` +
-      `   Paste your existing docs into:\n\n` +
-      `   ${pastePath}\n\n` +
-      `   Then tell the AI: "I've added docs to paste-content.md — use them to pre-populate answers."\n`;
+      `\nNext steps:\n\n` +
+      `  1. Open .team-foundry/paste-content.md and paste in your existing docs\n` +
+      `     (strategy, roadmaps, customer research). Save the file.\n\n` +
+      `  2. cd ${targetDir}\n\n` +
+      `  3. Open ${tool} and say:\n\n` +
+      `       "Let's set up our team-foundry. I've added docs to\n` +
+      `        paste-content.md — use them to pre-populate answers."\n`;
   } else if (answers.ingestion === 'mcp') {
     ingestionNote =
-      `\n⚠  Before running the setup:\n` +
-      `   Make sure your MCP server is connected (Notion, Confluence, or Google Drive).\n` +
-      `   Then tell the AI: "Pull any relevant strategy, roadmap, or customer research\n` +
-      `   from [your source] and use them to pre-populate answers."\n`;
+      `\nNext steps:\n\n` +
+      `  1. cd ${targetDir}\n\n` +
+      `  2. Open ${tool}.\n\n` +
+      `  3. In ${tool} settings, connect your MCP server\n` +
+      `     (Notion, Confluence, or Google Drive) if you haven't already.\n\n` +
+      `  4. Then say:\n\n` +
+      `       "Let's set up our team-foundry. Before we begin, pull any\n` +
+      `        relevant strategy, roadmap, or customer research from\n` +
+      `        [your MCP source] and use them to pre-populate answers."\n`;
+  } else if (answers.ingestion === 'local') {
+    ingestionNote =
+      `\nNext steps:\n\n` +
+      `  1. cd ${targetDir}\n\n` +
+      `  2. Open ${tool} and say:\n\n` +
+      `       "Let's set up our team-foundry. Before we begin, read the\n` +
+      `        docs in ${answers.ingestionPath ?? '[your docs folder]'} and use them to pre-populate answers."\n`;
+  } else {
+    ingestionNote =
+      `\nNext steps:\n\n` +
+      `  1. cd ${targetDir}\n\n` +
+      `  2. Open ${tool} and say:\n\n` +
+      `       "Let's set up our team-foundry."\n\n` +
+      `  You can add existing docs later by editing .team-foundry/paste-content.md.\n`;
   }
 
   outro(
-    `Done! Your files are in:\n\n  ${targetDir}\n\n` +
+    `Done! Your files are in:\n\n  ${targetDir}\n` +
       ingestionNote +
-      `\nOpen that directory in ${TOOL_LABEL[answers.tool]} and say:\n\n  "Let's set up our team-foundry."\n\n` +
-      `See GETTING_STARTED.md for what happens next.\n\n` +
-      `Reminder: team-foundry works best when the whole team can see these files.\n` +
-      `Make sure this repo is accessible to everyone who uses AI tools on your team —\n` +
-      `shared Git repo, synced folder, or however your team shares code.`,
+      `\nSee GETTING_STARTED.md for more detail.\n\n` +
+      `Reminder: team-foundry works best in a shared repo — one the whole\n` +
+      `team commits to, so everyone's AI tool gets the same context.`,
   );
 }
 
