@@ -34,6 +34,14 @@ Every file has YAML frontmatter (`purpose`, `read_when`, `last_updated`) so the 
 
 team-foundry enables the work of building a shared understanding of your product. It doesn't replace it. If your team isn't willing to have the hard conversations about outcomes, customers, and quality — no tool fixes that. What team-foundry does is make those conversations easier to start, and easier to keep current.
 
+## Shared floor, individual ceiling
+
+team-foundry sets a shared baseline of context that every team member's AI tool reads from. Outcomes, customers, decisions, quality bar, glossary — the things everyone should be grounded in.
+
+It does not cap what individuals do above that baseline. A senior PM can add their own prompts, their own discovery framework, their own depth. An engineer can bring their own AI practices. A designer can layer on top.
+
+The floor is shared. The ceiling is individual. That's the point.
+
 ## Strategy in Git
 
 Putting strategy and product context in a repo might feel wrong. A few things worth knowing:
