@@ -2,7 +2,7 @@
 
 **Stop the "Context Drift." Give your AI coding tools a shared product brain.**
 
-`npx create-team-foundry` scaffolds a structured context layer in your repo. It ensures every AI tool used by every team member—PM, Engineer, or Designer—is grounded in the same strategy, outcomes, and engineering decisions..
+`npx create-team-foundry` scaffolds a structured context layer in your repo. It ensures every AI tool used by every team member—PM, Engineer, or Designer—is grounded in the same strategy, outcomes, and engineering decisions.
 
 team-foundry is agent-agnostic by design. The context files are the product. The AI tool reading them is a replaceable component.
 
