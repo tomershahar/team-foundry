@@ -241,7 +241,7 @@ This is also the primary user-facing success metric (Goal 4).
 - F4.0 — **Root-file routing map.** Root `CLAUDE.md` / `GEMINI.md` contains only identity, routing map (which file to read for which query type), and coach activation pattern. Full coach playbook lives in `.team-foundry/coach.md`, loaded on demand. This preserves token budget.
 - F4.1 — Lives as instructions embedded in team-foundry files. No separate runtime. Activates whenever the user interacts with the AI tool in the repo.
 - F4.2 — Three activation modes: **inline** (always-on, silently evaluates every interaction), **explicit** (user-invoked, full or targeted audit), **scheduled** (proactive session-open prompt, weekly default, configurable). Only explicit requires user action. Trigger phrases for explicit mode are surfaced in the generated root file (`CLAUDE.md`/`GEMINI.md`) and `GETTING_STARTED.md` so users can discover them without reading documentation. See User Journey section for full mode descriptions.
-- F4.3 — Twelve coaching behaviors, in priority order as listed in the User Journey section above.
+- F4.3 — Seventeen coaching behaviors (B1–B17), in priority order as listed in the User Journey section above. B17 is team-specific lesson capture: triggers on recurring-pattern signal phrases, offers to add a rule to `.team-foundry/team-lessons.md`, follows conversation-as-update protocol.
 - F4.4 — **Conversation-as-update mechanism.** Coach offers to draft fixes for every drift it flags. User confirms, edits, or rejects. Coach writes the file after confirmation. No silent writes.
 - F4.5 — **Nudge memory applies to inline mode only.** Coach tracks recently-flagged issues and doesn't repeat within a configurable window (default 7 days). Explicit and scheduled modes ignore memory — when the user asks for a review, they get the full picture.
 - F4.6 — **Reality drift detection.** Coach reads the last N commits or PRs (when available) and flags contradictions between stated files and observed behavior.
@@ -328,6 +328,30 @@ This is also the primary user-facing success metric (Goal 4).
 
 ---
 
+## Telemetry Plan (v2 scope — not implemented)
+
+No telemetry in v1. This section documents the three metrics worth eventually measuring, how they'd be captured, and the privacy requirements. Flagged for v2 implementation.
+
+### Metrics
+
+**1. Context references per session**
+Count of team-foundry file references in AI tool responses per session, per team (anonymized). Measures whether the files are actually being used as context. Captured via a lightweight local log that the AI tool writes to on each session — not by sending data anywhere.
+
+**2. Onboarding time saved**
+Time between `npx create-team-foundry` and a new team member's first successful AI session using team-foundry context. Proxy: time from scaffold to first non-empty `last_updated` date appearing on a file other than the root. Requires local timestamp tracking only.
+
+**3. Drift items caught per active team per week**
+Count of coach flags surfaced, and for each: whether it was resolved (team wrote the fix), retired (team dismissed it), or ignored (no response within 7 days). Measures the coach's practical impact. Captured in a local `.team-foundry/coach-log.md` file — user-readable, user-clearable.
+
+### Privacy requirements
+
+- **Opt-in, disabled by default.** The `create-team-foundry` setup asks explicitly; the default is no telemetry.
+- **Clear disclosure at install.** The prompt explains what is and isn't collected before the user decides.
+- **No file content ever transmitted.** Only counts, timings, and anonymized team IDs. The content of team-foundry files never leaves the local machine.
+- **User can inspect and clear.** All collected data is stored locally in `.team-foundry/telemetry/` and can be deleted at any time. A `team-foundry clear-telemetry` command will be added in v2.
+
+---
+
 ## Appendix A — File spine (final, hell-yes cut applied)
 
 Full profile: **14 files** across 6 folders. Solo profile: **6 files** marked with (S).
@@ -337,7 +361,8 @@ team-foundry/
 ├── CLAUDE.md  (or GEMINI.md, or both)         # Root: identity + routing map + coach pointer (S)
 ├── GETTING_STARTED.md                          # First-run walkthrough (S)
 ├── .team-foundry/
-│   └── coach.md                                # Full coach playbook (loaded on demand)
+│   ├── coach.md                                # Full coach playbook (loaded on demand)
+│   └── team-lessons.md                         # Team-specific coaching rules (lazy-created by B17, not scaffolded)
 ├── product/
 │   ├── north-star.md                           # Vision, NSM, balancing metrics (S)
 │   ├── outcomes.md                             # Current quarter outcomes, outcome-shaped (S)
