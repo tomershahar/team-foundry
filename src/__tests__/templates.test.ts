@@ -1203,6 +1203,56 @@ describe('Iteration 9b — F4.9 context priority hierarchy', () => {
   });
 });
 
+describe('B17 — team-specific lesson capture', () => {
+  const output = () => coachTemplate(baseCtx);
+
+  it('coach contains B17 section', () => {
+    expect(output()).toMatch(/Behavior 17|team.specific lesson/i);
+  });
+
+  it('B17 triggers on recurring-pattern signal phrases', () => {
+    const coachOutput = output();
+    const b17Start = coachOutput.search(/Behavior 17|team.specific lesson/i);
+    const b17Section = coachOutput.slice(b17Start, b17Start + 1500);
+    expect(b17Section.toLowerCase()).toMatch(/we keep doing|third time|we always/);
+  });
+
+  it('B17 offers to add rule to team-lessons.md', () => {
+    const coachOutput = output();
+    const b17Start = coachOutput.search(/Behavior 17|team.specific lesson/i);
+    const b17Section = coachOutput.slice(b17Start, b17Start + 1500);
+    expect(b17Section).toMatch(/team-lessons\.md/);
+  });
+
+  it('B17 follows conversation-as-update protocol (draft then confirm)', () => {
+    const coachOutput = output();
+    const b17Start = coachOutput.search(/Behavior 17|team.specific lesson/i);
+    const b17Section = coachOutput.slice(b17Start, b17Start + 1500);
+    expect(b17Section.toLowerCase()).toMatch(/confirm|confirmation|edit/);
+  });
+
+  it('B17 supports rule retirement', () => {
+    const coachOutput = output();
+    const b17Start = coachOutput.search(/Behavior 17|team.specific lesson/i);
+    const b17Section = coachOutput.slice(b17Start, b17Start + 2000);
+    expect(b17Section.toLowerCase()).toMatch(/retir/);
+  });
+
+  it('team-lessons.md loading instruction present in context priority section', () => {
+    const coachOutput = output();
+    const priorityStart = coachOutput.search(/[Cc]ontext priority/);
+    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 1000);
+    expect(prioritySection).toMatch(/team-lessons\.md/);
+  });
+
+  it('B17 applies to both solo and full profiles', () => {
+    const soloOutput = coachTemplate({ ...baseCtx, profile: 'solo' });
+    const fullOutput = coachTemplate({ ...baseCtx, profile: 'full' });
+    expect(soloOutput).toMatch(/Behavior 17|team.specific lesson/i);
+    expect(fullOutput).toMatch(/Behavior 17|team.specific lesson/i);
+  });
+});
+
 describe('Iteration 9b — scaffold strategy.md wiring', () => {
   it('full profile includes strategy.md', () => {
     const fullPaths = expectedPaths('full', 'claude');
