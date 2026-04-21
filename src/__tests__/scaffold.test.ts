@@ -164,4 +164,12 @@ describe('expectedPaths()', () => {
       expectedPaths('full', 'claude').length,
     );
   });
+
+  it('solo profile produces exactly 7 files (matches README)', () => {
+    expect(expectedPaths('solo', 'claude').length).toBe(7);
+  });
+
+  it('full profile produces exactly 20 files (matches README)', () => {
+    expect(expectedPaths('full', 'claude').length).toBe(20);
+  });
 });

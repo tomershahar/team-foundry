@@ -26,9 +26,9 @@ It also installs a coach: a set of behaviors that notice when your files go stal
 
 ## What gets created
 
-**Solo profile (1–3 people):** 7 files. Identity, north star, outcomes, customers, stack, coach.
+**Solo profile (1–3 people):** 7 files. Root instruction file, getting started guide, coach playbook, north star, outcomes, customers, stack.
 
-**Full profile (4–15 people):** 15 files. Everything above plus strategy, roadmap, assumptions, risks, trio, working agreement, AI practices, quality bar, decisions log, design principles, metrics, glossary, stakeholders.
+**Full profile (4–15 people):** 20 files. Everything above plus strategy, roadmap, assumptions, risks, trio, working agreement, AI practices, quality bar, decisions log, design principles, metrics, glossary, stakeholders.
 
 Every file has YAML frontmatter (`purpose`, `read_when`, `last_updated`) so the AI knows when to load it and why.
 
