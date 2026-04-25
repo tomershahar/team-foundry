@@ -3,6 +3,7 @@ import type { TemplateContext } from '../types.js';
 import {
   rootClaudeTemplate,
   rootGeminiTemplate,
+  rootCursorTemplate,
   gettingStartedTemplate,
   coachTemplate,
   northStarTemplate,
@@ -35,6 +36,7 @@ const baseCtx: TemplateContext = {
 const allTemplates = [
   ['root-claude', rootClaudeTemplate],
   ['root-gemini', rootGeminiTemplate],
+  ['root-cursor', rootCursorTemplate],
   ['getting-started', gettingStartedTemplate],
   ['coach', coachTemplate],
   ['north-star', northStarTemplate],
@@ -122,6 +124,18 @@ describe('template stubs', () => {
 
   it('root-gemini uses GEMINI.md heading', () => {
     expect(rootGeminiTemplate(baseCtx)).toContain('# GEMINI.md');
+  });
+
+  it('root-cursor contains routing map', () => {
+    expect(rootCursorTemplate(baseCtx)).toMatch(/routing|outcomes\.md|customers\.md/i);
+  });
+
+  it('root-cursor contains coach activation instructions', () => {
+    expect(rootCursorTemplate(baseCtx)).toMatch(/coach|team-foundry review/i);
+  });
+
+  it('root-cursor contains last_updated frontmatter', () => {
+    expect(rootCursorTemplate(baseCtx)).toContain('last_updated');
   });
 
   it('customers template adds public visibility note for public repos', () => {

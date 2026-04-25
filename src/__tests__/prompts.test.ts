@@ -84,6 +84,23 @@ describe('runPrompts()', () => {
     expect(intro).toHaveBeenCalledWith('create-team-foundry');
   });
 
+  it('returns correct options for cursor tool', async () => {
+    vi.mocked(select)
+      .mockResolvedValueOnce('cursor')
+      .mockResolvedValueOnce('full')
+      .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('skip');
+
+    const result = await runPrompts();
+
+    expect(result).toEqual({
+      tool: 'cursor',
+      profile: 'full',
+      repoVisibility: 'internal',
+      ingestion: 'skip',
+    });
+  });
+
   it('calls select exactly 4 times for non-local ingestion', async () => {
     vi.mocked(select)
       .mockResolvedValueOnce('claude')

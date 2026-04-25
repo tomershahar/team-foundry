@@ -172,4 +172,55 @@ describe('expectedPaths()', () => {
   it('full profile produces exactly 20 files (matches README)', () => {
     expect(expectedPaths('full', 'claude').length).toBe(20);
   });
+
+  it('cursor tool produces .cursor/rules/team-foundry.mdc', () => {
+    const paths = expectedPaths('full', 'cursor');
+    expect(paths).toContain('.cursor/rules/team-foundry.mdc');
+  });
+
+  it('cursor tool does not produce CLAUDE.md or GEMINI.md', () => {
+    const paths = expectedPaths('full', 'cursor');
+    expect(paths).not.toContain('CLAUDE.md');
+    expect(paths).not.toContain('GEMINI.md');
+  });
+
+  it('cursor solo profile produces exactly 7 files', () => {
+    expect(expectedPaths('solo', 'cursor').length).toBe(7);
+  });
+
+  it('cursor full profile produces exactly 20 files', () => {
+    expect(expectedPaths('full', 'cursor').length).toBe(20);
+  });
+});
+
+describe('scaffold() — cursor tool', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => {
+    tmpDir = await makeTempDir();
+  });
+
+  afterEach(async () => {
+    await cleanup(tmpDir);
+  });
+
+  it('writes .cursor/rules/team-foundry.mdc for cursor tool', async () => {
+    await scaffold({ ...baseOptions, tool: 'cursor', targetDir: tmpDir });
+    const exists = await fs
+      .access(path.join(tmpDir, '.cursor/rules/team-foundry.mdc'))
+      .then(() => true)
+      .catch(() => false);
+    expect(exists).toBe(true);
+  });
+
+  it('does not write CLAUDE.md or GEMINI.md for cursor tool', async () => {
+    await scaffold({ ...baseOptions, tool: 'cursor', targetDir: tmpDir });
+    for (const name of ['CLAUDE.md', 'GEMINI.md']) {
+      const exists = await fs
+        .access(path.join(tmpDir, name))
+        .then(() => true)
+        .catch(() => false);
+      expect(exists, `${name} should not exist for cursor tool`).toBe(false);
+    }
+  });
 });

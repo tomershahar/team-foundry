@@ -8,6 +8,7 @@ import { writeGitignore } from './gitignore.js';
 const TOOL_LABEL: Record<string, string> = {
   claude: 'Claude Code',
   gemini: 'Gemini CLI',
+  cursor: 'Cursor',
   both: 'Claude Code or Gemini CLI',
 };
 

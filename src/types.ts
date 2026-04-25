@@ -3,7 +3,7 @@
  */
 export interface TemplateContext {
   profile: 'solo' | 'full';
-  tool: 'claude' | 'gemini' | 'both';
+  tool: 'claude' | 'gemini' | 'cursor' | 'both';
   repoVisibility: 'public' | 'internal' | 'private';
   /** ISO date string YYYY-MM-DD */
   date: string;

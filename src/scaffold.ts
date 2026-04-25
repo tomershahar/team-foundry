@@ -4,6 +4,7 @@ import type { ScaffoldOptions, TemplateContext } from './types.js';
 import {
   rootClaudeTemplate,
   rootGeminiTemplate,
+  rootCursorTemplate,
   gettingStartedTemplate,
   coachTemplate,
   northStarTemplate,
@@ -69,6 +70,9 @@ function rootEntries(tool: ScaffoldOptions['tool']): FileEntry[] {
   if (tool === 'gemini') {
     return [{ relativePath: 'GEMINI.md', content: rootGeminiTemplate }];
   }
+  if (tool === 'cursor') {
+    return [{ relativePath: '.cursor/rules/team-foundry.mdc', content: rootCursorTemplate }];
+  }
   return [
     { relativePath: 'CLAUDE.md', content: rootClaudeTemplate },
     { relativePath: 'GEMINI.md', content: rootGeminiTemplate },
@@ -119,7 +123,9 @@ export function expectedPaths(
       ? ['CLAUDE.md', 'GEMINI.md']
       : tool === 'claude'
         ? ['CLAUDE.md']
-        : ['GEMINI.md'];
+        : tool === 'cursor'
+          ? ['.cursor/rules/team-foundry.mdc']
+          : ['GEMINI.md'];
 
   const solo = SOLO_ENTRIES.map((e) => e.relativePath);
   const full = profile === 'full' ? FULL_ONLY_ENTRIES.map((e) => e.relativePath) : [];

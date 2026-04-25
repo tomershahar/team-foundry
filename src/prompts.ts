@@ -18,7 +18,8 @@ export async function runPrompts(): Promise<PromptResult> {
     options: [
       { value: 'claude', label: 'Claude Code' },
       { value: 'gemini', label: 'Gemini CLI' },
-      { value: 'both', label: 'Both' },
+      { value: 'cursor', label: 'Cursor' },
+      { value: 'both', label: 'Multiple (Claude Code + Gemini CLI)' },
     ],
   });
   cancelIfNeeded(tool);
