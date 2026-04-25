@@ -10,27 +10,25 @@ The PRD is in `team-foundry-prd-v2.md` — treat it as the source of truth for r
 
 ## Status
 
-Pre-implementation. The PRD defines 13 build iterations (see Appendix B). No code exists yet.
+v2 in active development. Core CLI is implemented and published to npm. See `ITERATIONS.md` for current iteration progress.
 
-## Architecture (from PRD)
+Completed: scaffold engine, all templates (solo + full + federated), cursor support, coach playbook, reality observation layer, status command, owner frontmatter.
 
-- **Node CLI** — entry point is `npx create-team-foundry`. Scaffolds a `team-foundry/` directory with profile-aware file materialization (6 files for solo, 14 for full team).
+## Architecture
+
+- **Node CLI** — entry point is `npx create-team-foundry`. Also supports `npx create-team-foundry status`.
+- **Profiles** — solo (7 files) and full (20 files flat, 26 federated). Profile controls which files are materialized on disk.
+- **Tools** — `claude` (CLAUDE.md), `gemini` (GEMINI.md), `cursor` (.cursor/rules/team-foundry.mdc), `both`.
 - **No backend** — zero hosted services, API keys, or token costs. Everything runs on the user's own AI tool.
-- **Coach system** — instructions embedded in generated files (`.team-foundry/coach.md`), not a separate runtime. Root `CLAUDE.md`/`GEMINI.md` contains only identity + routing map + coach pointer to preserve token budget.
-- **Two profiles** — solo (1-3 people) and full (4-15 people). Single spine, profile controls which files are materialized on disk.
-- **File frontmatter** — every generated file has YAML frontmatter with `purpose`, `read_when`, `last_updated`.
+- **Coach system** — instructions embedded in `.team-foundry/coach.md`, not a separate runtime. Root instruction file is kept minimal; full coach playbook loaded on demand.
+- **File frontmatter** — every generated file has YAML frontmatter with `purpose`, `read_when`, `last_updated`, `owner`.
 
 ## Key Design Decisions
 
 - Files are structured to make gaps visible, not hide them (mirror, not template pack)
 - Coach is diagnostic-first: names the gap before suggesting a fix
 - No silent writes — user always confirms before files are modified
-- Skipped onboarding answers become tracked gaps (commented-out placeholders)
 - Root instruction file is kept minimal; full coach playbook loaded on demand
-
-## Build Iterations
-
-The PRD defines iterations 1-13. Each is independently testable with TDD. UAT sign-off required between iterations. See PRD Appendix B for full details.
 
 ## Quality Standards
 

@@ -2,8 +2,18 @@ import type { TemplateContext } from '../types.js';
 
 export function coachTemplate(ctx: TemplateContext): string {
   const isSolo = ctx.profile === 'solo';
-  const questionCount = isSolo ? '10' : '18–25';
+  const questionCount = isSolo ? '9' : '18–25';
   const timeEstimate = isSolo ? '15–20 minutes' : '25–35 minutes';
+  const featureQueryFullSteps = isSolo ? '' : `3. Read \`team-foundry/product/now-next-later.md\` — find the feature's current status (Now / Next / Later / shipped)
+4. Read \`team-foundry/product/assumptions.md\` — find any assumptions linked to this feature
+5. Read \`team-foundry/engineering/decisions/\` — find any ADRs related to how it's being built
+`;
+  const featureQuerySynthesis = isSolo
+    ? 'why it\'s being built (outcome + customer evidence).'
+    : 'why it\'s being built (outcome + customer evidence), current status, open bets (assumptions), and any relevant technical decisions.';
+  const featureQueryIndexNote = isSolo
+    ? 'Your solo profile covers outcomes, customers, north-star, and stack — feature queries draw from those.'
+    : 'For full profile teams, this covers status, rationale, customer evidence, open bets, and decisions.';
 
   return `---
 purpose: Full coach playbook — loaded on demand to preserve token budget
@@ -278,17 +288,25 @@ Apply Active rules from that file alongside built-in behaviors — they carry eq
 
 ## Feature queries
 
-When the user asks about a specific feature ("tell me about X," "what's the status of Y," "what do we know about Z"):
+**Applies in explicit and scheduled modes.** In inline mode, treat feature questions as
+potential B5 (reality drift) triggers rather than running this full multi-file read.
 
-1. Read \`team-foundry/product/now-next-later.md\` — find the feature's current status (Now / Next / Later / shipped)
-2. Read \`team-foundry/product/assumptions.md\` — find any assumptions linked to this feature
-3. Read \`team-foundry/product/customers.md\` — find customer quotes or personas that motivated it
-4. Read \`team-foundry/engineering/decisions/\` — find any ADRs related to how it's being built
-5. Read \`team-foundry/product/outcomes.md\` — find which outcome it supports
+When the user asks about a specific feature — "tell me about X," "what's the status of Y,"
+"what do we know about Z," "has X shipped?," "where are we on X?," "who owns X?," or any
+close variant — read the following files in order:
 
-Synthesize into a single response: status, why it's being built (outcome + customer evidence), open bets (assumptions), and any relevant technical decisions. If any of these files don't mention the feature, say so — don't invent connections.
+1. Read \`team-foundry/product/outcomes.md\` — find which outcome this feature supports (the why)
+2. Read \`team-foundry/product/customers.md\` — find customer quotes or personas that motivated it
+${featureQueryFullSteps}
+For each file above: if the file doesn't exist on disk, skip it silently. If it exists
+but doesn't mention the feature, note that gap explicitly — don't invent connections.
 
-This replaces the need for a separate feature index file. The team-foundry files are the index.
+Synthesize into a single response: ${featureQuerySynthesis}
+
+If the feature doesn't appear in any file, say: "I couldn't find [X] in any team-foundry
+file — it may be undocumented or tracked under a different name. Want me to help capture it?"
+
+The team-foundry files are the index. ${featureQueryIndexNote}
 
 ---
 
@@ -1317,11 +1335,11 @@ Example answers:
 
 ---
 
-### Theme 3: Measurement
+${isSolo ? '' : `### Theme 3: Measurement
 
 *Files written: data/metrics.md*
 
-**Q${isSolo ? '5' : '7'}. What are the 3–5 numbers you actually look at to know if the product is healthy?**
+**Q7. What are the 3–5 numbers you actually look at to know if the product is healthy?**
 *Why it matters: data/metrics.md is read whenever the AI is asked about product performance.
 Undefined metrics cause disagreements — two people reading the same number and reaching different conclusions.*
 
@@ -1332,7 +1350,7 @@ Example answers:
 - "Listing-to-sale rate — % of active listings that get bought within 30 days, from our DB."
 - "P1 bug count — open bugs tagged P1 in Linear, reviewed Monday mornings."
 
-*After the answer: write each metric as a definition block to data/metrics.md.*
+*After the answer: write each metric as a definition block to data/metrics.md.*`}
 
 ---
 
@@ -1340,7 +1358,7 @@ Example answers:
 
 *Files written: product/customers.md*
 
-**Q${isSolo ? '6' : '8'}. Name three customers you've spoken to directly.**
+**Q${isSolo ? '5' : '8'}. Name three customers you've spoken to directly.**
 *Why it matters: customers.md is read whenever the AI helps with prioritization, specs,
 or discovery. Generic personas don't resolve real disagreements. Named customers do.*
 
@@ -1402,7 +1420,7 @@ Example answers:
 
 *After the answer: write to engineering/quality-bar.md (tech debt stance).*`}
 
-**Q${isSolo ? '7' : '12'}. What does "shipped" mean on your team?**
+**Q${isSolo ? '6' : '12'}. What does "shipped" mean on your team?**
 *Why it matters: misaligned definitions of done cause the most common sprint friction.
 Writing it down means the argument happens once, not every week.*
 
@@ -1484,7 +1502,7 @@ Example answers:
 
 *Files written: engineering/stack.md*
 
-**Q${isSolo ? '8' : '18'}. What's the tech stack, and what would surprise an incoming engineer?**
+**Q${isSolo ? '7' : '18'}. What's the tech stack, and what would surprise an incoming engineer?**
 *Why it matters: stack.md is read every time the AI helps write or review code.
 The "what would surprise" framing surfaces the non-obvious conventions.*
 
@@ -1517,7 +1535,7 @@ If no: note that the decisions/ folder is ready when one comes up.
 
 *Files written: context/glossary.md${isSolo ? '' : ', context/stakeholders.md'}*
 
-**Q${isSolo ? '9' : '21'}. What words does your team use that would confuse an outsider?**
+**Q${isSolo ? '8' : '21'}. What words does your team use that would confuse an outsider?**
 *Why it matters: glossary.md is read when the AI writes specs, reviews code, or
 discusses product strategy. Shared vocabulary prevents the AI from guessing at meaning.*
 
@@ -1538,7 +1556,7 @@ For each stakeholder: name/role, what they really care about, how they prefer to
 
 *After the answer: write to context/stakeholders.md.*`}
 
-**Q${isSolo ? '10' : '23'}. Are there any terms your team uses inconsistently with each other?**
+**Q${isSolo ? '9' : '23'}. Are there any terms your team uses inconsistently with each other?**
 *Why it matters: inconsistent internal vocabulary is a reliable source of meeting friction.
 Naming it here gives the AI a flag to raise when it notices the inconsistency.*
 

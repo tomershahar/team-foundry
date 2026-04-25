@@ -286,19 +286,25 @@ describe('Iteration 4 — onboarding interview', () => {
     expect(output).toContain('run the onboarding');
   });
 
-  it('coach contains all 9 theme headings for both profiles', () => {
-    for (const ctx of [baseCtx, { ...baseCtx, profile: 'solo' as const }]) {
-      const output = coachTemplate(ctx);
-      expect(output).toContain('### Theme 1: Identity');
-      expect(output).toContain('### Theme 2: Purpose');
-      expect(output).toContain('### Theme 3: Measurement');
-      expect(output).toContain('### Theme 4: Customers');
-      expect(output).toContain('### Theme 5: Quality');
-      expect(output).toContain('### Theme 6: Team');
-      expect(output).toContain('### Theme 7: Rhythm');
-      expect(output).toContain('### Theme 8: Technical');
-      expect(output).toContain('### Theme 9: Glossary');
+  it('coach contains all 9 theme headings for full profile', () => {
+    const output = coachTemplate(baseCtx);
+    for (let i = 1; i <= 9; i++) {
+      expect(output).toContain(`### Theme ${i}:`);
     }
+  });
+
+  it('coach solo profile contains all 9 theme headings (Theme 3 skipped via isSolo)', () => {
+    const soloCtx = { ...baseCtx, profile: 'solo' as const };
+    const output = coachTemplate(soloCtx);
+    // Theme 3 (Measurement) is full-only — not present in solo output
+    expect(output).not.toContain('### Theme 3: Measurement');
+    // All other themes present
+    expect(output).toContain('### Theme 1: Identity');
+    expect(output).toContain('### Theme 2: Purpose');
+    expect(output).toContain('### Theme 4: Customers');
+    expect(output).toContain('### Theme 5: Quality');
+    expect(output).toContain('### Theme 8: Technical');
+    expect(output).toContain('### Theme 9: Glossary');
   });
 
   it('coach solo profile marks Team and Rhythm as skipped', () => {
@@ -311,10 +317,9 @@ describe('Iteration 4 — onboarding interview', () => {
     expect(coachTemplate(baseCtx)).toContain('18–25');
   });
 
-  it('coach solo profile mentions exactly 10 questions', () => {
+  it('coach solo profile mentions exactly 9 questions', () => {
     const soloCtx = { ...baseCtx, profile: 'solo' as const };
-    expect(coachTemplate(soloCtx)).toContain('10 questions');
-    expect(coachTemplate(soloCtx)).not.toContain('10–12');
+    expect(coachTemplate(soloCtx)).toContain('9 questions');
   });
 
   it('coach contains evidence demand for outcomes (outcome-shaped language)', () => {
@@ -381,13 +386,13 @@ describe('Iteration 4 — onboarding interview', () => {
     }
   });
 
-  it('coach solo profile Q numbers are contiguous Q1–Q10', () => {
+  it('coach solo profile Q numbers are contiguous Q1–Q9', () => {
     const soloCtx = { ...baseCtx, profile: 'solo' as const };
     const output = coachTemplate(soloCtx);
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= 9; i++) {
       expect(output, `Q${i} missing in solo profile`).toContain(`**Q${i}`);
     }
-    expect(output).not.toContain('**Q11');
+    expect(output).not.toContain('**Q10');
   });
 
   it('root-claude trigger phrases include coach mode', () => {
