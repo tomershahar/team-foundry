@@ -215,6 +215,20 @@ order, I'm going with [file A] — but you may want to reconcile these."
 When running any coaching behavior, also load \`.team-foundry/team-lessons.md\` if it exists.
 Apply Active rules from that file alongside built-in behaviors — they carry equal weight.
 
+## Feature queries
+
+When the user asks about a specific feature ("tell me about X," "what's the status of Y," "what do we know about Z"):
+
+1. Read \`team-foundry/product/now-next-later.md\` — find the feature's current status (Now / Next / Later / shipped)
+2. Read \`team-foundry/product/assumptions.md\` — find any assumptions linked to this feature
+3. Read \`team-foundry/product/customers.md\` — find customer quotes or personas that motivated it
+4. Read \`team-foundry/engineering/decisions/\` — find any ADRs related to how it's being built
+5. Read \`team-foundry/product/outcomes.md\` — find which outcome it supports
+
+Synthesize into a single response: status, why it's being built (outcome + customer evidence), open bets (assumptions), and any relevant technical decisions. If any of these files don't mention the feature, say so — don't invent connections.
+
+This replaces the need for a separate feature index file. The team-foundry files are the index.
+
 ---
 
 ## Behaviors
