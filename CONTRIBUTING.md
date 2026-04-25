@@ -1,57 +1,62 @@
 # Contributing to team-foundry
 
-Thanks for your interest. team-foundry is a small, opinionated project. Contributions are welcome but the bar is high — every addition has to earn its place.
+Thanks for your interest. team-foundry is a small, opinionated tool — contributions that sharpen the existing scope are welcome. Contributions that expand scope are considered carefully.
 
 ## What we're looking for
 
-- Bug fixes (something doesn't work as documented)
-- Template improvements (content is clearer, more accurate, or better structured)
-- New coach behaviors (well-reasoned, with acceptance criteria)
+- Bug fixes
+- Template content improvements (better coaching language, sharper onboarding questions)
+- Corrections to file counts, routing maps, or frontmatter
 - Test coverage gaps
+- Documentation clarity
 
 ## What we're not looking for right now
 
-- New profiles beyond solo/full
-- Support for AI tools beyond Claude Code and Gemini CLI
-- Integrations with external services
-- UI or web app versions
+- New AI tool integrations (beyond claude/gemini/cursor)
+- Backend services or hosted components
+- Telemetry changes
+- Large new features without prior discussion
 
-If you're unsure whether something fits, open an issue before writing code.
+If you're unsure, open an issue first and describe what you want to change and why.
 
-## How to contribute
-
-1. Fork the repo and create a branch from `main`
-2. Make your change
-3. Write or update tests — all PRs require passing tests
-4. Run `npm test` and `npm run typecheck` locally
-5. Open a pull request with a clear description of what changed and why
-
-## Development
+## Setup
 
 ```bash
+git clone https://github.com/tomershahar/team-foundry
+cd team-foundry
 npm install
-npm run build      # compile TypeScript
-npm test           # run Vitest suite
-npm run typecheck  # tsc --noEmit
-npm run lint       # eslint
+npm test        # all tests should pass before you start
 ```
 
-## Template content
+## Development workflow
 
-Templates are in `src/templates/`. Each is a pure function `(ctx: TemplateContext) => string`. Content changes don't require new tests unless they change the structural contract (frontmatter keys, section headings, required markers).
+```bash
+npm run build       # compile TypeScript via tsup
+npm test            # run Vitest suite
+npm run typecheck   # tsc --noEmit
+npm run lint        # eslint
+```
 
-The hell-yes standard applies: every addition to a template must be obviously essential or it gets cut.
+Tests live in `src/__tests__/`. Each iteration has its own test file. Add tests for any behavior you change.
 
-## Coach behaviors
+## Templates
 
-New behaviors require:
-- A clear trigger condition (what file state or user question fires it)
-- A severity level (Blocker / Important / Minor)
-- A "what to say" script in the coach's voice
-- A "what to draft" description
-- An inline trigger
-- Tests in `src/__tests__/templates.test.ts`
+Templates are pure functions in `src/templates/`. Each returns a string. They receive a `TemplateContext` (see `src/types.ts`). No side effects, no file I/O, no imports beyond types.
 
-## Code of conduct
+The coach template (`src/templates/coach.ts`) is the most complex. It's a large template literal with profile-conditional blocks. Read the existing patterns before adding new ones — especially how `isSolo` gates full-only content.
 
-See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+## Pull requests
+
+- Keep PRs small and focused. One behavior change per PR.
+- Tests must pass.
+- `npm run typecheck` and `npm run lint` must pass.
+- Describe what you changed and why in the PR description — not just what.
+- If you're changing coaching language, explain the reasoning. Coaching text is intentional; word choices matter.
+
+## Content standard
+
+Generated content must read as written by a thoughtful senior PM, not a template. If it sounds like boilerplate, it's not ready. The hell-yes standard applies: every file, coaching behavior, and question must be obviously essential or it gets cut.
+
+## Questions
+
+Open an issue. We read them.
