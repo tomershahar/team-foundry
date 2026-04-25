@@ -2,6 +2,7 @@
 purpose: Named customers, personas, jobs-to-be-done, and direct quotes
 read_when: When discussing what to build, why something matters, or who we're solving for
 last_updated: 2026-04-25
+owner: Sarah
 ---
 
 # Customers

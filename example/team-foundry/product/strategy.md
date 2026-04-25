@@ -2,6 +2,7 @@
 purpose: Strategic logic — diagnosis, guiding policy, coherent actions
 read_when: When evaluating new features, setting quarterly priorities, or onboarding a new team member
 last_updated: 2026-04-25
+owner: Sarah
 ---
 
 # Strategy

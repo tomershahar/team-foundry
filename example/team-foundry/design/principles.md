@@ -2,6 +2,7 @@
 purpose: Design principles, tone of voice, and accessibility standards
 read_when: When designing new features, writing UI copy, or reviewing designs
 last_updated: 2026-04-25
+owner: Sarah
 ---
 
 # Design Principles

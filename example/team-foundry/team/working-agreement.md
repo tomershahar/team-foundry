@@ -2,6 +2,7 @@
 purpose: Team norms, definition of done, ceremonies, and how we work
 read_when: When onboarding someone new, resolving a process question, or reviewing team health
 last_updated: 2026-04-25
+owner: Sarah
 ---
 
 # Working Agreement

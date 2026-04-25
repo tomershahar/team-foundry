@@ -2,6 +2,7 @@
 purpose: How we use AI tools — what we delegate, what we don't, and how to do it well
 read_when: When onboarding someone new or discussing how to use AI in our workflow
 last_updated: 2026-04-25
+owner: Sarah
 ---
 
 # AI Practices

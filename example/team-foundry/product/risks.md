@@ -2,6 +2,7 @@
 purpose: Key product risks — value, usability, feasibility, viability
 read_when: When evaluating new bets, writing specs, or reviewing quarterly priorities
 last_updated: 2026-04-25
+owner: Sarah
 ---
 
 # Risks

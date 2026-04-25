@@ -2,6 +2,7 @@
 purpose: Domain terms and acronyms — what words mean specifically in Clearline's context
 read_when: When writing specs, reviewing copy, or any time a term might be ambiguous
 last_updated: 2026-04-25
+owner: Sarah
 ---
 
 # Glossary

@@ -2,6 +2,7 @@
 purpose: Product trio — who we are, how we make decisions, how we work together
 read_when: When discussing team dynamics, decision-making, or onboarding someone new
 last_updated: 2026-04-25
+owner: Sarah
 ---
 
 # Product Trio

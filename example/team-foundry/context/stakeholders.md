@@ -2,6 +2,7 @@
 purpose: Stakeholders — who they are, what they actually watch, and how to keep them well-informed
 read_when: When preparing for reviews, drafting updates, or navigating a stakeholder conversation
 last_updated: 2026-04-25
+owner: Sarah
 ---
 
 # Stakeholders
