@@ -5,6 +5,7 @@ export function trioTemplate(ctx: TemplateContext): string {
 purpose: The product trio — who owns what decisions and how the three roles work together
 read_when: Escalations, onboarding, clarifying ownership, any "who decides this?" conversation
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Team Trio

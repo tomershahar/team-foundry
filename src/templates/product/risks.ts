@@ -5,6 +5,7 @@ export function risksTemplate(ctx: TemplateContext): string {
 purpose: The four product risks — tracked so they don't become surprises at launch
 read_when: Scoping new features, go/no-go decisions, discovery planning, quarterly reviews
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Risks

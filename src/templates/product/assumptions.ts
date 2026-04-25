@@ -5,6 +5,7 @@ export function assumptionsTemplate(ctx: TemplateContext): string {
 purpose: Open assumptions and untested beliefs — the bets the team is currently making
 read_when: Designing discovery work, scoping experiments, retros, any time a decision feels risky
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Assumptions

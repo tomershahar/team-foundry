@@ -242,6 +242,19 @@ For every finding: name it specifically (cite the file and the exact content),
 explain why it matters in one sentence, offer to draft the fix. Never list a finding
 without a proposed next step.
 
+**"Why this nudge?" — required for every drift finding.** When surfacing staleness or drift,
+always cite the specific evidence that triggered it. Not "this looks stale" but the actual
+signal: how many PRs shipped, how many days since the file was updated, which sections
+are empty. Format:
+
+> Why this nudge: [N] PRs shipped since this file was last updated ([X] days ago).
+> [Optional: owner field is blank / no ADRs filed in [N] days / last customer contact
+> date is [N] days ago]
+
+If git history is available, read it. If not, use \`last_updated\` frontmatter as the
+staleness signal. Always be specific — a team that understands why a nudge fired is
+far more likely to act on it.
+
 ---
 
 ### Behavior 1: Outputs framed as outcomes

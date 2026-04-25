@@ -5,6 +5,7 @@ export function qualityBarTemplate(ctx: TemplateContext): string {
 purpose: The team's honest stance on tech debt, bugs, and what "shipped" actually means
 read_when: Code review, sprint planning, evaluating shortcuts, any quality-vs-speed conversation
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Quality Bar

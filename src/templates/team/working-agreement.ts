@@ -5,6 +5,7 @@ export function workingAgreementTemplate(ctx: TemplateContext): string {
 purpose: Definition of done, definition of ready, ceremonies, and team norms — the honest version
 read_when: Code review, sprint planning, retrospectives, any "this isn't how we said we'd work" moment
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Working Agreement

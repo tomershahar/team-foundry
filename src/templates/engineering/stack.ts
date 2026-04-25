@@ -5,6 +5,7 @@ export function stackTemplate(ctx: TemplateContext): string {
 purpose: Tech stack, conventions, deployment pipeline, and local dev setup
 read_when: Writing code, reviewing PRs, evaluating new dependencies, onboarding engineers
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Engineering Stack

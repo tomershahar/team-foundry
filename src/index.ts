@@ -4,6 +4,7 @@ import { outro, log, confirm } from '@clack/prompts';
 import { runPrompts } from './prompts.js';
 import { scaffold } from './scaffold.js';
 import { writeGitignore } from './gitignore.js';
+import { runStatus } from './status.js';
 
 const TOOL_LABEL: Record<string, string> = {
   claude: 'Claude Code',
@@ -68,6 +69,11 @@ async function checkDirectory(targetDir: string): Promise<void> {
 
 async function main(): Promise<void> {
   const targetDir = process.cwd();
+
+  if (process.argv[2] === 'status') {
+    await runStatus(targetDir);
+    return;
+  }
 
   await checkDirectory(targetDir);
 

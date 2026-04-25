@@ -5,6 +5,7 @@ export function outcomesTemplate(ctx: TemplateContext): string {
 purpose: Current quarter outcomes — the changes in customer behavior that define success this quarter
 read_when: Prioritizing work, writing specs, deciding what to build next, evaluating tradeoffs
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Outcomes

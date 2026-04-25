@@ -5,6 +5,7 @@ export function glossaryTemplate(ctx: TemplateContext): string {
 purpose: Domain terms, acronyms, and jargon specific to this team and product
 read_when: Onboarding, writing specs, any time a term feels ambiguous or overloaded
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Glossary

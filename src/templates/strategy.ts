@@ -5,6 +5,7 @@ export function strategyTemplate(ctx: TemplateContext): string {
 purpose: The strategic logic connecting our north-star gap to what we're building. Read before adding anything to the roadmap.
 read_when: Roadmap planning, evaluating new feature requests, quarterly retrospective, when a new item is proposed for Now or Next, when a new team member is onboarding
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Strategy

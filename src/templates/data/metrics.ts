@@ -5,6 +5,7 @@ export function metricsTemplate(ctx: TemplateContext): string {
 purpose: Metric definitions, ownership, and data sources — so the team means the same thing
 read_when: Building dashboards, writing OKRs, reviewing product health, debugging data discrepancies
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Metrics

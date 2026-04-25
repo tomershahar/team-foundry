@@ -5,6 +5,7 @@ export function decisionsReadmeTemplate(ctx: TemplateContext): string {
 purpose: Index and template for architecture decision records (ADRs)
 read_when: Evaluating architectural choices, understanding why the codebase looks the way it does
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Architecture Decisions

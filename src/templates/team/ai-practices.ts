@@ -5,6 +5,7 @@ export function aiPracticesTemplate(ctx: TemplateContext): string {
 purpose: How this team uses AI tools — what's working, what we've decided not to do, and our norms
 read_when: Onboarding engineers, evaluating new AI tooling, retrospectives on AI-assisted work
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # AI Practices

@@ -10,6 +10,7 @@ export function customersTemplate(ctx: TemplateContext): string {
 purpose: Named customers, personas, jobs to be done, and direct quotes from real conversations
 read_when: Writing specs, prioritizing features, evaluating tradeoffs, any time you're guessing what customers want
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Customers

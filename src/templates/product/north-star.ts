@@ -5,6 +5,7 @@ export function northStarTemplate(ctx: TemplateContext): string {
 purpose: The single metric that best captures whether we're creating the value we intend to create
 read_when: Setting quarterly direction, evaluating big bets, writing OKRs, onboarding new team members
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # North Star

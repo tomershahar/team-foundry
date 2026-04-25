@@ -5,6 +5,7 @@ export function principlesTemplate(ctx: TemplateContext): string {
 purpose: Design principles, tone of voice, and accessibility stance
 read_when: Designing new features, writing copy, reviewing designs, evaluating UX tradeoffs
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Design Principles

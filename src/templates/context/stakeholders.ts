@@ -5,6 +5,7 @@ export function stakeholdersTemplate(ctx: TemplateContext): string {
 purpose: Who cares about this product, what they care about, and how the team works with them
 read_when: Stakeholder updates, go/no-go decisions, escalations, quarterly planning
 last_updated: ${ctx.date}
+owner: 
 ---
 
 # Stakeholders
