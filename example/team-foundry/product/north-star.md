@@ -25,10 +25,9 @@ Definition: an invoice is processed without manual intervention if it moves from
 
 ## North Star
 
-**% of invoices processed without manual intervention** (NSM)
 Current: 61%. Target Q2: 72%.
 
-### Balancing
+### Balancing metrics
 
 We track these to make sure we're not improving the NSM at the expense of what matters:
 

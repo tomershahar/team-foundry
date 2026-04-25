@@ -23,7 +23,7 @@ The coach now reads recent git activity at the start of every explicit/scheduled
 The coach handles "tell me about feature X" queries by reading the relevant files across the repo (outcomes, customers, now-next-later, assumptions, decisions) and synthesizing a single response. Profile-aware: solo and full profiles get appropriately scoped answers.
 
 **Worked example**
-`example/` contains a fully populated team-foundry for Clearline, a fictional B2B SaaS team. 22 files, 8-person team, realistic content. Reference it when setting up your own.
+`example/` contains a fully populated team-foundry for Clearline, a fictional B2B SaaS team. 8-person team, realistic content across 22 team-foundry files including 5 individual ADRs. Reference it when setting up your own.
 
 **Gemini CLI support**
 `GEMINI.md` generation added alongside `CLAUDE.md`. Use `tool: both` to generate both files simultaneously.
@@ -36,4 +36,4 @@ None. v1 scaffolds are fully compatible with v2. Run `npx create-team-foundry st
 
 ## [1.0.0] — 2025-12-01
 
-Initial release. Solo and full profiles. Claude Code support. Coach playbook. Onboarding interview. B1–B17 coaching behaviors.
+Initial release. Solo and full profiles. Claude Code support. Coach playbook with 17 drift-detection behaviors. Onboarding interview (18–25 questions) to populate files from scratch or from existing docs.

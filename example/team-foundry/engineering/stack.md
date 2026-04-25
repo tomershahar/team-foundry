@@ -2,7 +2,7 @@
 purpose: Tech stack, conventions, and deployment — what we're running and how
 read_when: When writing code, reviewing PRs, evaluating new tools, or onboarding an engineer
 last_updated: 2026-04-25
-owner: Sarah
+owner: Marcus
 ---
 
 # Engineering Stack

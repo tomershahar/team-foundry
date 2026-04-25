@@ -2,7 +2,7 @@
 purpose: Our honest quality stance — what "done" means, what debt we accept, and what we don't
 read_when: When evaluating whether something is ready to ship, reviewing a PR, or discussing tech debt
 last_updated: 2026-04-25
-owner: Sarah
+owner: Marcus
 ---
 
 # Quality Bar

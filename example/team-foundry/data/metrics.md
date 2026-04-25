@@ -2,7 +2,7 @@
 purpose: Metric definitions, ownership, and data sources — the single source of truth for what numbers mean
 read_when: When discussing metrics, writing specs with success criteria, or reviewing dashboards
 last_updated: 2026-04-25
-owner: Sarah
+owner: David
 ---
 
 # Metrics
@@ -44,6 +44,14 @@ Definition: standard NPS methodology (0–10 scale, promoters 9–10, detractors
 Owner: Sarah
 Source: Delighted survey
 Current baseline: 42
+
+## Approval exception rate
+
+Definition: % of invoices that trigger an exception flag and require human intervention before being processed. Excludes invoices auto-resolved by pre-set rules.
+Owner: Marcus (engineering), David (measurement)
+Source: `invoice_events` table — invoices with status `exception_flagged` that required manual action
+Current baseline: 8.3%
+Note: a rising exception rate could mean the auto-approval model is miscalibrated or that vendor data quality is degrading.
 
 ## Quality & reliability
 

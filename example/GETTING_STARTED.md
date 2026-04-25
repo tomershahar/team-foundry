@@ -17,7 +17,8 @@ Open this directory in Claude Code and ask:
 - "What's the engineering quality bar for shipping?"
 - "What architecture decisions have been made and why?"
 - "What are the open assumptions the team is betting on?"
-- "Run a team-foundry review"
+- "Let's do a team-foundry review" ← triggers the coach for a full audit
+- "What assumptions are expiring soon?" ← inline coach, single finding
 
 ## What's in here
 
@@ -36,7 +37,7 @@ Open this directory in Claude Code and ask:
 | `team-foundry/team/ai-practices.md` | How Clearline uses AI tools |
 | `team-foundry/engineering/stack.md` | Tech stack and conventions |
 | `team-foundry/engineering/quality-bar.md` | Quality stance and bug triage |
-| `team-foundry/engineering/decisions/` | 5 architecture decision records |
+| `team-foundry/engineering/decisions/` | 5 architecture decision records (ADR-001 through ADR-005) |
 | `team-foundry/design/principles.md` | Design principles and accessibility |
 | `team-foundry/data/metrics.md` | Metric definitions and ownership |
 | `team-foundry/context/glossary.md` | Domain terms and known inconsistencies |

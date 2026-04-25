@@ -107,20 +107,6 @@ npx create-team-foundry
 
 ---
 
-## The honest note
-
-team-foundry enables the work of building shared product understanding. It doesn't replace it. If your team isn't willing to have the hard conversations — no tool fixes that. What team-foundry does is make those conversations easier to start and easier to keep current.
-
-## Shared floor, individual ceiling
-
-team-foundry sets a baseline every team member's AI tool reads from. It doesn't cap what individuals do above that baseline. The floor is shared. The ceiling is individual.
-
-## Strategy in Git
-
-- `.gitignore` excludes `team-foundry/private/` by default
-- During setup you choose repo visibility (public / internal / private) and the coach adjusts
-- Nothing in the generated files requires sensitive data
-
 ## Requirements
 
 - Node 18+
