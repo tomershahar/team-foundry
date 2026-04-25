@@ -175,11 +175,12 @@ describe('rankFindings()', () => {
     expect(result.length).toBeLessThanOrEqual(3);
   });
 
-  it('ranks missing-link and missing-file higher than stale', () => {
+  it('ranks missing-link higher than stale by score', () => {
     const health = [makeHealth('stale-file.md', 'stale', 0)];
     const links = [makeLink('Undefined Metric', 'outcomes.md')];
     const result = rankFindings(health, links);
-    // link finding (severity 3) should outrank stale (severity 2)
+    // link finding severity=3 → score=9; stale severity=2 → score=6
+    expect(result[0].score).toBeGreaterThan(result[1].score);
     expect(result[0].item).toBe('Undefined Metric');
   });
 
@@ -194,11 +195,6 @@ describe('rankFindings()', () => {
 
   it('returns empty when no findings', () => {
     expect(rankFindings([], [])).toHaveLength(0);
-  });
-
-  it('returns "no drift" sentinel when findings is empty', () => {
-    const result = rankFindings([], []);
-    expect(result).toHaveLength(0);
   });
 
   it('boosts score for files with recent PRs', () => {

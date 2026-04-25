@@ -85,11 +85,12 @@ Combine all findings (health + link integrity) into a single ranked list.
 
 ```
 severity:  missing-file=3, missing-link=3, stale=2, empty=2
-reach:     number of distinct downstream files referencing this file
 recency:   prsSinceUpdate > 3 → +2, > 0 → +1, else 0
 
-priority_score = severity * 3 + reach * 2 + recency_factor
+priority_score = severity * 3 + recency_factor
 ```
+
+Note: `reach` (downstream file count) is deferred to v1.1 when cross-file dependency tracking is added.
 
 Return top 3 by score. On tie: deterministic order (alphabetical by file path).
 
