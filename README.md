@@ -16,6 +16,10 @@ That's it. Answer 4 questions. Files appear in your repo.
 
 ---
 
+## See what populated looks like
+
+→ **[example/](example/)** — a fully populated team-foundry for Clearline, a fictional 8-person B2B SaaS team. Clone this repo, open `example/` in Claude Code, and ask questions about the team.
+
 ## What it does
 
 Most teams use AI tools for code. The AI gives better answers when it knows what the product is for, who the customers are, and what quality means to this team.
