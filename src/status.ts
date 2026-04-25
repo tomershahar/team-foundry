@@ -208,10 +208,10 @@ export async function runStatus(targetDir: string): Promise<void> {
 
   // Top 3 fix suggestions
   const healthForRanking = results
-    .filter(r => r.health !== 'ok')
+    .filter((r): r is FileStatus & { health: 'stale' | 'empty' | 'missing' } => r.health !== 'ok')
     .map(r => ({
       file: r.relativePath,
-      health: r.health as 'stale' | 'empty' | 'missing',
+      health: r.health,
       prs: r.prsSinceUpdate ?? 0,
     }));
 
@@ -224,7 +224,7 @@ export async function runStatus(targetDir: string): Promise<void> {
     for (let i = 0; i < top3.length; i++) {
       const s = top3[i];
       console.log(`\n  ${i + 1}) ${s.detail}`);
-      console.log(`     Why: ${s.file.replace('team-foundry/', '')}`);
+      console.log(`     In: ${s.file.replace('team-foundry/', '')}`);
       console.log(`     Action: ${s.action}`);
     }
     console.log();

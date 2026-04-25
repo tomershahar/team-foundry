@@ -207,4 +207,45 @@ describe('runStatus()', () => {
     logSpy.mockRestore();
     expect(lines.some(l => l.includes('Link Integrity'))).toBe(false);
   });
+
+  it('outputs Link Integrity section on full profile when violations exist', async () => {
+    // Full profile marker
+    await writeFile(tmpDir, 'team-foundry/team/trio.md', CURRENT_CONTENT());
+    // assumptions.md with a heading
+    await writeFile(tmpDir, 'team-foundry/product/assumptions.md', `---
+purpose: test
+read_when: always
+last_updated: ${today}
+owner: Alice
+---
+
+## Speed matters
+
+details
+`);
+    // now-next-later.md with a Now item that has no assumption reference
+    await writeFile(tmpDir, 'team-foundry/product/now-next-later.md', `---
+purpose: test
+read_when: always
+last_updated: ${today}
+owner: Alice
+---
+
+### Now
+
+## Orphan feature
+
+no assumption linked here
+`);
+
+    const lines: string[] = [];
+    const logSpy = vi.spyOn(console, 'log').mockImplementation((...args) => {
+      lines.push(args.join(' '));
+    });
+    await runStatus(tmpDir);
+    logSpy.mockRestore();
+
+    expect(lines.some(l => l.includes('Link Integrity'))).toBe(true);
+    expect(lines.some(l => l.includes('Orphan feature'))).toBe(true);
+  });
 });

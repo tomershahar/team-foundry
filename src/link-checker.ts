@@ -1,3 +1,5 @@
+import { readFile } from 'fs/promises';
+
 export interface LinkFinding {
   type: 'outcome-metric' | 'now-assumption' | 'assumption-outcome';
   file: string;
@@ -34,6 +36,10 @@ function recencyFactor(prs: number): number {
   return 0;
 }
 
+function escapeRe(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function actionForHealth(health: 'stale' | 'empty' | 'missing', file: string): string {
   if (health === 'missing') return `Run \`npx create-team-foundry\` to scaffold ${file}`;
   if (health === 'empty') return `Fill in ${file} with real content (remove stub placeholder)`;
@@ -54,11 +60,11 @@ export function rankFindings(
 
   for (const h of healthFindings) {
     const severity = SEVERITY[h.health] ?? 1;
-    const score = severity * 3 + recencyFactor(h.prs) ;
+    const score = severity * 3 + recencyFactor(h.prs);
     candidates.push({
       item: h.file,
       file: h.file,
-      detail: `File is ${h.health}`,
+      detail: `File is ${h.health}: ${h.file.replace('team-foundry/', '')}`,
       score,
       action: actionForHealth(h.health, h.file),
     });
@@ -86,12 +92,17 @@ export function rankFindings(
 
 // Extract ## heading names from content.
 // If section is provided, only headings inside that ### section are returned.
+// Regex anchors to line boundaries so ### inside code blocks or inline text is ignored.
 export function extractHeadings(content: string, section?: string): string[] {
   if (!content.trim()) return [];
 
   let source = content;
   if (section) {
-    const sectionRe = new RegExp(`###\\s+${escapeRe(section)}\\s*\\n([\\s\\S]*?)(?=###|$)`);
+    // Match the ### section header and capture everything until the next ### (or end of string).
+    // (?:^|\n) anchors to line start without requiring multiline flag.
+    const sectionRe = new RegExp(
+      `(?:^|\\n)###\\s+${escapeRe(section)}\\s*\\n([\\s\\S]*?)(?=\\n###|$)`
+    );
     const match = source.match(sectionRe);
     source = match ? match[1] : '';
   }
@@ -125,7 +136,8 @@ export function extractSectionBodies(content: string): Record<string, string> {
   return result;
 }
 
-// Rule 1: Outcome/north-star ## headings that aren't in metrics.md ## headings.
+// Rule 1: ## headings in a "## Key Metrics" section of outcomes/north-star not defined in metrics.md.
+// Scoped to "Key Metrics" subsection to avoid false positives from structural headings.
 export function checkOutcomeMetricLinks(
   outcomesContent: string,
   northStarContent: string,
@@ -135,26 +147,28 @@ export function checkOutcomeMetricLinks(
   if (defined.size === 0) return []; // no metric set to check against
 
   const findings: LinkFinding[] = [];
-  const referencedInOutcomes = extractHeadings(outcomesContent);
-  const referencedInNorthStar = extractHeadings(northStarContent);
 
-  for (const heading of referencedInOutcomes) {
+  // Only check ## headings nested under a "### Key Metrics" section
+  const fromOutcomes = extractHeadings(outcomesContent, 'Key Metrics');
+  const fromNorthStar = extractHeadings(northStarContent, 'Key Metrics');
+
+  for (const heading of fromOutcomes) {
     if (!defined.has(heading)) {
       findings.push({
         type: 'outcome-metric',
         file: 'team-foundry/product/outcomes.md',
         item: heading,
-        detail: `"${heading}" referenced in outcomes.md but not defined in data/metrics.md`,
+        detail: `"${heading}" in outcomes.md#Key Metrics is not defined in data/metrics.md`,
       });
     }
   }
-  for (const heading of referencedInNorthStar) {
+  for (const heading of fromNorthStar) {
     if (!defined.has(heading)) {
       findings.push({
         type: 'outcome-metric',
         file: 'team-foundry/product/north-star.md',
         item: heading,
-        detail: `"${heading}" referenced in north-star.md but not defined in data/metrics.md`,
+        detail: `"${heading}" in north-star.md#Key Metrics is not defined in data/metrics.md`,
       });
     }
   }
@@ -169,6 +183,8 @@ export function checkNowAssumptionLinks(
   if (!nowNextLaterContent.trim()) return [];
 
   const assumptionHeadings = extractHeadings(assumptionsContent);
+  if (assumptionHeadings.length === 0) return []; // no assumptions defined — nothing to check against
+
   const nowItems = extractHeadings(nowNextLaterContent, 'Now');
   const bodies = extractSectionBodies(nowNextLaterContent);
 
@@ -229,13 +245,8 @@ export function checkAssumptionOutcomeReciprocity(
   return findings;
 }
 
-function escapeRe(s: string): string {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 async function readOptional(filePath: string): Promise<string> {
   try {
-    const { readFile } = await import('fs/promises');
     return await readFile(filePath, 'utf-8');
   } catch {
     return '';

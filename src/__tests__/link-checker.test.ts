@@ -49,16 +49,24 @@ describe('extractSectionBodies()', () => {
 // ── checkOutcomeMetricLinks ───────────────────────────────────────────────────
 
 describe('checkOutcomeMetricLinks()', () => {
+  // Rule 1 only checks ## headings inside a "### Key Metrics" section to avoid false positives
+  // from structural headings like "## Overview" or "## This Quarter".
   const metricsContent = `## Activation Rate\n\nformula: ...\n\n## Retention\n\nformula: ...`;
-  const outcomesContent = `## Activation Rate\n\nWe track this metric.\n\n## Retention\n\nLinked here.`;
-  const northStarContent = `## Churn Rate\n\nWe want to minimize this.`;
+  const outcomesContent = `## Overview\n\nsome text\n\n### Key Metrics\n\n## Activation Rate\n\ndetail\n\n## Retention\n\ndetail`;
+  const northStarContent = `## Context\n\nsome text\n\n### Key Metrics\n\n## Churn Rate\n\nWe want to minimize this.`;
 
   it('returns empty when all referenced metrics are defined', () => {
     const findings = checkOutcomeMetricLinks(outcomesContent, '', metricsContent);
     expect(findings).toHaveLength(0);
   });
 
-  it('flags a metric heading in north-star not present in metrics.md', () => {
+  it('does not flag ## headings outside Key Metrics section', () => {
+    // "## Overview" is a structural heading — should not be checked
+    const findings = checkOutcomeMetricLinks(outcomesContent, '', metricsContent);
+    expect(findings.every(f => f.item !== 'Overview')).toBe(true);
+  });
+
+  it('flags a metric heading in north-star Key Metrics not present in metrics.md', () => {
     const findings = checkOutcomeMetricLinks('', northStarContent, metricsContent);
     expect(findings).toHaveLength(1);
     expect(findings[0].item).toBe('Churn Rate');
@@ -66,8 +74,13 @@ describe('checkOutcomeMetricLinks()', () => {
   });
 
   it('returns empty when metrics content is empty (file missing)', () => {
-    // Cannot flag anything without a defined metric set
     const findings = checkOutcomeMetricLinks(outcomesContent, northStarContent, '');
+    expect(findings).toHaveLength(0);
+  });
+
+  it('returns empty when no Key Metrics section exists in outcomes', () => {
+    const noSection = `## Overview\n\nsome text`;
+    const findings = checkOutcomeMetricLinks(noSection, '', metricsContent);
     expect(findings).toHaveLength(0);
   });
 });
@@ -95,6 +108,16 @@ describe('checkNowAssumptionLinks()', () => {
 
   it('returns empty when nowNextLater content is empty', () => {
     expect(checkNowAssumptionLinks('', assumptionsContent)).toHaveLength(0);
+  });
+
+  it('returns empty when assumptions has no ## headings (nothing to check against)', () => {
+    expect(checkNowAssumptionLinks(nowNextContent, '# Just a title\n\nno headings here')).toHaveLength(0);
+  });
+
+  it('does not flag items in ### Later section', () => {
+    const withLater = nowNextContent + '\n\n### Later\n\n## Far future thing\n\nsome text';
+    const findings = checkNowAssumptionLinks(withLater, assumptionsContent);
+    expect(findings.some(f => f.item === 'Far future thing')).toBe(false);
   });
 });
 
