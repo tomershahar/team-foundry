@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
@@ -159,5 +159,52 @@ describe('runStatus()', () => {
     // Only solo files exist — should not throw or report full-only files as missing unexpectedly
     await writeFile(tmpDir, 'team-foundry/product/outcomes.md', CURRENT_CONTENT());
     await expect(runStatus(tmpDir)).resolves.not.toThrow();
+  });
+
+  it('detects full profile when trio.md exists', async () => {
+    await writeFile(tmpDir, 'team-foundry/team/trio.md', CURRENT_CONTENT());
+    await expect(runStatus(tmpDir)).resolves.not.toThrow();
+  });
+
+  it('outputs "No critical drift detected" when all files are current', async () => {
+    // Write all solo files so there are no missing/stale/empty findings
+    for (const rel of [
+      'team-foundry/product/north-star.md',
+      'team-foundry/product/outcomes.md',
+      'team-foundry/product/customers.md',
+      'team-foundry/engineering/stack.md',
+    ]) {
+      await writeFile(tmpDir, rel, CURRENT_CONTENT());
+    }
+    const lines: string[] = [];
+    const logSpy = vi.spyOn(console, 'log').mockImplementation((...args) => {
+      lines.push(args.join(' '));
+    });
+    await runStatus(tmpDir);
+    logSpy.mockRestore();
+    expect(lines.some(l => l.includes('No critical drift'))).toBe(true);
+  });
+
+  it('includes Top 3 Fix Suggestions section in output', async () => {
+    // Create a stale file so there's at least one finding
+    await writeFile(tmpDir, 'team-foundry/product/outcomes.md', STALE_CONTENT);
+    const lines: string[] = [];
+    const logSpy = vi.spyOn(console, 'log').mockImplementation((...args) => {
+      lines.push(args.join(' '));
+    });
+    await runStatus(tmpDir);
+    logSpy.mockRestore();
+    expect(lines.some(l => l.includes('Top 3 Fix Suggestions'))).toBe(true);
+  });
+
+  it('does not output Link Integrity section on solo profile', async () => {
+    await writeFile(tmpDir, 'team-foundry/product/outcomes.md', CURRENT_CONTENT());
+    const lines: string[] = [];
+    const logSpy = vi.spyOn(console, 'log').mockImplementation((...args) => {
+      lines.push(args.join(' '));
+    });
+    await runStatus(tmpDir);
+    logSpy.mockRestore();
+    expect(lines.some(l => l.includes('Link Integrity'))).toBe(false);
   });
 });

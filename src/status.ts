@@ -1,6 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { spawnSync } from 'child_process';
+import { runLinkChecks, rankFindings } from './link-checker.js';
+import type { LinkFinding } from './link-checker.js';
 
 interface FileStatus {
   relativePath: string;
@@ -177,6 +179,56 @@ export async function runStatus(targetDir: string): Promise<void> {
   console.log();
 
   console.log(`  ✓ ${ok.length} current   ~ ${stale.length} stale   ○ ${empty.length} empty   ✗ ${missing.length} missing\n`);
+
+  // Link integrity section (full profile only)
+  let linkFindings: LinkFinding[] = [];
+  if (isFullProfile) {
+    linkFindings = await runLinkChecks(targetDir);
+    if (linkFindings.length > 0) {
+      console.log(`  Link Integrity`);
+      console.log(`  ${'─'.repeat(60)}`);
+      const byType: Record<string, LinkFinding[]> = {};
+      for (const f of linkFindings) {
+        (byType[f.type] ??= []).push(f);
+      }
+      const typeLabels: Record<string, string> = {
+        'outcome-metric': 'Outcome references undefined metric',
+        'now-assumption': 'Now item missing linked assumption',
+        'assumption-outcome': 'Assumption/outcome unlinked',
+      };
+      for (const [type, items] of Object.entries(byType)) {
+        console.log(`\n  ! ${typeLabels[type] ?? type}`);
+        for (const item of items) {
+          console.log(`      ${item.file.replace('team-foundry/', '')} → ${item.detail}`);
+        }
+      }
+      console.log();
+    }
+  }
+
+  // Top 3 fix suggestions
+  const healthForRanking = results
+    .filter(r => r.health !== 'ok')
+    .map(r => ({
+      file: r.relativePath,
+      health: r.health as 'stale' | 'empty' | 'missing',
+      prs: r.prsSinceUpdate ?? 0,
+    }));
+
+  const top3 = rankFindings(healthForRanking, linkFindings);
+  console.log(`  Top 3 Fix Suggestions`);
+  console.log(`  ${'─'.repeat(60)}`);
+  if (top3.length === 0) {
+    console.log('  No critical drift detected this week.\n');
+  } else {
+    for (let i = 0; i < top3.length; i++) {
+      const s = top3[i];
+      console.log(`\n  ${i + 1}) ${s.detail}`);
+      console.log(`     Why: ${s.file.replace('team-foundry/', '')}`);
+      console.log(`     Action: ${s.action}`);
+    }
+    console.log();
+  }
 
   if (stale.length > 0) {
     console.log('  Stale files — why this nudge:\n');
