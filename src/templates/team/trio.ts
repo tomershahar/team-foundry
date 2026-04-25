@@ -26,11 +26,17 @@ last_updated: ${ctx.date}
 
 ## Members
 
-| Role | Person | Focus area |
-|---|---|---|
-| Product Manager | <!-- name --> | What to build and why |
-| Engineering Lead | <!-- name --> | How to build it, tech debt, architecture |
-| Design Lead | <!-- name --> | UX, flows, visual quality |
+| Role | Person | GitHub (optional) | Focus area |
+|---|---|---|---|
+| Product Manager | <!-- name --> | <!-- @handle --> | What to build and why |
+| Engineering Lead | <!-- name --> | <!-- @handle --> | How to build it, tech debt, architecture |
+| Design Lead | <!-- name --> | <!-- @handle --> | UX, flows, visual quality |
+
+<!-- Optional additional fields per member (add inline or as a sub-list):
+     - slack: U0C3D4E5F  (Slack member ID for @mentions)
+     - linear: user ID  (for issue assignment lookups)
+     Fill in what's known; leave blank what isn't. These fields let AI tools
+     take cross-platform actions when relevant. -->
 
 ## How we make decisions
 

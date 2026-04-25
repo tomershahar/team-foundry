@@ -1285,3 +1285,20 @@ describe('Iteration 9b — scaffold strategy.md wiring', () => {
     expect(fullPaths.length - soloPaths.length).toBe(13);
   });
 });
+
+describe('Iteration v2.4 — team member IDs in trio template', () => {
+  const output = () => trioTemplate(baseCtx);
+
+  it('trio template includes optional GitHub ID field', () => {
+    expect(output()).toMatch(/github/i);
+  });
+
+  it('trio template marks ID fields as optional', () => {
+    expect(output()).toMatch(/optional/i);
+  });
+
+  it('coach onboarding asks for GitHub handles', () => {
+    const coachOutput = coachTemplate(baseCtx);
+    expect(coachOutput).toMatch(/github|handle/i);
+  });
+});
