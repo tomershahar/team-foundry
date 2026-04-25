@@ -1,24 +1,24 @@
 # team-foundry
 
-**Your team's AI tools are reading different files. team-foundry gets them on the same page.**
+**A Context Engine for product teams.**
 
-`npx create-team-foundry` scaffolds a structured context layer in your repo. It ensures every AI tool used by every team member—PM, Engineer, or Designer—is grounded in the same strategy, outcomes, and engineering decisions.
-
-team-foundry is agent-agnostic by design. The context files are the product. The AI tool reading them is a replaceable component.
+team-foundry scaffolds the shared brain your AI coding tools read from — outcomes, customers, decisions, quality bar — in a repo every team member commits to. Every AI tool, every team member, the same context. Automatically.
 
 ```
 npx create-team-foundry
 ```
 
-That's it. Answer 4 questions. Files appear in your repo.
+Answer 4 questions. Files appear in your repo. That's it.
 
-**Run this in your shared product/engineering repo** — the one the whole team commits to. That's how everyone's AI tool picks up the same context automatically. Running it in a personal or feature branch repo works for solo use but misses the point for teams.
+team-foundry is agent-agnostic by design. The context files are the product. The AI tool reading them is a replaceable component.
+
+**Run this in your shared product/engineering repo** — the one the whole team commits to. Running it in a personal repo works for solo use but misses the point for teams.
 
 ---
 
 ## See what populated looks like
 
-→ **[example/](example/)** — a fully populated team-foundry for Clearline, a fictional 8-person B2B SaaS team. Clone this repo, open `example/` in Claude Code, and ask questions about the team.
+→ **[example/](example/)** — a fully populated team-foundry for Clearline, a fictional 8-person B2B SaaS team. Clone this repo, open `example/` in Claude Code, and ask the AI anything about the team. This is what your team-foundry can look like after the setup conversation.
 
 ## What it does
 
