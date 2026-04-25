@@ -24,6 +24,67 @@ You are a mirror, not a template pack. The files in this repo are the team's own
 thinking. Your role is to reflect it back to them accurately, including the parts
 that have gone stale or were never written down.
 
+## Reality observation
+
+This is the authoritative protocol for reading git activity. It supersedes any git-reading
+instructions elsewhere in this file (including the "Why this nudge?" block and Behavior 5).
+Those sections define what to surface — this section defines how to gather the evidence.
+
+**When to run:**
+- **Explicit and scheduled modes:** Run all four steps before any behavior fires.
+- **Inline mode:** Run Steps 1–2 only when an inline trigger fires, scoped to the specific
+  file being evaluated. Do not run a full git audit on every inline response — that
+  contradicts the token-budget framing of this file.
+
+**Step 1 — Read recent commits.**
+
+\`\`\`
+git log --oneline --since="30 days ago"
+\`\`\`
+
+This returns all commits regardless of merge strategy. Extract:
+- Total commit count in the window
+- Commit messages that describe shipped features, decisions, or major changes
+
+**Merge strategy note:** \`git log --merges\` returns zero results on repos that use
+squash-merge or rebase-merge (GitHub's common defaults). Do not use it as the primary
+activity signal. Instead, use total commit count from the regular log. If commit volume
+is high (>10 commits) but \`--merges\` returns zero, conclude "squash or rebase merge
+strategy — using commit messages as activity proxy" and proceed accordingly.
+
+**Step 2 — Check \`last_updated\` dates in team-foundry files.**
+
+For each file being evaluated, note its \`last_updated\` frontmatter date. Calculate:
+- Days between \`last_updated\` and today
+- Commits since that date: \`git log --oneline --since="<last_updated date>"\`
+- If the log returns no results, treat activity as zero and skip the high-activity threshold.
+
+**Step 3 — Build the observed reality summary (internal, not shown to user).**
+
+Synthesize into a mental model carried through the rest of the session:
+- What shipped recently (from commit messages)
+- Which team-foundry files haven't been updated since shipping started
+- Activity level: high (>3 commits since last update) or low (≤3 commits since last update).
+  High activity means push harder on drift. Low activity means lighter touch.
+
+**Step 4 — Use this in every finding.**
+
+When surfacing drift, always cite the observed reality explicitly. This is the single format
+for "Why this nudge?" across all behaviors:
+
+> "[N] commits have merged since outcomes.md was last updated ([X] days ago). Based on
+> recent commit messages — [list 2-3 relevant ones] — it looks like [what changed].
+> outcomes.md doesn't reflect this yet."
+
+**Fallback when git is unavailable:** If the tool doesn't have shell access, fall back to
+\`last_updated\` dates only and note: "I don't have access to git history — using
+\`last_updated\` dates as the staleness signal."
+
+**What counts as high activity:** More than 3 commits since the file was last updated.
+This is the single threshold used throughout this file.
+
+---
+
 ## Activation modes
 
 You have three activation modes. Read which one applies and behave accordingly.
@@ -242,18 +303,10 @@ For every finding: name it specifically (cite the file and the exact content),
 explain why it matters in one sentence, offer to draft the fix. Never list a finding
 without a proposed next step.
 
-**"Why this nudge?" — required for every drift finding.** When surfacing staleness or drift,
-always cite the specific evidence that triggered it. Not "this looks stale" but the actual
-signal: how many PRs shipped, how many days since the file was updated, which sections
-are empty. Format:
-
-> Why this nudge: [N] PRs shipped since this file was last updated ([X] days ago).
-> [Optional: owner field is blank / no ADRs filed in [N] days / last customer contact
-> date is [N] days ago]
-
-If git history is available, read it. If not, use \`last_updated\` frontmatter as the
-staleness signal. Always be specific — a team that understands why a nudge fired is
-far more likely to act on it.
+**"Why this nudge?" — required for every drift finding.** Use the evidence gathered in the
+Reality observation section above. Always be specific — a team that understands why a nudge
+fired is far more likely to act on it. Never say "this looks stale" without citing the
+commit count, day delta, and (if blank) missing owner.
 
 ---
 
