@@ -17,12 +17,13 @@ describe('runPrompts()', () => {
     vi.clearAllMocks();
   });
 
-  it('returns correct options for claude/full/internal/skip', async () => {
+  it('returns correct options for claude/full/internal/flat/skip', async () => {
     vi.mocked(select)
-      .mockResolvedValueOnce('claude')
-      .mockResolvedValueOnce('full')
-      .mockResolvedValueOnce('internal')
-      .mockResolvedValueOnce('skip');
+      .mockResolvedValueOnce('claude')   // tool
+      .mockResolvedValueOnce('full')     // profile
+      .mockResolvedValueOnce('internal') // visibility
+      .mockResolvedValueOnce('flat')     // federated
+      .mockResolvedValueOnce('skip');    // ingestion
 
     const result = await runPrompts();
 
@@ -31,7 +32,32 @@ describe('runPrompts()', () => {
       profile: 'full',
       repoVisibility: 'internal',
       ingestion: 'skip',
+      federated: false,
     });
+  });
+
+  it('returns federated: true when federated layout selected', async () => {
+    vi.mocked(select)
+      .mockResolvedValueOnce('claude')
+      .mockResolvedValueOnce('full')
+      .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('federated')
+      .mockResolvedValueOnce('skip');
+
+    const result = await runPrompts();
+    expect(result.federated).toBe(true);
+  });
+
+  it('does not ask federated question for solo profile', async () => {
+    vi.mocked(select)
+      .mockResolvedValueOnce('claude')
+      .mockResolvedValueOnce('solo')
+      .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('skip');
+
+    const result = await runPrompts();
+    expect(result.federated).toBeUndefined();
+    expect(select).toHaveBeenCalledTimes(4); // no extra question
   });
 
   it('returns ingestionPath when local folder is selected', async () => {
@@ -59,6 +85,7 @@ describe('runPrompts()', () => {
       .mockResolvedValueOnce('both')
       .mockResolvedValueOnce('full')
       .mockResolvedValueOnce('private')
+      .mockResolvedValueOnce('flat')
       .mockResolvedValueOnce('mcp');
 
     const result = await runPrompts();
@@ -68,6 +95,7 @@ describe('runPrompts()', () => {
       profile: 'full',
       repoVisibility: 'private',
       ingestion: 'mcp',
+      federated: false,
     });
     expect(text).not.toHaveBeenCalled();
   });
@@ -89,6 +117,7 @@ describe('runPrompts()', () => {
       .mockResolvedValueOnce('cursor')
       .mockResolvedValueOnce('full')
       .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('flat')
       .mockResolvedValueOnce('skip');
 
     const result = await runPrompts();
@@ -98,10 +127,11 @@ describe('runPrompts()', () => {
       profile: 'full',
       repoVisibility: 'internal',
       ingestion: 'skip',
+      federated: false,
     });
   });
 
-  it('calls select exactly 4 times for non-local ingestion', async () => {
+  it('calls select exactly 4 times for solo non-local ingestion', async () => {
     vi.mocked(select)
       .mockResolvedValueOnce('claude')
       .mockResolvedValueOnce('solo')
@@ -111,5 +141,18 @@ describe('runPrompts()', () => {
     await runPrompts();
 
     expect(select).toHaveBeenCalledTimes(4);
+  });
+
+  it('calls select 5 times for full profile non-local ingestion', async () => {
+    vi.mocked(select)
+      .mockResolvedValueOnce('claude')
+      .mockResolvedValueOnce('full')
+      .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('flat')
+      .mockResolvedValueOnce('skip');
+
+    await runPrompts();
+
+    expect(select).toHaveBeenCalledTimes(5);
   });
 });

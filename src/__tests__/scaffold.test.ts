@@ -173,6 +173,14 @@ describe('expectedPaths()', () => {
     expect(expectedPaths('full', 'claude').length).toBe(20);
   });
 
+  it('full profile federated produces exactly 26 files (20 + 6 folder CLAUDE.md)', () => {
+    expect(expectedPaths('full', 'claude', true).length).toBe(26);
+  });
+
+  it('solo profile federated still produces 7 files (federated ignored)', () => {
+    expect(expectedPaths('solo', 'claude', true).length).toBe(7);
+  });
+
   it('cursor tool produces .cursor/rules/team-foundry.mdc', () => {
     const paths = expectedPaths('full', 'cursor');
     expect(paths).toContain('.cursor/rules/team-foundry.mdc');
@@ -221,6 +229,53 @@ describe('scaffold() — cursor tool', () => {
         .then(() => true)
         .catch(() => false);
       expect(exists, `${name} should not exist for cursor tool`).toBe(false);
+    }
+  });
+});
+
+describe('scaffold() — federated mode', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => { tmpDir = await makeTempDir(); });
+  afterEach(async () => { await cleanup(tmpDir); });
+
+  const federatedFolders = ['product', 'team', 'engineering', 'design', 'data', 'context'];
+
+  it('flat mode does not write folder-level CLAUDE.md files', async () => {
+    await scaffold({ ...baseOptions, federated: false, targetDir: tmpDir });
+    for (const folder of federatedFolders) {
+      const exists = await fs
+        .access(path.join(tmpDir, `team-foundry/${folder}/CLAUDE.md`))
+        .then(() => true).catch(() => false);
+      expect(exists, `team-foundry/${folder}/CLAUDE.md should not exist in flat mode`).toBe(false);
+    }
+  });
+
+  it('federated mode writes CLAUDE.md in each major folder', async () => {
+    await scaffold({ ...baseOptions, federated: true, targetDir: tmpDir });
+    for (const folder of federatedFolders) {
+      const exists = await fs
+        .access(path.join(tmpDir, `team-foundry/${folder}/CLAUDE.md`))
+        .then(() => true).catch(() => false);
+      expect(exists, `team-foundry/${folder}/CLAUDE.md should exist in federated mode`).toBe(true);
+    }
+  });
+
+  it('federated mode still writes the root CLAUDE.md', async () => {
+    await scaffold({ ...baseOptions, federated: true, targetDir: tmpDir });
+    const exists = await fs
+      .access(path.join(tmpDir, 'CLAUDE.md'))
+      .then(() => true).catch(() => false);
+    expect(exists).toBe(true);
+  });
+
+  it('federated mode is ignored for solo profile', async () => {
+    await scaffold({ ...baseOptions, profile: 'solo', federated: true, targetDir: tmpDir });
+    for (const folder of federatedFolders) {
+      const exists = await fs
+        .access(path.join(tmpDir, `team-foundry/${folder}/CLAUDE.md`))
+        .then(() => true).catch(() => false);
+      expect(exists, `team-foundry/${folder}/CLAUDE.md should not exist for solo profile`).toBe(false);
     }
   });
 });

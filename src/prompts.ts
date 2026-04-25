@@ -43,6 +43,19 @@ export async function runPrompts(): Promise<PromptResult> {
   });
   cancelIfNeeded(repoVisibility);
 
+  let federated: boolean | undefined;
+  if (profile === 'full') {
+    const federatedAnswer = await select({
+      message: 'Context layout?',
+      options: [
+        { value: 'flat', label: 'Flat  (one root CLAUDE.md — simpler, recommended for most teams)' },
+        { value: 'federated', label: 'Federated  (CLAUDE.md per folder — for larger teams, 8+ people)' },
+      ],
+    });
+    cancelIfNeeded(federatedAnswer);
+    federated = federatedAnswer === 'federated';
+  }
+
   const ingestion = await select({
     message:
       'Do you have existing docs to ingest?\n  (Strategy docs, old roadmaps, customer research — the interview uses them to pre-populate answers)',
@@ -74,5 +87,6 @@ export async function runPrompts(): Promise<PromptResult> {
     repoVisibility: repoVisibility as ScaffoldOptions['repoVisibility'],
     ingestion: ingestion as ScaffoldOptions['ingestion'],
     ingestionPath,
+    federated,
   };
 }

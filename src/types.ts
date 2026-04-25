@@ -14,6 +14,8 @@ export interface TemplateContext {
   ingestionPath?: string;
   /** Ingestion mode selected by the user. Drives which ingestion block renders in coach.md. */
   ingestion?: 'local' | 'mcp' | 'paste' | 'skip';
+  /** Whether to generate per-folder CLAUDE.md files (full profile only; ignored for solo) */
+  federated?: boolean;
 }
 
 /**
