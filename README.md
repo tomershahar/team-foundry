@@ -13,6 +13,8 @@ Setup takes 15–25 minutes. Your AI starts using the context immediately.
 
 → **[See what it looks like when populated](example/)** — a fully filled-in team-foundry for Clearline, a fictional 8-person B2B SaaS team. Open `example/` in Claude Code or Cursor and ask anything.
 
+**[team-foundry.com](https://team-foundry.com)** · If this helps your team, [a star helps others find it](https://github.com/tomershahar/team-foundry).
+
 ---
 
 ## The problem
@@ -135,7 +137,7 @@ Every finding cites the specific file, the specific content, and the evidence. N
 npx create-team-foundry status
 ```
 
-Health table across all your files: last updated, days since update, PRs shipped since then, owner, health classification (ok / stale / empty / missing).
+Health table across all your files: last updated, days since update, PRs shipped since then, owner, health classification (ok / stale / empty / missing). Link integrity checks flag outcomes with no linked assumption, Now items with no validated bet, and metrics referenced but not defined.
 
 ---
 
@@ -143,7 +145,23 @@ Health table across all your files: last updated, days since update, PRs shipped
 npx create-team-foundry
 ```
 
-**Run in your shared repo. 15 minutes. Then ask: `"Let's set up our team-foundry."`**
+**Run in your shared repo. 15 minutes. Then say: `"Let's set up our team-foundry."`**
+
+---
+
+## What's next
+
+**v2.x**
+- `--json` output for `status` — pipe findings into CI or dashboards
+- `--strict` mode — fail CI when critical drift is detected
+- MCP server — expose team-foundry context as a tool for agents that don't read files natively
+
+**v3 (exploring)**
+- Cross-repo federation — one team-foundry for a platform team read by multiple product repos
+- Status webhooks — post weekly drift report to Slack without leaving the terminal
+- Team onboarding flow — guided interview for new team members joining an existing team-foundry
+
+Have a use case or feature idea? [Open an issue](https://github.com/tomershahar/team-foundry/issues).
 
 ---
 

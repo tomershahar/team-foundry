@@ -6,9 +6,7 @@ dist/
 coverage/
 uat-mock-docs/
 
-# Working documents — not for public consumption
+# Internal working documents
+docs/internal/
 new_features_idea.md
 SPEC-iteration-9b.md
-team-foundry-update-instructions.md
-ITERATIONS.md
-team-foundry-prd-v2*.md
