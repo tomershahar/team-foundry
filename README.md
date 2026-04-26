@@ -2,7 +2,7 @@
 
 **Make your AI coding outputs align with your product reality.**
 
-Your AI tool gives better answers when it knows what the product is for, who the customers are, and what quality means. team-foundry puts that context in your shared repo — where every tool, every team member reads the same thing, automatically.
+Your AI tool gives better answers when it knows what the product is for, who the customers are, and what quality means. team-foundry puts that context in your shared repo — where every AI tool on every teammate's machine reads the same files from the same repo.
 
 ```bash
 npx create-team-foundry
@@ -32,6 +32,46 @@ npx create-team-foundry
 ```
 
 **Try it in 2 minutes.** Answer a few questions. Files appear. Open your AI tool. Done.
+
+---
+
+## Set up once. Everyone gets the same context.
+
+**No cloud. No sync service. No extra accounts.** team-foundry uses your existing repo as the shared space.
+
+**One person sets it up**
+Run `npx create-team-foundry` in your shared repo. The CLI scaffolds a `team-foundry/` folder, generates the right tool file (`CLAUDE.md`, `GEMINI.md`, or `.cursor/rules/`), and commits everything to git.
+
+**Everyone else pulls**
+Teammates `git pull`. They now have the same team-foundry files locally. Their Claude Code, Cursor, or Gemini CLI reads from the same files yours does. No installs, no logins, no setup.
+
+**Updates flow through git**
+When someone updates a file — or the coach drafts an update they confirm — it's a normal git commit. Push, pull, review in PRs. Everyone stays in sync the same way they already sync code.
+
+```
+                ┌────────────────────────┐
+                │   Your shared repo     │
+                │   (GitHub / GitLab)    │
+                │                        │
+                │   team-foundry/        │
+                │     ├─ outcomes.md     │
+                │     ├─ customers.md    │
+                │     ├─ decisions/      │
+                │     └─ ...             │
+                └───────────┬────────────┘
+                            │
+              git pull / push (no other sync)
+                            │
+          ┌─────────────────┼─────────────────┐
+          ▼                 ▼                 ▼
+    ┌──────────┐      ┌──────────┐      ┌──────────┐
+    │   PM     │      │ Engineer │      │ Designer │
+    │ Claude   │      │ Cursor   │      │ Gemini   │
+    │ Code     │      │          │      │ CLI      │
+    └──────────┘      └──────────┘      └──────────┘
+```
+
+*Your repo is the shared space. Git is the sync. team-foundry adds the structure and the coach.*
 
 ---
 
