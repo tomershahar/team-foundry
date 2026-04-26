@@ -84,7 +84,7 @@ When someone updates a file — or the coach drafts an update they confirm — i
 
 | Profile | Files | Includes |
 |---|---|---|
-| Solo | 7 | Root instruction file, coach playbook, north star, outcomes, customers, stack |
+| Solo | 7 | Root instruction file (CLAUDE.md/GEMINI.md), getting started guide, coach playbook, north star, outcomes, customers, stack |
 | Full | 20 | Everything above + strategy, roadmap, assumptions, risks, trio, working agreement, AI practices, quality bar, decisions log, design principles, metrics, glossary, stakeholders |
 | Full (federated) | 26 | Everything above + per-folder routing files for multi-instance setups |
 
