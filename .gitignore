@@ -7,6 +7,6 @@ coverage/
 uat-mock-docs/
 
 # Internal working documents
-docs/internal/
+docs/
 new_features_idea.md
-SPEC-iteration-9b.md
+SPEC*.md
