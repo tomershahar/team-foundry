@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { TemplateContext } from '../types.js';
+import { rootAgentsTemplate } from '../templates/root-agents.js';
 import {
   rootClaudeTemplate,
   rootGeminiTemplate,
@@ -1288,6 +1289,63 @@ describe('Iteration 9b — scaffold strategy.md wiring', () => {
     const soloPaths = expectedPaths('solo', 'claude');
     // full has all solo files + 13 full-only files (was 12, now 13 with strategy.md)
     expect(fullPaths.length - soloPaths.length).toBe(13);
+  });
+});
+
+describe('Iteration 9 — AGENTS.md template', () => {
+  it('AGENTS.md output contains purpose: frontmatter', () => {
+    const output = rootAgentsTemplate(baseCtx);
+    expect(output).toContain('purpose:');
+  });
+
+  it('AGENTS.md output has read_when: always', () => {
+    const output = rootAgentsTemplate(baseCtx);
+    const fm = parseFrontmatter(output);
+    expect(fm?.read_when).toBe('always');
+  });
+
+  it('AGENTS.md output contains ## Where to find context', () => {
+    expect(rootAgentsTemplate(baseCtx)).toContain('## Where to find context');
+  });
+
+  it('AGENTS.md output contains team-foundry/product/ path reference', () => {
+    expect(rootAgentsTemplate(baseCtx)).toContain('team-foundry/product/');
+  });
+
+  it('AGENTS.md output contains ## Working with the team-foundry coach', () => {
+    expect(rootAgentsTemplate(baseCtx)).toContain('## Working with the team-foundry coach');
+  });
+
+  it('AGENTS.md full profile contains ## Glossary', () => {
+    expect(rootAgentsTemplate(baseCtx)).toContain('## Glossary');
+  });
+
+  it('AGENTS.md solo profile does NOT contain ## Glossary', () => {
+    const soloCtx = { ...baseCtx, profile: 'solo' as const };
+    expect(rootAgentsTemplate(soloCtx)).not.toContain('## Glossary');
+  });
+
+  it('AGENTS.md does NOT contain full coach playbook text (no B1 inline detail)', () => {
+    const output = rootAgentsTemplate(baseCtx);
+    expect(output).not.toContain('Behavior 1:');
+    expect(output).not.toContain('Inline trigger');
+  });
+
+  it('AGENTS.md full profile shows team-foundry/context/ path', () => {
+    expect(rootAgentsTemplate(baseCtx)).toContain('team-foundry/context/');
+  });
+
+  it('AGENTS.md solo profile does NOT show team-foundry/context/ path', () => {
+    const soloCtx = { ...baseCtx, profile: 'solo' as const };
+    expect(rootAgentsTemplate(soloCtx)).not.toContain('team-foundry/context/');
+  });
+
+  it('CLAUDE.md output contains AGENTS.md cross-reference line', () => {
+    expect(rootClaudeTemplate(baseCtx)).toContain('AGENTS.md');
+  });
+
+  it('GEMINI.md output contains AGENTS.md cross-reference line', () => {
+    expect(rootGeminiTemplate(baseCtx)).toContain('AGENTS.md');
   });
 });
 

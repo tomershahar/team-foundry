@@ -13,6 +13,7 @@ import {
   rootClaudeTemplate,
   rootGeminiTemplate,
   rootCursorTemplate,
+  rootAgentsTemplate,
   gettingStartedTemplate,
   coachTemplate,
   northStarTemplate,
@@ -39,6 +40,11 @@ interface FileEntry {
   relativePath: string;
   content: (ctx: TemplateContext) => string;
 }
+
+/** Root files always written regardless of tool choice */
+const ALWAYS_ROOT_ENTRIES: FileEntry[] = [
+  { relativePath: 'AGENTS.md', content: rootAgentsTemplate },
+];
 
 /** Files written for every profile */
 const SOLO_ENTRIES: FileEntry[] = [
@@ -103,6 +109,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
   const ctx: TemplateContext = { profile, tool, repoVisibility, date, ingestionPath, ingestion };
 
   const entries: FileEntry[] = [
+    ...ALWAYS_ROOT_ENTRIES,
     ...rootEntries(tool),
     ...SOLO_ENTRIES,
     ...(profile === 'full' ? FULL_ONLY_ENTRIES : []),
@@ -143,9 +150,10 @@ export function expectedPaths(
           ? ['.cursor/rules/team-foundry.mdc']
           : ['GEMINI.md'];
 
+  const alwaysRoot = ALWAYS_ROOT_ENTRIES.map((e) => e.relativePath);
   const solo = SOLO_ENTRIES.map((e) => e.relativePath);
   const full = profile === 'full' ? FULL_ONLY_ENTRIES.map((e) => e.relativePath) : [];
   const fed = profile === 'full' && federated ? FEDERATED_ENTRIES.map((e) => e.relativePath) : [];
 
-  return [...roots, ...solo, ...full, ...fed];
+  return [...alwaysRoot, ...roots, ...solo, ...full, ...fed];
 }

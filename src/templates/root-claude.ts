@@ -7,6 +7,8 @@ read_when: Every Claude Code session in this repo — this is the root instructi
 last_updated: ${ctx.date}
 ---
 
+<!-- See AGENTS.md for cross-tool context routing (OpenAI Codex and other agents). -->
+
 # CLAUDE.md
 
 This repo uses **team-foundry** — structured files that give you real team context.

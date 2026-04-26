@@ -97,6 +97,7 @@ Every file has YAML frontmatter (`purpose`, `read_when`, `last_updated`, `owner`
 | Claude Code | `CLAUDE.md` |
 | Gemini CLI | `GEMINI.md` |
 | Cursor | `.cursor/rules/team-foundry.mdc` |
+| OpenAI Codex / generic agents | `AGENTS.md` |
 | Both (Claude + Gemini) | `CLAUDE.md` + `GEMINI.md` |
 
 ## The coach

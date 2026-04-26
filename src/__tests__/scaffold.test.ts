@@ -165,20 +165,20 @@ describe('expectedPaths()', () => {
     );
   });
 
-  it('solo profile produces exactly 7 files (matches README)', () => {
-    expect(expectedPaths('solo', 'claude').length).toBe(7);
+  it('solo profile produces exactly 8 files (7 content + AGENTS.md)', () => {
+    expect(expectedPaths('solo', 'claude').length).toBe(8);
   });
 
-  it('full profile produces exactly 20 files (matches README)', () => {
-    expect(expectedPaths('full', 'claude').length).toBe(20);
+  it('full profile produces exactly 21 files (20 content + AGENTS.md)', () => {
+    expect(expectedPaths('full', 'claude').length).toBe(21);
   });
 
-  it('full profile federated produces exactly 26 files (20 + 6 folder CLAUDE.md)', () => {
-    expect(expectedPaths('full', 'claude', true).length).toBe(26);
+  it('full profile federated produces exactly 27 files (21 + 6 folder CLAUDE.md)', () => {
+    expect(expectedPaths('full', 'claude', true).length).toBe(27);
   });
 
-  it('solo profile federated still produces 7 files (federated ignored)', () => {
-    expect(expectedPaths('solo', 'claude', true).length).toBe(7);
+  it('solo profile federated still produces 8 files (federated ignored)', () => {
+    expect(expectedPaths('solo', 'claude', true).length).toBe(8);
   });
 
   it('cursor tool produces .cursor/rules/team-foundry.mdc', () => {
@@ -192,12 +192,12 @@ describe('expectedPaths()', () => {
     expect(paths).not.toContain('GEMINI.md');
   });
 
-  it('cursor solo profile produces exactly 7 files', () => {
-    expect(expectedPaths('solo', 'cursor').length).toBe(7);
+  it('cursor solo profile produces exactly 8 files', () => {
+    expect(expectedPaths('solo', 'cursor').length).toBe(8);
   });
 
-  it('cursor full profile produces exactly 20 files', () => {
-    expect(expectedPaths('full', 'cursor').length).toBe(20);
+  it('cursor full profile produces exactly 21 files', () => {
+    expect(expectedPaths('full', 'cursor').length).toBe(21);
   });
 });
 

@@ -7,6 +7,8 @@ read_when: Every Gemini CLI session in this repo — this is the root instructio
 last_updated: ${ctx.date}
 ---
 
+<!-- See AGENTS.md for cross-tool context routing (OpenAI Codex and other agents). -->
+
 # GEMINI.md
 
 This repo uses **team-foundry** — structured files that give you real team context.

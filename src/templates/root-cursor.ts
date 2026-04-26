@@ -8,6 +8,8 @@ last_updated: ${ctx.date}
 alwaysApply: true
 ---
 
+<!-- See AGENTS.md for cross-tool context routing (OpenAI Codex and other agents). -->
+
 # team-foundry
 
 This repo uses **team-foundry** — structured files that give you real team context.
