@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { TemplateContext } from '../types.js';
-import { rootAgentsTemplate } from '../templates/root-agents.js';
 import {
+  rootAgentsTemplate,
   rootClaudeTemplate,
   rootGeminiTemplate,
   rootCursorTemplate,
@@ -38,6 +38,7 @@ const allTemplates = [
   ['root-claude', rootClaudeTemplate],
   ['root-gemini', rootGeminiTemplate],
   ['root-cursor', rootCursorTemplate],
+  ['root-agents', rootAgentsTemplate],
   ['getting-started', gettingStartedTemplate],
   ['coach', coachTemplate],
   ['north-star', northStarTemplate],
@@ -1292,7 +1293,7 @@ describe('Iteration 9b — scaffold strategy.md wiring', () => {
   });
 });
 
-describe('Iteration 9 — AGENTS.md template', () => {
+describe('AGENTS.md generation', () => {
   it('AGENTS.md output contains purpose: frontmatter', () => {
     const output = rootAgentsTemplate(baseCtx);
     expect(output).toContain('purpose:');
@@ -1346,6 +1347,25 @@ describe('Iteration 9 — AGENTS.md template', () => {
 
   it('GEMINI.md output contains AGENTS.md cross-reference line', () => {
     expect(rootGeminiTemplate(baseCtx)).toContain('AGENTS.md');
+  });
+
+  it('cursor template output contains AGENTS.md cross-reference line', () => {
+    expect(rootCursorTemplate(baseCtx)).toContain('AGENTS.md');
+  });
+
+  it('AGENTS.md coach section points to CLAUDE.md/GEMINI.md instead of duplicating trigger phrases', () => {
+    const output = rootAgentsTemplate(baseCtx);
+    expect(output).toContain('CLAUDE.md');
+    expect(output).toContain('GEMINI.md');
+  });
+
+  it('AGENTS.md solo profile does NOT contain ADR commitments caution bullet', () => {
+    const soloCtx = { ...baseCtx, profile: 'solo' as const };
+    expect(rootAgentsTemplate(soloCtx)).not.toContain('ADR commitments');
+  });
+
+  it('AGENTS.md full profile contains ADR commitments caution bullet', () => {
+    expect(rootAgentsTemplate(baseCtx)).toContain('ADR commitments');
   });
 });
 

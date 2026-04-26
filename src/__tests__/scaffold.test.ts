@@ -165,7 +165,7 @@ describe('expectedPaths()', () => {
     );
   });
 
-  it('solo profile produces exactly 8 files (7 content + AGENTS.md)', () => {
+  it('solo profile produces exactly 8 files (6 content + CLAUDE.md + AGENTS.md)', () => {
     expect(expectedPaths('solo', 'claude').length).toBe(8);
   });
 

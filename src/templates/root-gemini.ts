@@ -5,6 +5,7 @@ export function rootGeminiTemplate(ctx: TemplateContext): string {
 purpose: Identity, routing map, and coach activation — read at the start of every session
 read_when: Every Gemini CLI session in this repo — this is the root instruction file
 last_updated: ${ctx.date}
+owner:
 ---
 
 <!-- See AGENTS.md for cross-tool context routing (OpenAI Codex and other agents). -->

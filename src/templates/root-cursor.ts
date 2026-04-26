@@ -5,6 +5,7 @@ export function rootCursorTemplate(ctx: TemplateContext): string {
 purpose: Identity, routing map, and coach activation — read at the start of every session
 read_when: Every Cursor session in this repo — this is the root instruction file
 last_updated: ${ctx.date}
+owner:
 alwaysApply: true
 ---
 
