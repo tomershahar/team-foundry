@@ -1,6 +1,6 @@
 {
   "name": "create-team-foundry",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Scaffold a team-foundry into any repo — structured context files for Claude Code, Gemini CLI, and Cursor",
   "license": "MIT",
   "type": "module",
