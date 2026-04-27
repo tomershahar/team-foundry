@@ -9,7 +9,7 @@ npx create-team-foundry
 ```
 
 **Run in your shared repo. Then say: `"Let's set up our team-foundry."`**
-Setup takes 15–25 minutes. Your AI starts using the context immediately.
+If your repo already has a README and commit history, setup takes about 1 minute — the AI reads your repo and pre-fills the answers. Starting fresh takes 15–25 minutes. Either way, your AI starts using the context immediately.
 
 → **[See what it looks like when populated](example/)** — a fully filled-in team-foundry for Clearline, a fictional 8-person B2B SaaS team. Open `example/` in Claude Code or Cursor and ask anything.
 
@@ -79,8 +79,8 @@ When someone updates a file — or the coach drafts an update they confirm — i
 
 ## What gets created
 
-**Solo profile (1–3 people):** 7 files, ~15 minutes.
-**Full profile (4–15 people):** 20 files, ~25 minutes.
+**Solo profile (1–3 people):** 7 files, ~1 minute with repo scan / ~15 minutes fresh.
+**Full profile (4–15 people):** 20 files, ~1 minute with repo scan / ~25 minutes fresh.
 
 | Profile | Files | Includes |
 |---|---|---|
@@ -146,7 +146,7 @@ Health table across all your files: last updated, days since update, PRs shipped
 npx create-team-foundry
 ```
 
-**Run in your shared repo. 15 minutes. Then say: `"Let's set up our team-foundry."`**
+**Run in your shared repo. Then say: `"Let's set up our team-foundry."`**
 
 ---
 
