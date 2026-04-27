@@ -1122,7 +1122,7 @@ Present a single structured summary. Do not ask questions yet.
 > What's missing or wrong? (say "looks good" to proceed, or correct anything above)
 
 Per-field source attribution rules:
-- Fields read verbatim from a file: show \`(from package.json)\`, \`(from README)\` etc.
+- Fields read verbatim from a file: show \`(from manifest file)\`, \`(from README)\` etc. Use the actual filename (e.g. \`package.json\`, \`pyproject.toml\`, \`Cargo.toml\`) when it is unambiguous.
 - Fields inferred (e.g. team size estimated from contributor count): append \`— challenge me\`
 - Fields where no signal was found: omit the field from the summary
 
@@ -1169,7 +1169,7 @@ If the repo has no \`README.md\`, no \`package.json\`, and fewer than 5 git comm
 say:
 
 > I couldn't find enough signals in this repo to pre-fill anything.
-> I'll ask you directly — this takes about ${ctx.profile === 'solo' ? '15–20' : '25–35'} minutes.
+> I'll ask you directly — this takes about ${timeEstimate}.
 
 Then proceed with the standard interview sequence below, skipping Steps 1–5.
 
@@ -1223,7 +1223,7 @@ Apply medium confidence to all content from undated or old docs.
 Then apply Steps 2–4 from the **Shared ingestion reference** section below.
 ` : ctx.ingestionPath ? `
 **Existing docs — local folder:** The user indicated they have docs to ingest at
-\`${ctx.ingestionPath}\`. Before asking any questions, read all files in that folder,
+\`${ctx.ingestionPath}\`.${ctx.ingestion === 'repo+local' ? ` Repo signals have already been processed in the Repo auto-ingestion section above. Now also read this local folder as a supplementary source — use it to fill gaps the repo signals could not supply.` : ` Before asking any questions, read all files in that folder,`}
 then follow the shared ingestion reference below.
 
 **Step 1 — Stale doc check.** Before reading content, check each file for dates.
@@ -1262,7 +1262,7 @@ Wait for the user to confirm before proceeding.
 
 Then apply Steps 2–4 from the **Shared ingestion reference** section below.
 ` : ''}
-${(ctx.ingestionPath || ctx.ingestion === 'mcp' || ctx.ingestion === 'paste' || ctx.ingestion === 'repo+mcp' || ctx.ingestion === 'repo+paste') ? `
+${(ctx.ingestionPath || ctx.ingestion === 'repo+local' || ctx.ingestion === 'mcp' || ctx.ingestion === 'paste' || ctx.ingestion === 'repo+mcp' || ctx.ingestion === 'repo+paste') ? `
 ### Shared ingestion reference
 
 **Step 2 — Map content to files.** Route what you find to the right team-foundry file:

@@ -869,10 +869,12 @@ describe('Iteration 8 — Artifact ingestion (MCP + paste)', () => {
     expect(coachTemplate(mcpCtx)).toContain('MCP source guidance');
   });
 
-  it('MCP block does not render for local, paste, or skip', () => {
+  it('MCP block does not render for local, paste, skip, repo, or repo+local', () => {
     expect(coachTemplate(baseCtx)).not.toContain('MCP source guidance');
     expect(coachTemplate(pasteCtx)).not.toContain('MCP source guidance');
     expect(coachTemplate(skipCtx)).not.toContain('MCP source guidance');
+    expect(coachTemplate({ ...baseCtx, ingestion: 'repo' })).not.toContain('MCP source guidance');
+    expect(coachTemplate({ ...baseCtx, ingestion: 'repo+local' })).not.toContain('MCP source guidance');
   });
 
   it('MCP block includes Notion, Confluence, Google Drive guidance', () => {
@@ -898,9 +900,11 @@ describe('Iteration 8 — Artifact ingestion (MCP + paste)', () => {
     expect(coachTemplate(pasteCtx)).toContain('paste content');
   });
 
-  it('paste block does not render for mcp, local, or skip', () => {
+  it('paste block does not render for mcp, local, skip, repo, or repo+local', () => {
     expect(coachTemplate(mcpCtx)).not.toContain('Paste them now');
     expect(coachTemplate(skipCtx)).not.toContain('Paste them now');
+    expect(coachTemplate({ ...baseCtx, ingestion: 'repo' })).not.toContain('Paste them now');
+    expect(coachTemplate({ ...baseCtx, ingestion: 'repo+local' })).not.toContain('Paste them now');
   });
 
   it('paste block instructs AI to wait for paste before interview', () => {
@@ -1041,12 +1045,31 @@ describe('Repo auto-ingestion', () => {
     expect(coachTemplate(repoLocalCtx)).toContain('Shared ingestion reference');
   });
 
+  it('repo+local renders Shared ingestion reference even without ingestionPath', () => {
+    const ctx: TemplateContext = { ...baseCtx, ingestion: 'repo+local' };
+    expect(coachTemplate(ctx)).toContain('Shared ingestion reference');
+  });
+
+  it('repo+local local-folder block acknowledges it is the supplementary layer', () => {
+    expect(coachTemplate(repoLocalCtx)).toContain('supplementary source');
+  });
+
   it('repo+mcp also renders the MCP ingestion block', () => {
     expect(coachTemplate(repoMcpCtx)).toContain('MCP source guidance');
   });
 
   it('repo+paste also renders the paste block', () => {
     expect(coachTemplate(repoPasteCtx)).toContain('Paste them now');
+  });
+
+  it('repo and repo+local do not render the MCP block', () => {
+    expect(coachTemplate(repoCtx)).not.toContain('MCP source guidance');
+    expect(coachTemplate(repoLocalCtx)).not.toContain('MCP source guidance');
+  });
+
+  it('repo and repo+local do not render the paste block', () => {
+    expect(coachTemplate(repoCtx)).not.toContain('Paste them now');
+    expect(coachTemplate(repoLocalCtx)).not.toContain('Paste them now');
   });
 });
 

@@ -8,8 +8,8 @@ export interface TemplateContext {
   /** ISO date string YYYY-MM-DD */
   date: string;
   /**
-   * Path to local docs folder for ingestion, if the user selected 'local'.
-   * Included in generated files so the AI knows where to look.
+   * Path to local docs folder for ingestion. Must be set when ingestion is
+   * 'local' or 'repo+local'. Included in generated files so the AI knows where to look.
    */
   ingestionPath?: string;
   /** Ingestion mode selected by the user. Drives which ingestion block renders in coach.md. */
