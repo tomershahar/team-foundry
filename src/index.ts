@@ -83,7 +83,7 @@ async function main(): Promise<void> {
   await scaffold({ ...answers, targetDir, date });
   await writeGitignore(targetDir);
 
-  if (answers.ingestion === 'paste') {
+  if (answers.ingestion === 'paste' || answers.ingestion === 'repo+paste') {
     const pastePath = path.join(targetDir, '.team-foundry', 'paste-content.md');
     try {
       await fs.access(pastePath);
@@ -95,7 +95,41 @@ async function main(): Promise<void> {
   const tool = TOOL_LABEL[answers.tool];
   let ingestionNote: string;
 
-  if (answers.ingestion === 'paste') {
+  if (answers.ingestion === 'repo') {
+    ingestionNote =
+      `\nNext steps:\n\n` +
+      `  1. cd ${targetDir}\n\n` +
+      `  2. Open ${tool} and say:\n\n` +
+      `       "Let's set up our team-foundry."\n\n` +
+      `  The AI will read your repo (README, package.json, git history, GitHub\n` +
+      `  PRs/issues) and pre-fill answers before asking questions.\n`;
+  } else if (answers.ingestion === 'repo+local') {
+    ingestionNote =
+      `\nNext steps:\n\n` +
+      `  1. cd ${targetDir}\n\n` +
+      `  2. Open ${tool} and say:\n\n` +
+      `       "Let's set up our team-foundry."\n\n` +
+      `  The AI will read your repo first, then supplement with the docs in\n` +
+      `  ${answers.ingestionPath ?? '[your docs folder]'}.\n`;
+  } else if (answers.ingestion === 'repo+mcp') {
+    ingestionNote =
+      `\nNext steps:\n\n` +
+      `  1. In ${tool} settings, connect your MCP server\n` +
+      `     (Notion, Confluence, or Google Drive) if you haven't already.\n\n` +
+      `  2. cd ${targetDir}\n\n` +
+      `  3. Open ${tool} and say:\n\n` +
+      `       "Let's set up our team-foundry."\n\n` +
+      `  The AI will read your repo first, then supplement from your MCP source.\n`;
+  } else if (answers.ingestion === 'repo+paste') {
+    ingestionNote =
+      `\nNext steps:\n\n` +
+      `  1. Open .team-foundry/paste-content.md and paste in your existing docs\n` +
+      `     (strategy, roadmaps, customer research). Save the file.\n\n` +
+      `  2. cd ${targetDir}\n\n` +
+      `  3. Open ${tool} and say:\n\n` +
+      `       "Let's set up our team-foundry. I've added docs to\n` +
+      `        paste-content.md — use them to supplement the repo scan."\n`;
+  } else if (answers.ingestion === 'paste') {
     ingestionNote =
       `\nNext steps:\n\n` +
       `  1. Open .team-foundry/paste-content.md and paste in your existing docs\n` +

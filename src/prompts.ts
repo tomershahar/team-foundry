@@ -63,7 +63,7 @@ export async function runPrompts(): Promise<PromptResult> {
       { value: 'repo', label: 'Repo signals only  (README, package.json, git history, GitHub PRs/issues)' },
       { value: 'repo+local', label: 'Repo + local docs folder  (repo signals + point me at a folder)' },
       { value: 'repo+mcp', label: 'Repo + MCP source  (repo signals + Notion, Confluence, Google Drive)' },
-      { value: 'repo+paste', label: 'Repo + paste content  (repo signals + paste docs into the chat)' },
+      { value: 'repo+paste', label: 'Repo + paste content  (repo signals + paste docs into paste-content.md)' },
       { value: 'local', label: 'Local docs folder only  (no repo scan)' },
       { value: 'mcp', label: 'MCP source only  (no repo scan)' },
       { value: 'paste', label: 'Paste content only  (no repo scan)' },
