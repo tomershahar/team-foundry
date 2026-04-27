@@ -1067,13 +1067,120 @@ Adjustments are soft — they change when you surface a behavior, not whether yo
 its protocol. They reset after 30 days or when the team addresses the gap.
 
 ---
+${ctx.ingestion?.startsWith('repo') ? `
+## Repo auto-ingestion
 
+**When this runs:** At the start of every onboarding interview when ingestion mode is
+\`repo\`, \`repo+local\`, \`repo+mcp\`, or \`repo+paste\`. Execute Steps 1–5 silently
+before saying anything to the user.
+
+### Source priority
+
+Read sources in this order. Highest-priority source wins per field — lower sources
+only fill gaps the higher ones leave empty.
+
+| Priority | Source | What it supplies |
+|---|---|---|
+| 1 | Existing \`team-foundry/\` files | Everything — highest priority, re-run aware |
+| 2 | \`package.json\` / \`pyproject.toml\` / \`Cargo.toml\` | Product name, stack, language, deps |
+| 3 | \`README.md\` | Product description, what it does, who it's for |
+| 4 | Git log (last 30 commits) | Contributors, cadence, recent focus |
+| 5 | ADRs in \`docs/\`, \`decisions/\`, or \`engineering/decisions/\` | Architecture decisions |
+| 6 | GitHub PRs and issues via \`gh\` CLI (optional) | Current work, open problems |
+| 7 | Top-level folder structure | Repo layout, monorepo signals |
+
+### Step 1 — Silent read
+
+Read all available sources silently. Do not stream output during the read.
+
+**GitHub signals (priority 6):** Run \`gh issue list\` and \`gh pr list\` to read open
+issues and recent PRs. If \`gh\` is not installed, not authenticated, or does not respond
+within 10 seconds, fall back to local repo signals only and note
+"GitHub signals unavailable — using local repo only" in the summary. Never block on
+GitHub — the flow continues regardless.
+
+**Re-run detection:** Check whether \`team-foundry/\` files already exist and have
+content beyond gap markers. If yes, treat them as highest-priority source and skip to
+the re-run flow in Step 2b.
+
+### Step 2 — Pre-fill summary
+
+Present a single structured summary. Do not ask questions yet.
+
+> Here's what I found in your repo. Tell me what's wrong and I'll fix it before writing
+> anything.
+>
+> **Product:** [name — from package.json]
+> **What it does:** [1–2 sentences — from README, first paragraph]
+> **Stack:** [language/framework — from package.json + README]
+> **Team:** [contributor count from git log — challenge me]${ctx.profile === 'full' ? `
+> **Recent focus:** [inferred from last 30 commit messages — challenge me]
+> **Open assumptions I spotted:** [from open issues / PRs if available]
+> **Decisions already made:** [from ADRs if found]` : `
+> **Recent focus:** [inferred from last 30 commit messages — challenge me]`}
+>
+> What's missing or wrong? (say "looks good" to proceed, or correct anything above)
+
+Per-field source attribution rules:
+- Fields read verbatim from a file: show \`(from package.json)\`, \`(from README)\` etc.
+- Fields inferred (e.g. team size estimated from contributor count): append \`— challenge me\`
+- Fields where no signal was found: omit the field from the summary
+
+### Step 2b — Re-run flow (only when existing team-foundry/ files found)
+
+If existing \`team-foundry/\` files are populated beyond gap markers, say instead:
+
+> You've already run the onboarding interview. Here's what's currently populated.
+> What's changed since then?
+
+Show current values from the files. Only update fields the user says have changed.
+Leave confirmed fields untouched.
+
+### Step 3 — One-message correction
+
+Wait for the user's response. Apply any corrections they give. Do not re-ask confirmed
+fields. If the user says "looks good," proceed immediately to Step 4.
+
+### Step 4 — Write files
+
+Write all team-foundry files using confirmed data. For any field with no signal and
+no user-provided answer, write a \`<!-- GAP: ... -->\` marker. Follow the
+conversation-as-update protocol — show each file draft and wait for confirmation
+before writing.
+
+**No silent writes.** Even high-confidence pre-filled answers require explicit
+confirmation before being written to disk. "Looks good" or "yes" is confirmation.
+Silence is not.
+
+### Step 5 — Gap nudge
+
+After writing, surface the top 3 gaps:
+
+> Here's what still needs filling in — these are the most important:
+> 1. [Gap 1 — file and field]
+> 2. [Gap 2 — file and field]
+> 3. [Gap 3 — file and field]
+>
+> Want to fill any of these in now?
+
+### No-signal fallback
+
+If the repo has no \`README.md\`, no \`package.json\`, and fewer than 5 git commits,
+say:
+
+> I couldn't find enough signals in this repo to pre-fill anything.
+> I'll ask you directly — this takes about ${ctx.profile === 'solo' ? '15–20' : '25–35'} minutes.
+
+Then proceed with the standard interview sequence below, skipping Steps 1–5.
+
+---
+` : ''}
 ## Onboarding interview
 
 **Triggered by:** The user says "Let's set up our team-foundry," "run the onboarding
 interview," or any close variant. Also triggered on first load if GETTING_STARTED.md
 still exists and the "Who we are" section in the root file is empty.
-${ctx.ingestion === 'mcp' ? `
+${(ctx.ingestion === 'mcp' || ctx.ingestion === 'repo+mcp') ? `
 **Existing docs — MCP source:** The user indicated they have docs in a connected MCP
 source (Notion, Confluence, or Google Drive). Before asking any questions, query their
 connected MCP servers, then follow the shared ingestion reference below.
@@ -1126,7 +1233,7 @@ If a file has no date fields, or all dates are older than 6 months, flag it:
 Apply medium confidence to all content from undated or old files.
 
 Then apply Steps 2–4 from the **Shared ingestion reference** section below.
-` : ctx.ingestion === 'paste' ? `
+` : (ctx.ingestion === 'paste' || ctx.ingestion === 'repo+paste') ? `
 **Existing docs — paste content:** The user indicated they have docs to share by
 pasting. Before starting the interview, say:
 
@@ -1155,7 +1262,7 @@ Wait for the user to confirm before proceeding.
 
 Then apply Steps 2–4 from the **Shared ingestion reference** section below.
 ` : ''}
-${(ctx.ingestionPath || ctx.ingestion === 'mcp' || ctx.ingestion === 'paste') ? `
+${(ctx.ingestionPath || ctx.ingestion === 'mcp' || ctx.ingestion === 'paste' || ctx.ingestion === 'repo+mcp' || ctx.ingestion === 'repo+paste') ? `
 ### Shared ingestion reference
 
 **Step 2 — Map content to files.** Route what you find to the right team-foundry file:

@@ -925,6 +925,131 @@ describe('Iteration 8 — Artifact ingestion (MCP + paste)', () => {
   });
 });
 
+describe('Repo auto-ingestion', () => {
+  const repoCtx: TemplateContext = { ...baseCtx, ingestion: 'repo' };
+  const repoLocalCtx: TemplateContext = { ...baseCtx, ingestion: 'repo+local', ingestionPath: './docs' };
+  const repoMcpCtx: TemplateContext = { ...baseCtx, ingestion: 'repo+mcp' };
+  const repoPasteCtx: TemplateContext = { ...baseCtx, ingestion: 'repo+paste' };
+  const soloRepoCtx: TemplateContext = { ...baseCtx, profile: 'solo', ingestion: 'repo' };
+
+  it('repo auto-ingestion block renders when ingestion is repo', () => {
+    expect(coachTemplate(repoCtx)).toContain('Repo auto-ingestion');
+  });
+
+  it('repo block renders for repo+local', () => {
+    expect(coachTemplate(repoLocalCtx)).toContain('Repo auto-ingestion');
+  });
+
+  it('repo block renders for repo+mcp', () => {
+    expect(coachTemplate(repoMcpCtx)).toContain('Repo auto-ingestion');
+  });
+
+  it('repo block renders for repo+paste', () => {
+    expect(coachTemplate(repoPasteCtx)).toContain('Repo auto-ingestion');
+  });
+
+  it('repo block does NOT render for local, mcp, paste, skip, or absent', () => {
+    expect(coachTemplate(baseCtx)).not.toContain('Repo auto-ingestion');
+    expect(coachTemplate({ ...baseCtx, ingestion: 'local' })).not.toContain('Repo auto-ingestion');
+    expect(coachTemplate({ ...baseCtx, ingestion: 'mcp' })).not.toContain('Repo auto-ingestion');
+    expect(coachTemplate({ ...baseCtx, ingestion: 'paste' })).not.toContain('Repo auto-ingestion');
+    expect(coachTemplate({ ...baseCtx, ingestion: 'skip' })).not.toContain('Repo auto-ingestion');
+  });
+
+  it('repo block contains the pre-fill summary fields', () => {
+    const output = coachTemplate(repoCtx);
+    expect(output).toContain('**Product:**');
+    expect(output).toContain('**What it does:**');
+    expect(output).toContain('**Stack:**');
+    expect(output).toContain('**Team:**');
+    expect(output).toContain('**Recent focus:**');
+  });
+
+  it('repo block reads package.json as a source', () => {
+    expect(coachTemplate(repoCtx)).toContain('package.json');
+  });
+
+  it('repo block reads README.md as a source', () => {
+    expect(coachTemplate(repoCtx)).toContain('README.md');
+  });
+
+  it('repo block reads git log as a source', () => {
+    expect(coachTemplate(repoCtx)).toContain('git log');
+  });
+
+  it('repo block reads existing team-foundry/ files as highest-priority source', () => {
+    const output = coachTemplate(repoCtx);
+    expect(output).toContain('team-foundry/');
+    expect(output).toMatch(/highest.priority|highest priority/i);
+  });
+
+  it('repo block includes GitHub signals via gh CLI', () => {
+    expect(coachTemplate(repoCtx)).toContain('gh');
+  });
+
+  it('repo block has 10-second timeout for GitHub signals', () => {
+    expect(coachTemplate(repoCtx)).toContain('10 seconds');
+  });
+
+  it('repo block falls back to local repo on GitHub timeout', () => {
+    const output = coachTemplate(repoCtx);
+    expect(output).toMatch(/fall.?back|fallback/i);
+    expect(output).toContain('local repo');
+  });
+
+  it('repo block shows "challenge me" on inferred fields', () => {
+    expect(coachTemplate(repoCtx)).toContain('challenge me');
+  });
+
+  it('repo block shows source attribution per field', () => {
+    expect(coachTemplate(repoCtx)).toContain('from package.json');
+    expect(coachTemplate(repoCtx)).toContain('from README');
+  });
+
+  it('repo block has re-run detection for existing team-foundry files', () => {
+    const output = coachTemplate(repoCtx);
+    expect(output).toMatch(/re.run|re-run|already run|existing.*team-foundry/i);
+    expect(output).toContain("What's changed");
+  });
+
+  it('repo block has no-signal fallback', () => {
+    const output = coachTemplate(repoCtx);
+    expect(output).toContain("couldn't find enough signals");
+  });
+
+  it('repo block enforces no silent writes', () => {
+    expect(coachTemplate(repoCtx)).toContain('No silent writes');
+  });
+
+  it('repo block mentions top-3 gap nudge after writing', () => {
+    expect(coachTemplate(repoCtx)).toContain('top 3 gaps');
+  });
+
+  it('full profile pre-fill summary includes full-only fields', () => {
+    const output = coachTemplate(repoCtx);
+    expect(output).toContain('**Open assumptions');
+    expect(output).toContain('**Decisions');
+  });
+
+  it('solo profile pre-fill summary omits full-only fields', () => {
+    const output = coachTemplate(soloRepoCtx);
+    expect(output).not.toContain('**Open assumptions');
+    expect(output).not.toContain('**Decisions');
+  });
+
+  it('repo+local also renders the local ingestion block', () => {
+    expect(coachTemplate(repoLocalCtx)).toContain('Shared ingestion reference');
+  });
+
+  it('repo+mcp also renders the MCP ingestion block', () => {
+    expect(coachTemplate(repoMcpCtx)).toContain('MCP source guidance');
+  });
+
+  it('repo+paste also renders the paste block', () => {
+    expect(coachTemplate(repoPasteCtx)).toContain('Paste them now');
+  });
+});
+
 describe('Iteration 10 — Quarterly retrospective', () => {
   it('retro section has a trigger definition with last_retrospective and last_updated fallback', () => {
     const output = coachTemplate(baseCtx);
