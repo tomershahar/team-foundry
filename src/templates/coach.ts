@@ -1148,10 +1148,11 @@ files just because they were not mentioned in the pre-fill summary — if the re
 gave you data for a file, populate it now.
 
 Signal-to-file mapping (use this to decide what to write):
-- Stack (language, framework, dependencies from manifest file) → \`engineering/stack.md\`
+- Stack (language, framework, dependencies from manifest file) → \`team-foundry/engineering/stack.md\`
 - Product name + what it does (README) → \`team-foundry/product/north-star.md\` (name field)
-- Recent commit messages → \`team-foundry/product/outcomes.md\` (inferred focus areas)
+- Recent commit messages → \`team-foundry/product/outcomes.md\` (inferred focus areas — frame as customer outcomes, not shipped features)
 - Open issues / PRs → \`team-foundry/product/assumptions.md\` (open bets, if full profile)
+- \`team-foundry/product/customers.md\` — no repo signal; write gap marker, surface in Step 5
 - Root instruction file — always write/update with product name and stack summary
 
 For any field with no signal and no user-provided answer, write a \`<!-- GAP: ... -->\`
@@ -1700,8 +1701,8 @@ After the last question, do the following:
    → north star (grounds the coach) → stack (engineering context).
    Wait for the user to say yes or choose a different file. If they say yes, proceed
    directly to the interview questions for that file as defined in the interview section
-   above — do not re-run the full interview. If they decline, proceed to step 4.
-   If all files are populated, skip this offer and proceed directly to step 4.
+   above — do not re-run the full interview. If they decline, proceed to the "Offer the coach" step below.
+   If all files are populated, skip this offer and proceed directly to the "Offer the coach" step below.
 
 4. **Offer the coach.** End with:
    > "Your team-foundry is set up. You can ask me to review it any time by saying

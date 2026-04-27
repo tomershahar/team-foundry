@@ -1089,12 +1089,12 @@ describe('Repo auto-ingestion', () => {
     expect(coachTemplate(repoLocalCtx)).not.toContain('Paste them now');
   });
 
-  it('Step 4 maps stack signal to engineering/stack.md', () => {
+  it('Step 4 maps stack signal to team-foundry/engineering/stack.md', () => {
     const output = coachTemplate(repoCtx);
     const step4Start = output.indexOf('### Step 4');
     const step5Start = output.indexOf('### Step 5');
     const step4 = output.slice(step4Start, step5Start);
-    expect(step4).toContain('engineering/stack.md');
+    expect(step4).toContain('team-foundry/engineering/stack.md');
   });
 
   it('Step 4 maps README signal to north-star.md', () => {
