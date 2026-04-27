@@ -929,6 +929,23 @@ describe('Iteration 8 — Artifact ingestion (MCP + paste)', () => {
   });
 });
 
+describe('Interview close — proactive next-step offer', () => {
+  it('interview close offers to start filling the most valuable gap immediately', () => {
+    expect(coachTemplate(baseCtx)).toContain('Want to start with');
+  });
+
+  it('interview close names customers as the default highest-leverage first fill', () => {
+    expect(coachTemplate(baseCtx)).toContain('customers');
+  });
+
+  it('interview close offer appears after the gap list, not before', () => {
+    const output = coachTemplate(baseCtx);
+    const gapListPos = output.indexOf("List what's still a gap");
+    const offerPos = output.indexOf('Want to start with');
+    expect(offerPos).toBeGreaterThan(gapListPos);
+  });
+});
+
 describe('Repo auto-ingestion', () => {
   const repoCtx: TemplateContext = { ...baseCtx, ingestion: 'repo' };
   const repoLocalCtx: TemplateContext = { ...baseCtx, ingestion: 'repo+local', ingestionPath: './docs' };

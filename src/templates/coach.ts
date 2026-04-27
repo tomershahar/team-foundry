@@ -1682,9 +1682,14 @@ After the last question, do the following:
 2. **List what's still a gap.** Name each empty or partially-filled file and the specific
    missing piece. Don't apologize for the gaps — state them neutrally.
 
-3. **Suggest one next action.** The single most valuable thing the team could do to improve
-   their team-foundry right now. Usually: fill the most important gap, or schedule a
-   customer conversation if customers.md is thin.
+3. **Suggest one next action and offer to start it now.** Name the single most valuable
+   gap and immediately offer to fill it:
+   > "Want to start with [most valuable gap]? That's usually the highest-leverage first
+   > fill — everything else references it."
+   Default priority: customers (shapes all other files) → outcomes (most time-sensitive)
+   → north star (grounds the coach) → stack (engineering context).
+   Wait for the user to say yes or choose a different file. If they say yes, begin the
+   relevant questions immediately without re-running the full interview.
 
 4. **Offer the coach.** End with:
    > "Your team-foundry is set up. You can ask me to review it any time by saying
