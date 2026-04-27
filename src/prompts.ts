@@ -28,7 +28,7 @@ export async function runPrompts(): Promise<PromptResult> {
     message: 'Team size?',
     options: [
       { value: 'solo', label: '1–3 people  (solo profile — 7 files)' },
-      { value: 'full', label: '4–15 people  (full profile — 19 files)' },
+      { value: 'full', label: '4–15 people  (full profile — 20 files)' },
     ],
   });
   cancelIfNeeded(profile);
