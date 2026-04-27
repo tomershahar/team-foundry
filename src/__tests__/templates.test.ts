@@ -934,8 +934,8 @@ describe('Interview close — proactive next-step offer', () => {
     expect(coachTemplate(baseCtx)).toContain('Want to start with');
   });
 
-  it('interview close names customers as the default highest-leverage first fill', () => {
-    expect(coachTemplate(baseCtx)).toContain('customers');
+  it('interview close priority list names customers as highest-leverage', () => {
+    expect(coachTemplate(baseCtx)).toContain('customers (shapes all other files)');
   });
 
   it('interview close offer appears after the gap list, not before', () => {
