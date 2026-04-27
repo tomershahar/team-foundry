@@ -1143,10 +1143,20 @@ fields. If the user says "looks good," proceed immediately to Step 4.
 
 ### Step 4 — Write files
 
-Write all team-foundry files using confirmed data. For any field with no signal and
-no user-provided answer, write a \`<!-- GAP: ... -->\` marker. Follow the
-conversation-as-update protocol — show each file draft and wait for confirmation
-before writing.
+Write **all** team-foundry files that have at least one confirmed signal. Do not skip
+files just because they were not mentioned in the pre-fill summary — if the repo scan
+gave you data for a file, populate it now.
+
+Signal-to-file mapping (use this to decide what to write):
+- Stack (language, framework, dependencies from manifest file) → \`engineering/stack.md\`
+- Product name + what it does (README) → \`team-foundry/product/north-star.md\` (name field)
+- Recent commit messages → \`team-foundry/product/outcomes.md\` (inferred focus areas)
+- Open issues / PRs → \`team-foundry/product/assumptions.md\` (open bets, if full profile)
+- Root instruction file — always write/update with product name and stack summary
+
+For any field with no signal and no user-provided answer, write a \`<!-- GAP: ... -->\`
+marker. Follow the conversation-as-update protocol — show each file draft and wait
+for confirmation before writing.
 
 **No silent writes.** Even high-confidence pre-filled answers require explicit
 confirmation before being written to disk. "Looks good" or "yes" is confirmation.
