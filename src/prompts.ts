@@ -60,16 +60,20 @@ export async function runPrompts(): Promise<PromptResult> {
     message:
       'Do you have existing docs to ingest?\n  (Strategy docs, old roadmaps, customer research — the interview uses them to pre-populate answers)',
     options: [
-      { value: 'local', label: 'Local folder  (exported docs on disk)' },
-      { value: 'mcp', label: 'MCP source  (Notion, Confluence, Google Drive)' },
-      { value: 'paste', label: 'Paste content  (we\'ll create a file for you to fill in)' },
+      { value: 'repo', label: 'Repo signals only  (README, package.json, git history, GitHub PRs/issues)' },
+      { value: 'repo+local', label: 'Repo + local docs folder  (repo signals + point me at a folder)' },
+      { value: 'repo+mcp', label: 'Repo + MCP source  (repo signals + Notion, Confluence, Google Drive)' },
+      { value: 'repo+paste', label: 'Repo + paste content  (repo signals + paste docs into the chat)' },
+      { value: 'local', label: 'Local docs folder only  (no repo scan)' },
+      { value: 'mcp', label: 'MCP source only  (no repo scan)' },
+      { value: 'paste', label: 'Paste content only  (no repo scan)' },
       { value: 'skip', label: 'Skip  (start fresh)' },
     ],
   });
   cancelIfNeeded(ingestion);
 
   let ingestionPath: string | undefined;
-  if (ingestion === 'local') {
+  if (ingestion === 'local' || ingestion === 'repo+local') {
     const rawPath = await text({
       message: 'Path to the folder containing your docs?',
       placeholder: './docs  or  /Users/you/exports',

@@ -13,7 +13,7 @@ export interface TemplateContext {
    */
   ingestionPath?: string;
   /** Ingestion mode selected by the user. Drives which ingestion block renders in coach.md. */
-  ingestion?: 'local' | 'mcp' | 'paste' | 'skip';
+  ingestion?: 'local' | 'mcp' | 'paste' | 'skip' | 'repo' | 'repo+local' | 'repo+mcp' | 'repo+paste';
   /** Whether to generate per-folder CLAUDE.md files (full profile only; ignored for solo) */
   federated?: boolean;
 }
@@ -24,5 +24,5 @@ export interface TemplateContext {
 export interface ScaffoldOptions extends TemplateContext {
   /** Absolute path to the directory being scaffolded into */
   targetDir: string;
-  ingestion: 'local' | 'mcp' | 'paste' | 'skip';
+  ingestion: 'local' | 'mcp' | 'paste' | 'skip' | 'repo' | 'repo+local' | 'repo+mcp' | 'repo+paste';
 }

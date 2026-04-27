@@ -143,6 +143,56 @@ describe('runPrompts()', () => {
     expect(select).toHaveBeenCalledTimes(4);
   });
 
+  it('returns repo ingestion when repo signals only selected', async () => {
+    vi.mocked(select)
+      .mockResolvedValueOnce('claude')
+      .mockResolvedValueOnce('solo')
+      .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('repo');
+
+    const result = await runPrompts();
+    expect(result.ingestion).toBe('repo');
+    expect(text).not.toHaveBeenCalled();
+  });
+
+  it('returns repo+local and prompts for path', async () => {
+    vi.mocked(select)
+      .mockResolvedValueOnce('claude')
+      .mockResolvedValueOnce('solo')
+      .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('repo+local');
+    vi.mocked(text).mockResolvedValueOnce('./docs');
+
+    const result = await runPrompts();
+    expect(result.ingestion).toBe('repo+local');
+    expect(result.ingestionPath).toBe('./docs');
+    expect(text).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns repo+mcp and does not prompt for path', async () => {
+    vi.mocked(select)
+      .mockResolvedValueOnce('claude')
+      .mockResolvedValueOnce('solo')
+      .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('repo+mcp');
+
+    const result = await runPrompts();
+    expect(result.ingestion).toBe('repo+mcp');
+    expect(text).not.toHaveBeenCalled();
+  });
+
+  it('returns repo+paste and does not prompt for path', async () => {
+    vi.mocked(select)
+      .mockResolvedValueOnce('claude')
+      .mockResolvedValueOnce('solo')
+      .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('repo+paste');
+
+    const result = await runPrompts();
+    expect(result.ingestion).toBe('repo+paste');
+    expect(text).not.toHaveBeenCalled();
+  });
+
   it('calls select 5 times for full profile non-local ingestion', async () => {
     vi.mocked(select)
       .mockResolvedValueOnce('claude')
