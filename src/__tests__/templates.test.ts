@@ -1474,11 +1474,11 @@ describe('Iteration 9b — scaffold strategy.md wiring', () => {
     expect(soloPaths).not.toContain('team-foundry/product/strategy.md');
   });
 
-  it('full profile has one more file than before (strategy.md added)', () => {
+  it('full profile has more files than solo (strategy.md + other full-only files)', () => {
     const fullPaths = expectedPaths('full', 'claude');
     const soloPaths = expectedPaths('solo', 'claude');
-    // full has all solo files + 13 full-only files (was 12, now 13 with strategy.md)
-    expect(fullPaths.length - soloPaths.length).toBe(13);
+    // full has all solo files + 14 full-only files (13 from v2 + hierarchy.md)
+    expect(fullPaths.length - soloPaths.length).toBe(14);
   });
 });
 
