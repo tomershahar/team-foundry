@@ -1,7 +1,7 @@
 ---
 purpose: Identity, routing map, and coach activation — read at the start of every session
 read_when: Every Claude Code session in this repo — this is the root instruction file
-last_updated: 2026-04-25
+last_updated: 2026-04-29
 ---
 
 # CLAUDE.md
@@ -40,6 +40,7 @@ When the user's question relates to any of the following, read the corresponding
 | Metric definitions | `team-foundry/data/metrics.md` |
 | Domain terms and acronyms | `team-foundry/context/glossary.md` |
 | Stakeholders and what they care about | `team-foundry/context/stakeholders.md` |
+| Which source wins when context conflicts | `.team-foundry/hierarchy.md` |
 
 ## Coach
 

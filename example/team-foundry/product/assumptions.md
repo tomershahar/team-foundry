@@ -1,7 +1,9 @@
 ---
 purpose: Open assumptions and untested bets — things we're acting on without full evidence
 read_when: When evaluating roadmap items, writing specs, or reviewing whether to continue a bet
-last_updated: 2026-04-25
+last_updated: 2026-04-29
+last_validated: 2026-04-25
+source: Sales calls, customer interviews, cohort data — sourced per assumption below
 owner: Sarah
 ---
 
