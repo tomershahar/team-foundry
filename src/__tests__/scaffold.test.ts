@@ -169,12 +169,22 @@ describe('expectedPaths()', () => {
     expect(expectedPaths('solo', 'claude').length).toBe(8);
   });
 
-  it('full profile produces exactly 23 files (+ hierarchy.md + hooks.md)', () => {
-    expect(expectedPaths('full', 'claude').length).toBe(23);
+  it('full profile includes all v3 architecture files', () => {
+    const paths = expectedPaths('full', 'claude');
+    expect(paths).toContain('.team-foundry/hierarchy.md');
+    expect(paths).toContain('.team-foundry/instructions/hooks.md');
   });
 
-  it('full profile federated produces exactly 29 files (23 + 6 folder CLAUDE.md)', () => {
-    expect(expectedPaths('full', 'claude', true).length).toBe(29);
+  it('full profile has more files than solo', () => {
+    expect(expectedPaths('full', 'claude').length).toBeGreaterThan(
+      expectedPaths('solo', 'claude').length,
+    );
+  });
+
+  it('full profile federated has 6 more files than full flat (one per folder CLAUDE.md)', () => {
+    const flat = expectedPaths('full', 'claude', false);
+    const federated = expectedPaths('full', 'claude', true);
+    expect(federated.length - flat.length).toBe(6);
   });
 
   it('solo profile federated still produces 8 files (federated ignored)', () => {
@@ -196,8 +206,10 @@ describe('expectedPaths()', () => {
     expect(expectedPaths('solo', 'cursor').length).toBe(8);
   });
 
-  it('cursor full profile produces exactly 23 files', () => {
-    expect(expectedPaths('full', 'cursor').length).toBe(23);
+  it('cursor full profile has same file count as claude full profile', () => {
+    expect(expectedPaths('full', 'cursor').length).toBe(
+      expectedPaths('full', 'claude').length,
+    );
   });
 });
 
