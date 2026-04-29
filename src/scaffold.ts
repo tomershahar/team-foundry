@@ -35,6 +35,7 @@ import {
   strategyTemplate,
   hierarchyTemplate,
   hooksTemplate,
+  rulesTemplate,
 } from './templates/index.js';
 
 interface FileEntry {
@@ -78,6 +79,7 @@ const FULL_ONLY_ENTRIES: FileEntry[] = [
   { relativePath: 'team-foundry/product/strategy.md', content: strategyTemplate },
   { relativePath: '.team-foundry/hierarchy.md', content: hierarchyTemplate },
   { relativePath: '.team-foundry/instructions/hooks.md', content: hooksTemplate },
+  { relativePath: '.team-foundry/instructions/rules.md', content: rulesTemplate },
 ];
 
 /** Per-folder CLAUDE.md files written only for full profile in federated layout */

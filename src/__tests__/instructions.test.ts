@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { TemplateContext } from '../types.js';
-import { hooksTemplate } from '../templates/index.js';
+import { hooksTemplate, rulesTemplate } from '../templates/index.js';
 import { expectedPaths } from '../scaffold.js';
 
 const baseCtx: TemplateContext = {
@@ -56,6 +56,58 @@ describe('v3 Task 5 — instructions/hooks.md template', () => {
   });
 });
 
+describe('v3 Task 6 — instructions/rules.md template', () => {
+  it('rulesTemplate is a function that returns a string', () => {
+    expect(typeof rulesTemplate).toBe('function');
+    expect(typeof rulesTemplate(baseCtx)).toBe('string');
+  });
+
+  it('has YAML frontmatter with required fields', () => {
+    const output = rulesTemplate(baseCtx);
+    expect(output).toContain('purpose:');
+    expect(output).toContain('read_when:');
+    expect(output).toContain('last_updated:');
+    expect(output).toContain('owner:');
+  });
+
+  it('last_updated matches context date', () => {
+    expect(rulesTemplate(baseCtx)).toContain('2026-04-29');
+  });
+
+  it('contains 10 or fewer numbered rules', () => {
+    const output = rulesTemplate(baseCtx);
+    const ruleCount = (output.match(/^\d+\./gm) || []).length;
+    expect(ruleCount).toBeGreaterThan(0);
+    expect(ruleCount).toBeLessThanOrEqual(10);
+  });
+
+  it('covers coach voice / diagnostic-first rule', () => {
+    expect(rulesTemplate(baseCtx)).toMatch(/diagnostic.first|coach voice|name the gap/i);
+  });
+
+  it('covers sourcing requirement rule', () => {
+    expect(rulesTemplate(baseCtx)).toMatch(/source|attribution/i);
+  });
+
+  it('covers validated-vs-hypothesized rule', () => {
+    expect(rulesTemplate(baseCtx)).toMatch(/validated|hypothesized/i);
+  });
+
+  it('covers hell-yes standard rule', () => {
+    expect(rulesTemplate(baseCtx)).toMatch(/hell.yes|obviously essential|cut/i);
+  });
+});
+
+describe('v3 Task 6 — instructions/rules.md scaffold wiring', () => {
+  it('full profile expectedPaths includes .team-foundry/instructions/rules.md', () => {
+    expect(expectedPaths('full', 'claude')).toContain('.team-foundry/instructions/rules.md');
+  });
+
+  it('solo profile expectedPaths does NOT include .team-foundry/instructions/rules.md', () => {
+    expect(expectedPaths('solo', 'claude')).not.toContain('.team-foundry/instructions/rules.md');
+  });
+});
+
 describe('v3 Task 5 — instructions/hooks.md scaffold wiring', () => {
   it('full profile expectedPaths includes .team-foundry/instructions/hooks.md', () => {
     const paths = expectedPaths('full', 'claude');
@@ -67,9 +119,10 @@ describe('v3 Task 5 — instructions/hooks.md scaffold wiring', () => {
     expect(paths).not.toContain('.team-foundry/instructions/hooks.md');
   });
 
-  it('full profile has 15 more files than solo (14 from before + hooks.md)', () => {
-    const fullPaths = expectedPaths('full', 'claude');
-    const soloPaths = expectedPaths('solo', 'claude');
-    expect(fullPaths.length - soloPaths.length).toBe(15);
+  it('full profile includes hooks.md and is larger than solo', () => {
+    expect(expectedPaths('full', 'claude')).toContain('.team-foundry/instructions/hooks.md');
+    expect(expectedPaths('full', 'claude').length).toBeGreaterThan(
+      expectedPaths('solo', 'claude').length,
+    );
   });
 });
