@@ -1648,6 +1648,65 @@ describe('v3 — sourced frontmatter on data-heavy templates (Task 2)', () => {
   });
 });
 
+describe('v3 Task 7 — Validated/Hypothesized sections in customers.md', () => {
+  const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
+
+  it('full profile customers.md has ## Validated section', () => {
+    expect(customersTemplate(baseCtx)).toContain('## Validated');
+  });
+
+  it('full profile customers.md has ## Hypothesized section', () => {
+    expect(customersTemplate(baseCtx)).toContain('## Hypothesized');
+  });
+
+  it('full profile customers.md has ## Anti-ICP section', () => {
+    expect(customersTemplate(baseCtx)).toContain('## Anti-ICP');
+  });
+
+  it('full profile customers.md does NOT have ## Personas section', () => {
+    expect(customersTemplate(baseCtx)).not.toContain('## Personas');
+  });
+
+  it('solo profile customers.md has ## Personas section', () => {
+    expect(customersTemplate(soloCtx)).toContain('## Personas');
+  });
+
+  it('solo profile customers.md does NOT have ## Validated section', () => {
+    expect(customersTemplate(soloCtx)).not.toContain('## Validated');
+  });
+
+  it('solo profile customers.md does NOT have ## Hypothesized section', () => {
+    expect(customersTemplate(soloCtx)).not.toContain('## Hypothesized');
+  });
+
+  it('solo profile customers.md does NOT have ## Anti-ICP section', () => {
+    expect(customersTemplate(soloCtx)).not.toContain('## Anti-ICP');
+  });
+
+  it('full profile Validated section has a coach comment explaining sourcing requirement', () => {
+    const output = customersTemplate(baseCtx);
+    const validatedStart = output.indexOf('## Validated');
+    const hypothesizedStart = output.indexOf('## Hypothesized');
+    const section = output.slice(validatedStart, hypothesizedStart);
+    expect(section).toMatch(/source|cohort|evidence|data/i);
+  });
+
+  it('full profile Hypothesized section has a coach comment about what would validate it', () => {
+    const output = customersTemplate(baseCtx);
+    const hypothesizedStart = output.indexOf('## Hypothesized');
+    const antiIcpStart = output.indexOf('## Anti-ICP');
+    const section = output.slice(hypothesizedStart, antiIcpStart);
+    expect(section).toMatch(/validat|confirm|test/i);
+  });
+
+  it('full profile Anti-ICP section has a coach comment about reasoning', () => {
+    const output = customersTemplate(baseCtx);
+    const antiIcpStart = output.indexOf('## Anti-ICP');
+    const section = output.slice(antiIcpStart);
+    expect(section).toMatch(/reason|why|explicit/i);
+  });
+});
+
 describe('Iteration v2.4 — team member IDs in trio template', () => {
   const output = () => trioTemplate(baseCtx);
 
