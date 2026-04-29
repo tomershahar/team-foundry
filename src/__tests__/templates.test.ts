@@ -1586,6 +1586,68 @@ describe('v3 — sourced frontmatter on data-heavy templates (Task 1: outcomes)'
   });
 });
 
+describe('v3 — sourced frontmatter on data-heavy templates (Task 2)', () => {
+  const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
+
+  const dataHeavyTemplates = [
+    ['customers', customersTemplate],
+    ['metrics', metricsTemplate],
+    ['assumptions', assumptionsTemplate],
+    ['now-next-later', nowNextLaterTemplate],
+  ] as const;
+
+  it.each(dataHeavyTemplates)('%s has source: field in frontmatter (full profile)', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('source' in fm!).toBe(true);
+  });
+
+  it.each(dataHeavyTemplates)('%s has last_validated: field in frontmatter (full profile)', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('last_validated' in fm!).toBe(true);
+  });
+
+  it.each(dataHeavyTemplates)('%s has source: field in frontmatter (solo profile)', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(soloCtx));
+    expect(fm).not.toBeNull();
+    expect('source' in fm!).toBe(true);
+  });
+
+  it.each(dataHeavyTemplates)('%s has last_validated: field in frontmatter (solo profile)', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(soloCtx));
+    expect(fm).not.toBeNull();
+    expect('last_validated' in fm!).toBe(true);
+  });
+
+  const narrativeTemplates = [
+    ['north-star', northStarTemplate],
+    ['strategy', strategyTemplate],
+    ['quality-bar', qualityBarTemplate],
+    ['working-agreement', workingAgreementTemplate],
+    ['glossary', glossaryTemplate],
+    ['decisions-readme', decisionsReadmeTemplate],
+    ['trio', trioTemplate],
+    ['ai-practices', aiPracticesTemplate],
+    ['principles', principlesTemplate],
+    ['stakeholders', stakeholdersTemplate],
+    ['risks', risksTemplate],
+    ['stack', stackTemplate],
+  ] as const;
+
+  it.each(narrativeTemplates)('%s does NOT have source: in frontmatter', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('source' in fm!).toBe(false);
+  });
+
+  it.each(narrativeTemplates)('%s does NOT have last_validated: in frontmatter', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('last_validated' in fm!).toBe(false);
+  });
+});
+
 describe('Iteration v2.4 — team member IDs in trio template', () => {
   const output = () => trioTemplate(baseCtx);
 

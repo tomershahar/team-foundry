@@ -5,7 +5,9 @@ export function nowNextLaterTemplate(ctx: TemplateContext): string {
 purpose: What we're building now, what we're committed to next, and what's directional
 read_when: Sprint planning, stakeholder updates, evaluating new requests, prioritization discussions
 last_updated: ${ctx.date}
-owner: 
+last_validated: ~
+source: ~
+owner:
 ---
 
 # Now / Next / Later
