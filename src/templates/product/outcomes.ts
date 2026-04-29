@@ -26,7 +26,24 @@ owner:
      "Write your outcomes in the form 'we want X to change for Y customer segment.'
      What does winning this quarter look like for your customers, not your roadmap?" -->
 
-## This quarter
+${ctx.profile === 'full' ? `## Validated outcomes
+
+<!-- Outcomes confirmed by data: cohort analysis, retention curves, usage metrics, or direct
+     customer evidence. Each entry needs a source — inline (source, date) or in the frontmatter.
+     If you can't name the evidence, move it to Hypothesized.
+
+     Format: outcome statement + evidence reference + date confirmed.
+     Example: "New sellers list their first item within 48h of signup (cohort data, Q1 2026)" -->
+
+## Hypothesized outcomes
+
+<!-- Outcomes you believe are worth pursuing but haven't yet validated with data.
+     State the assumption and what would confirm it.
+
+     Format: outcome statement + assumption + validation signal.
+     Example: "Ops managers close reconciliation in <30 min — assumed from 3 sales calls.
+     Validate: measure time-on-task for 5 ops managers over one cycle." -->
+` : `## This quarter
 
 <!-- List 2–4 outcome statements. Each should be falsifiable — you'll know at quarter-end
      whether it happened.
@@ -41,5 +58,6 @@ owner:
      - "Ship the new dashboard" (feature, not behavior change)
      - "Complete the API integration" (milestone, not customer outcome)
      - "Improve retention" (direction, not a measurable change) -->
+`}
 `;
 }

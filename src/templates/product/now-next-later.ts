@@ -34,7 +34,27 @@ owner:
      What have you committed to doing after that?
      What's directional but not yet committed?" -->
 
-## Now
+${ctx.profile === 'full' ? `## Validated
+
+<!-- Work connected to a validated outcome in outcomes.md — something backed by data or direct
+     customer evidence. Validated items have an outcome reference and a source.
+
+     Format: item + outcome reference + evidence.
+     Example:
+     - **Self-serve report fix flow** → "ops managers close reconciliation in <30 min"
+       Evidence: usability study (March 2026) | Owner: [name] | Started: [date] -->
+
+## Hypothesized
+
+<!-- Work connected to a hypothesized outcome — believed to matter but not yet validated.
+     These are bets, not commitments. The outcome connection should be explicit so the AI
+     can flag it when the hypothesis is later confirmed or invalidated.
+
+     Format: item + hypothesis link + what would validate.
+     Example:
+     - **Onboarding redesign** → hypothesis: "new sellers list first item within 48h"
+       Validate: track time-to-first-listing for next cohort | Owner: [name] -->
+` : `## Now
 
 <!-- Active work. For each item: what it is, which outcome it serves, who owns it.
 
@@ -58,5 +78,6 @@ owner:
 
      It's okay for "later" to be short. A short, honest "later" is better than a long,
      wishful one. -->
+`}
 `;
 }

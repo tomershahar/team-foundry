@@ -34,6 +34,8 @@ const baseCtx: TemplateContext = {
   date: '2026-04-17',
 };
 
+const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
+
 const allTemplates = [
   ['root-claude', rootClaudeTemplate],
   ['root-gemini', rootGeminiTemplate],
@@ -1704,6 +1706,77 @@ describe('v3 Task 7 — Validated/Hypothesized sections in customers.md', () => 
     const antiIcpStart = output.indexOf('## Anti-ICP');
     const section = output.slice(antiIcpStart);
     expect(section).toMatch(/reason|why|explicit/i);
+  });
+});
+
+describe('v3 Task 8 — Validated/Hypothesized in outcomes.md', () => {
+  it('full profile outcomes.md has ## Validated outcomes section', () => {
+    expect(outcomesTemplate(baseCtx)).toContain('## Validated outcomes');
+  });
+
+  it('full profile outcomes.md has ## Hypothesized outcomes section', () => {
+    expect(outcomesTemplate(baseCtx)).toContain('## Hypothesized outcomes');
+  });
+
+  it('full profile outcomes.md does NOT have ## This quarter section', () => {
+    expect(outcomesTemplate(baseCtx)).not.toContain('## This quarter');
+  });
+
+  it('solo profile outcomes.md has ## This quarter section', () => {
+    expect(outcomesTemplate(soloCtx)).toContain('## This quarter');
+  });
+
+  it('solo profile outcomes.md does NOT have Validated outcomes section', () => {
+    expect(outcomesTemplate(soloCtx)).not.toContain('## Validated outcomes');
+  });
+
+  it('solo profile outcomes.md does NOT have Hypothesized outcomes section', () => {
+    expect(outcomesTemplate(soloCtx)).not.toContain('## Hypothesized outcomes');
+  });
+
+  it('full profile Validated outcomes section has a coach comment about sourcing', () => {
+    const output = outcomesTemplate(baseCtx);
+    const start = output.indexOf('## Validated outcomes');
+    const end = output.indexOf('## Hypothesized outcomes');
+    const section = output.slice(start, end);
+    expect(section).toMatch(/source|evidence|data/i);
+  });
+
+  it('full profile Hypothesized outcomes section has a coach comment about validation', () => {
+    const output = outcomesTemplate(baseCtx);
+    const start = output.indexOf('## Hypothesized outcomes');
+    const section = output.slice(start);
+    expect(section).toMatch(/hypothes|assumption|validate|confirm/i);
+  });
+});
+
+describe('v3 Task 8 — Validated/Hypothesized in now-next-later.md', () => {
+  it('full profile now-next-later.md has ## Validated section', () => {
+    expect(nowNextLaterTemplate(baseCtx)).toContain('## Validated');
+  });
+
+  it('full profile now-next-later.md has ## Hypothesized section', () => {
+    expect(nowNextLaterTemplate(baseCtx)).toContain('## Hypothesized');
+  });
+
+  it('solo profile now-next-later.md has ## Now section', () => {
+    expect(nowNextLaterTemplate(soloCtx)).toContain('## Now');
+  });
+
+  it('solo profile now-next-later.md does NOT have Validated section', () => {
+    expect(nowNextLaterTemplate(soloCtx)).not.toContain('## Validated');
+  });
+
+  it('solo profile now-next-later.md does NOT have Hypothesized section', () => {
+    expect(nowNextLaterTemplate(soloCtx)).not.toContain('## Hypothesized');
+  });
+
+  it('full profile now-next-later.md Validated section has coach comment about evidence', () => {
+    const output = nowNextLaterTemplate(baseCtx);
+    const start = output.indexOf('## Validated');
+    const end = output.indexOf('## Hypothesized');
+    const section = output.slice(start, end);
+    expect(section).toMatch(/outcome|evidence|data|source/i);
   });
 });
 
