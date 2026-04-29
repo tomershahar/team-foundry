@@ -117,10 +117,8 @@ describe('v3 Task 3 — hierarchy.md scaffold wiring', () => {
     expect(paths).not.toContain('.team-foundry/hierarchy.md');
   });
 
-  it('full profile has one more file than before (hierarchy.md added)', () => {
+  it('full profile includes hierarchy.md in addition to all v2 files', () => {
     const fullPaths = expectedPaths('full', 'claude');
-    const soloPaths = expectedPaths('solo', 'claude');
-    // was 13 full-only files (from v2); now 14 with hierarchy.md
-    expect(fullPaths.length - soloPaths.length).toBe(14);
+    expect(fullPaths).toContain('.team-foundry/hierarchy.md');
   });
 });

@@ -169,12 +169,12 @@ describe('expectedPaths()', () => {
     expect(expectedPaths('solo', 'claude').length).toBe(8);
   });
 
-  it('full profile produces exactly 22 files (21 content + AGENTS.md + hierarchy.md)', () => {
-    expect(expectedPaths('full', 'claude').length).toBe(22);
+  it('full profile produces exactly 23 files (+ hierarchy.md + hooks.md)', () => {
+    expect(expectedPaths('full', 'claude').length).toBe(23);
   });
 
-  it('full profile federated produces exactly 28 files (22 + 6 folder CLAUDE.md)', () => {
-    expect(expectedPaths('full', 'claude', true).length).toBe(28);
+  it('full profile federated produces exactly 29 files (23 + 6 folder CLAUDE.md)', () => {
+    expect(expectedPaths('full', 'claude', true).length).toBe(29);
   });
 
   it('solo profile federated still produces 8 files (federated ignored)', () => {
@@ -196,8 +196,8 @@ describe('expectedPaths()', () => {
     expect(expectedPaths('solo', 'cursor').length).toBe(8);
   });
 
-  it('cursor full profile produces exactly 22 files', () => {
-    expect(expectedPaths('full', 'cursor').length).toBe(22);
+  it('cursor full profile produces exactly 23 files', () => {
+    expect(expectedPaths('full', 'cursor').length).toBe(23);
   });
 });
 

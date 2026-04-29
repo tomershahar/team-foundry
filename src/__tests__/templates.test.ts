@@ -1477,8 +1477,8 @@ describe('Iteration 9b — scaffold strategy.md wiring', () => {
   it('full profile has more files than solo (strategy.md + other full-only files)', () => {
     const fullPaths = expectedPaths('full', 'claude');
     const soloPaths = expectedPaths('solo', 'claude');
-    // full has all solo files + 14 full-only files (13 from v2 + hierarchy.md)
-    expect(fullPaths.length - soloPaths.length).toBe(14);
+    // full has all solo files + 15 full-only files (13 from v2 + hierarchy.md + hooks.md)
+    expect(fullPaths.length - soloPaths.length).toBe(15);
   });
 });
 
