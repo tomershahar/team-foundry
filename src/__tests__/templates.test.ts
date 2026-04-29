@@ -1558,6 +1558,34 @@ describe('AGENTS.md generation', () => {
   });
 });
 
+describe('v3 — sourced frontmatter on data-heavy templates (Task 1: outcomes)', () => {
+  const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
+
+  it('outcomes has source: field in frontmatter (full profile)', () => {
+    const fm = parseFrontmatter(outcomesTemplate(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('source' in fm!).toBe(true);
+  });
+
+  it('outcomes has last_validated: field in frontmatter (full profile)', () => {
+    const fm = parseFrontmatter(outcomesTemplate(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('last_validated' in fm!).toBe(true);
+  });
+
+  it('outcomes has source: field in frontmatter (solo profile)', () => {
+    const fm = parseFrontmatter(outcomesTemplate(soloCtx));
+    expect(fm).not.toBeNull();
+    expect('source' in fm!).toBe(true);
+  });
+
+  it('outcomes has last_validated: field in frontmatter (solo profile)', () => {
+    const fm = parseFrontmatter(outcomesTemplate(soloCtx));
+    expect(fm).not.toBeNull();
+    expect('last_validated' in fm!).toBe(true);
+  });
+});
+
 describe('Iteration v2.4 — team member IDs in trio template', () => {
   const output = () => trioTemplate(baseCtx);
 
