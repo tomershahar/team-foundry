@@ -34,26 +34,38 @@ owner:
      What have you committed to doing after that?
      What's directional but not yet committed?" -->
 
-${ctx.profile === 'full' ? `## Validated
+${ctx.profile === 'full' ? `## Now (validated outcomes)
 
-<!-- Work connected to a validated outcome in outcomes.md — something backed by data or direct
-     customer evidence. Validated items have an outcome reference and a source.
+<!-- Active work connected to a validated outcome — something backed by data or direct
+     customer evidence. Each item has an outcome reference and a source.
 
-     Format: item + outcome reference + evidence.
+     Format: item → outcome reference | evidence | owner | started date.
      Example:
      - **Self-serve report fix flow** → "ops managers close reconciliation in <30 min"
        Evidence: usability study (March 2026) | Owner: [name] | Started: [date] -->
 
-## Hypothesized
+## Now (hypothesized outcomes)
 
-<!-- Work connected to a hypothesized outcome — believed to matter but not yet validated.
-     These are bets, not commitments. The outcome connection should be explicit so the AI
-     can flag it when the hypothesis is later confirmed or invalidated.
+<!-- Active work connected to a hypothesized outcome — believed to matter but not yet
+     validated. These are bets, not commitments. The outcome link should be explicit so the
+     AI can flag it when the hypothesis is later confirmed or invalidated.
 
-     Format: item + hypothesis link + what would validate.
+     Format: item → hypothesis | what would validate | owner.
      Example:
      - **Onboarding redesign** → hypothesis: "new sellers list first item within 48h"
        Validate: track time-to-first-listing for next cohort | Owner: [name] -->
+
+## Next
+
+<!-- Committed work, sequenced. Whether linked to a validated or hypothesized outcome,
+     the commitment is real — there's a reason this follows from what's in Now.
+
+     If everything in Next could plausibly be first, it isn't sequenced — it's a list. -->
+
+## Later
+
+<!-- Directional bets. Not scheduled, not promised. Label each with its outcome hypothesis
+     so the AI can flag it if that hypothesis is validated or invalidated before you get here. -->
 ` : `## Now
 
 <!-- Active work. For each item: what it is, which outcome it serves, who owns it.

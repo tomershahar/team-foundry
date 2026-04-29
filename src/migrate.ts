@@ -6,6 +6,22 @@ import type { TemplateContext } from './types.js';
 
 export type MigrateState = 'none' | 'v2' | 'v3';
 
+/** Infers which AI tool was used to scaffold by checking for known root files. */
+export async function detectTool(targetDir: string): Promise<TemplateContext['tool']> {
+  const checks: [string, TemplateContext['tool']][] = [
+    ['.cursor/rules/team-foundry.mdc', 'cursor'],
+    ['GEMINI.md', 'gemini'],
+    ['CLAUDE.md', 'claude'],
+  ];
+  for (const [relPath, tool] of checks) {
+    try {
+      await fs.access(path.join(targetDir, relPath));
+      return tool;
+    } catch { /* not found */ }
+  }
+  return 'claude';
+}
+
 /** Detects the current team-foundry version in targetDir. */
 export async function detectMigrateState(targetDir: string): Promise<MigrateState> {
   const tfDir = path.join(targetDir, '.team-foundry');
@@ -24,13 +40,13 @@ export async function detectMigrateState(targetDir: string): Promise<MigrateStat
   }
 }
 
-/** Writes a file only if it does not already exist. */
+/** Writes a file only if it does not already exist (atomic — no TOCTOU window). */
 export async function writeIfAbsent(filePath: string, content: string): Promise<void> {
+  await fs.mkdir(path.dirname(filePath), { recursive: true });
   try {
-    await fs.access(filePath);
-  } catch {
-    await fs.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.writeFile(filePath, content, 'utf-8');
+    await fs.writeFile(filePath, content, { flag: 'wx', encoding: 'utf-8' });
+  } catch (err: unknown) {
+    if ((err as NodeJS.ErrnoException).code !== 'EEXIST') throw err;
   }
 }
 
@@ -102,9 +118,10 @@ export async function runMigrate(targetDir: string): Promise<void> {
   }
 
   const date = new Date().toISOString().split('T')[0];
+  const tool = await detectTool(targetDir);
   const ctx: TemplateContext = {
     profile: 'full',
-    tool: 'claude',
+    tool,
     repoVisibility: 'internal',
     date,
   };

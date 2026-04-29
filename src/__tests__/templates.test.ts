@@ -1751,30 +1751,38 @@ describe('v3 Task 8 — Validated/Hypothesized in outcomes.md', () => {
 });
 
 describe('v3 Task 8 — Validated/Hypothesized in now-next-later.md', () => {
-  it('full profile now-next-later.md has ## Validated section', () => {
-    expect(nowNextLaterTemplate(baseCtx)).toContain('## Validated');
+  it('full profile now-next-later.md has ## Now (validated outcomes) section', () => {
+    expect(nowNextLaterTemplate(baseCtx)).toContain('## Now (validated outcomes)');
   });
 
-  it('full profile now-next-later.md has ## Hypothesized section', () => {
-    expect(nowNextLaterTemplate(baseCtx)).toContain('## Hypothesized');
+  it('full profile now-next-later.md has ## Now (hypothesized outcomes) section', () => {
+    expect(nowNextLaterTemplate(baseCtx)).toContain('## Now (hypothesized outcomes)');
+  });
+
+  it('full profile now-next-later.md has ## Next section', () => {
+    expect(nowNextLaterTemplate(baseCtx)).toContain('## Next');
+  });
+
+  it('full profile now-next-later.md has ## Later section', () => {
+    expect(nowNextLaterTemplate(baseCtx)).toContain('## Later');
   });
 
   it('solo profile now-next-later.md has ## Now section', () => {
     expect(nowNextLaterTemplate(soloCtx)).toContain('## Now');
   });
 
-  it('solo profile now-next-later.md does NOT have Validated section', () => {
-    expect(nowNextLaterTemplate(soloCtx)).not.toContain('## Validated');
+  it('solo profile now-next-later.md does NOT have validated outcomes section', () => {
+    expect(nowNextLaterTemplate(soloCtx)).not.toContain('## Now (validated outcomes)');
   });
 
-  it('solo profile now-next-later.md does NOT have Hypothesized section', () => {
-    expect(nowNextLaterTemplate(soloCtx)).not.toContain('## Hypothesized');
+  it('solo profile now-next-later.md does NOT have hypothesized outcomes section', () => {
+    expect(nowNextLaterTemplate(soloCtx)).not.toContain('## Now (hypothesized outcomes)');
   });
 
-  it('full profile now-next-later.md Validated section has coach comment about evidence', () => {
+  it('full profile now-next-later.md validated section has coach comment about evidence', () => {
     const output = nowNextLaterTemplate(baseCtx);
-    const start = output.indexOf('## Validated');
-    const end = output.indexOf('## Hypothesized');
+    const start = output.indexOf('## Now (validated outcomes)');
+    const end = output.indexOf('## Now (hypothesized outcomes)');
     const section = output.slice(start, end);
     expect(section).toMatch(/outcome|evidence|data|source/i);
   });

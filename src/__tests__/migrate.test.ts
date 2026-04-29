@@ -1,8 +1,14 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import { detectMigrateState, writeIfAbsent, appendFrontmatterFields } from '../migrate.js';
+import { detectMigrateState, detectTool, writeIfAbsent, appendFrontmatterFields, runMigrate } from '../migrate.js';
+
+vi.mock('@clack/prompts', () => ({
+  confirm: vi.fn(),
+  log: { info: vi.fn(), error: vi.fn() },
+  outro: vi.fn(),
+}));
 
 async function makeTempDir(): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), 'team-foundry-migrate-test-'));
@@ -145,5 +151,122 @@ describe('v3 Task 13 — migrate: appendFrontmatterFields', () => {
     await expect(
       appendFrontmatterFields(path.join(tmpDir, 'nonexistent.md'))
     ).resolves.toBeUndefined();
+  });
+});
+
+describe('v3 — migrate: detectTool', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => {
+    tmpDir = await makeTempDir();
+  });
+
+  afterEach(async () => {
+    await cleanup(tmpDir);
+  });
+
+  it('detects claude when CLAUDE.md is present', async () => {
+    await fs.writeFile(path.join(tmpDir, 'CLAUDE.md'), '', 'utf-8');
+    expect(await detectTool(tmpDir)).toBe('claude');
+  });
+
+  it('detects gemini when GEMINI.md is present', async () => {
+    await fs.writeFile(path.join(tmpDir, 'GEMINI.md'), '', 'utf-8');
+    expect(await detectTool(tmpDir)).toBe('gemini');
+  });
+
+  it('detects cursor when .cursor/rules/team-foundry.mdc is present', async () => {
+    await fs.mkdir(path.join(tmpDir, '.cursor', 'rules'), { recursive: true });
+    await fs.writeFile(path.join(tmpDir, '.cursor', 'rules', 'team-foundry.mdc'), '', 'utf-8');
+    expect(await detectTool(tmpDir)).toBe('cursor');
+  });
+
+  it('defaults to claude when no root file is found', async () => {
+    expect(await detectTool(tmpDir)).toBe('claude');
+  });
+
+  it('prefers cursor over gemini when both files exist', async () => {
+    await fs.mkdir(path.join(tmpDir, '.cursor', 'rules'), { recursive: true });
+    await fs.writeFile(path.join(tmpDir, '.cursor', 'rules', 'team-foundry.mdc'), '', 'utf-8');
+    await fs.writeFile(path.join(tmpDir, 'GEMINI.md'), '', 'utf-8');
+    expect(await detectTool(tmpDir)).toBe('cursor');
+  });
+});
+
+describe('v3 — migrate: runMigrate orchestration', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => {
+    tmpDir = await makeTempDir();
+    vi.clearAllMocks();
+  });
+
+  afterEach(async () => {
+    await cleanup(tmpDir);
+  });
+
+  it('exits early with error when no .team-foundry directory exists', async () => {
+    const { log } = await import('@clack/prompts');
+    const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => { throw new Error('process.exit'); });
+
+    await expect(runMigrate(tmpDir)).rejects.toThrow('process.exit');
+    expect(log.error).toHaveBeenCalledWith(expect.stringContaining('No existing team-foundry found'));
+    exitSpy.mockRestore();
+  });
+
+  it('exits early with outro when already on v3 (hierarchy.md present)', async () => {
+    const { outro } = await import('@clack/prompts');
+    await fs.mkdir(path.join(tmpDir, '.team-foundry'), { recursive: true });
+    await fs.writeFile(path.join(tmpDir, '.team-foundry', 'hierarchy.md'), '# Hierarchy\n', 'utf-8');
+
+    await runMigrate(tmpDir);
+    expect(outro).toHaveBeenCalledWith(expect.stringContaining('Already on v3'));
+  });
+
+  it('cancels without writing files when user declines confirmation', async () => {
+    const { confirm, outro } = await import('@clack/prompts');
+    vi.mocked(confirm).mockResolvedValue(false);
+
+    await fs.mkdir(path.join(tmpDir, '.team-foundry'), { recursive: true });
+    await fs.writeFile(path.join(tmpDir, '.team-foundry', 'coach.md'), '# Coach\n', 'utf-8');
+
+    await runMigrate(tmpDir);
+    expect(outro).toHaveBeenCalledWith(expect.stringContaining('cancelled'));
+
+    const hierarchyExists = await fs.access(path.join(tmpDir, '.team-foundry', 'hierarchy.md')).then(() => true).catch(() => false);
+    expect(hierarchyExists).toBe(false);
+  });
+
+  it('writes v3 files when user confirms on a v2 install', async () => {
+    const { confirm } = await import('@clack/prompts');
+    vi.mocked(confirm).mockResolvedValue(true);
+
+    await fs.mkdir(path.join(tmpDir, '.team-foundry'), { recursive: true });
+    await fs.writeFile(path.join(tmpDir, '.team-foundry', 'coach.md'), '# Coach\n', 'utf-8');
+    await fs.writeFile(path.join(tmpDir, 'CLAUDE.md'), '# Root\n', 'utf-8');
+
+    await runMigrate(tmpDir);
+
+    const hierarchy = await fs.access(path.join(tmpDir, '.team-foundry', 'hierarchy.md')).then(() => true).catch(() => false);
+    const hooks = await fs.access(path.join(tmpDir, '.team-foundry', 'instructions', 'hooks.md')).then(() => true).catch(() => false);
+    const rules = await fs.access(path.join(tmpDir, '.team-foundry', 'instructions', 'rules.md')).then(() => true).catch(() => false);
+    expect(hierarchy).toBe(true);
+    expect(hooks).toBe(true);
+    expect(rules).toBe(true);
+  });
+
+  it('does not overwrite existing v3 files on re-run', async () => {
+    const { confirm } = await import('@clack/prompts');
+    vi.mocked(confirm).mockResolvedValue(true);
+
+    await fs.mkdir(path.join(tmpDir, '.team-foundry'), { recursive: true });
+    await fs.writeFile(path.join(tmpDir, '.team-foundry', 'coach.md'), '# Coach\n', 'utf-8');
+    const existingHierarchy = '# My custom hierarchy\n';
+    await fs.writeFile(path.join(tmpDir, '.team-foundry', 'hierarchy.md'), existingHierarchy, 'utf-8');
+
+    // Re-running on what now looks like v3 should short-circuit
+    await runMigrate(tmpDir);
+    const content = await fs.readFile(path.join(tmpDir, '.team-foundry', 'hierarchy.md'), 'utf-8');
+    expect(content).toBe(existingHierarchy);
   });
 });

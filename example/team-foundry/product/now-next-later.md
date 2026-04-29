@@ -11,9 +11,9 @@ owner: Sarah
 
 *Now = active this sprint or blocked for launch. Next = committed for this quarter. Later = real intention, no date.*
 
-## Validated
+## Now (validated outcomes)
 
-Work connected to a validated outcome (O1–O3) with evidence backing the bet.
+Active work connected to a validated outcome (O1–O3) with evidence backing the bet.
 
 ### Exception UI v2
 → O3: Finance managers trust the exception queue enough to stop spot-checking
@@ -30,9 +30,9 @@ In development (Jake). Unblocked.
 Evidence: Mira Halonen raised this directly (Apr 2026 session)
 Scoped, starting next sprint (Aino).
 
-## Hypothesized
+## Now (hypothesized outcomes)
 
-Work connected to an outcome we believe in but haven't fully validated.
+Active work connected to an outcome we believe in but haven't fully validated.
 
 ### Onboarding flow rework
 → O2: New customers reach first auto-approved invoice within 5 days (hypothesis: friction in current onboarding is the cause)
