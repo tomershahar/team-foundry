@@ -1780,6 +1780,37 @@ describe('v3 Task 8 — Validated/Hypothesized in now-next-later.md', () => {
   });
 });
 
+describe('v3 Task 9 — Coach B18: unsourced claim behavior', () => {
+  it('full profile coach.md contains Behavior 18', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 18');
+  });
+
+  it('B18 references the source: frontmatter field by name', () => {
+    const output = coachTemplate(baseCtx);
+    const b18Start = output.indexOf('Behavior 18');
+    const section = output.slice(b18Start, b18Start + 1500);
+    expect(section).toMatch(/source:/i);
+  });
+
+  it('B18 triggers on quantitative claims without a source', () => {
+    const output = coachTemplate(baseCtx);
+    const b18Start = output.indexOf('Behavior 18');
+    const section = output.slice(b18Start, b18Start + 1500);
+    expect(section).toMatch(/number|%|quantit|metric/i);
+  });
+
+  it('B18 severity is low', () => {
+    const output = coachTemplate(baseCtx);
+    const b18Start = output.indexOf('Behavior 18');
+    const section = output.slice(b18Start, b18Start + 1500);
+    expect(section).toMatch(/low/i);
+  });
+
+  it('B18 is NOT present in solo coach output', () => {
+    expect(coachTemplate(soloCtx)).not.toContain('Behavior 18');
+  });
+});
+
 describe('Iteration v2.4 — team member IDs in trio template', () => {
   const output = () => trioTemplate(baseCtx);
 

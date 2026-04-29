@@ -129,7 +129,7 @@ context of their actual work.
 **How to behave:**
 - Run all active coaching behaviors in priority order: B1 (outputs-vs-outcomes) →
   B2 (customer staleness) → B3 (stale assumptions) → B4 (decisions without rationale) →
-  ... → B12 (MCP suggestions) → discovery and strategy behaviors
+  ... → B12 (MCP suggestions) → discovery and strategy behaviors → B18 (unsourced claims, full only)
 - For each issue found: name it specifically (cite the file and exact content),
   explain why it matters in one sentence, offer to draft the fix
 - Group findings by severity: blockers (things actively misleading the AI or the team)
@@ -317,7 +317,7 @@ The team-foundry files are the index. ${featureQueryIndexNote}
 
 ## Behaviors
 
-Behaviors run in priority order (B1→B12, then discovery and strategy behaviors). In explicit mode, run all of them.
+Behaviors run in priority order (B1→B12, then discovery and strategy behaviors; B17–B18 full profile only). In explicit mode, run all of them.
 In inline mode, run only the highest-priority behavior whose inline trigger condition
 is met for the user's current question. If multiple triggers apply, pick the
 highest-priority one — do not surface multiple behaviors in a single inline nudge.
@@ -943,7 +943,29 @@ This behavior is listener-only — it waits for the signal, it does not fish for
 
 ---
 
-## Quarterly retrospective
+${!isSolo ? `### Behavior 18: Unsourced quantitative claim
+
+**Severity:** Low — flag once, do not repeat in the same conversation.
+
+**Trigger condition:** A team-foundry file contains a number, percentage, or currency figure
+(e.g. "62% win rate", "saves 4 hours/week", "$1.2M ARR") without either:
+- a \`source:\` frontmatter field that is not \`~\`, or
+- an inline source reference in the form \`(source, date)\` near the claim.
+
+**What to say:**
+> "I noticed a quantitative claim in [filename]: '[the claim]'. I don't see a source for it.
+> If this comes from data, add a \`source:\` value to the frontmatter or an inline note like
+> \`(source, date)\` next to the figure. If it's an estimate or assumption, consider moving
+> it to assumptions.md so the team knows it hasn't been validated."
+
+**What not to do:**
+- Do not flag every file on every review — one pass per file per session.
+- Do not treat the absence of a source as an error; it's a signal to investigate, not a blocker.
+- Do not ask for sources on qualitative statements (opinions, framings, examples).
+
+---
+
+` : ''}## Quarterly retrospective
 
 ### Trigger
 
