@@ -1811,6 +1811,37 @@ describe('v3 Task 9 — Coach B18: unsourced claim behavior', () => {
   });
 });
 
+describe('v3 Task 10 — Coach B19: validated without evidence behavior', () => {
+  it('full profile coach.md contains Behavior 19', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 19');
+  });
+
+  it('B19 references the Validated section by name', () => {
+    const output = coachTemplate(baseCtx);
+    const b19Start = output.indexOf('Behavior 19');
+    const section = output.slice(b19Start, b19Start + 1500);
+    expect(section).toMatch(/validated/i);
+  });
+
+  it('B19 triggers when Validated entry lacks a source', () => {
+    const output = coachTemplate(baseCtx);
+    const b19Start = output.indexOf('Behavior 19');
+    const section = output.slice(b19Start, b19Start + 1500);
+    expect(section).toMatch(/source|evidence/i);
+  });
+
+  it('B19 severity is medium or low', () => {
+    const output = coachTemplate(baseCtx);
+    const b19Start = output.indexOf('Behavior 19');
+    const section = output.slice(b19Start, b19Start + 1500);
+    expect(section).toMatch(/medium|low/i);
+  });
+
+  it('B19 is NOT present in solo coach output', () => {
+    expect(coachTemplate(soloCtx)).not.toContain('Behavior 19');
+  });
+});
+
 describe('Iteration v2.4 — team member IDs in trio template', () => {
   const output = () => trioTemplate(baseCtx);
 
