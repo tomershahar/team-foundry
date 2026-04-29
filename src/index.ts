@@ -5,6 +5,7 @@ import { runPrompts } from './prompts.js';
 import { scaffold } from './scaffold.js';
 import { writeGitignore } from './gitignore.js';
 import { runStatus } from './status.js';
+import { runMigrate } from './migrate.js';
 
 const TOOL_LABEL: Record<string, string> = {
   claude: 'Claude Code',
@@ -72,6 +73,11 @@ async function main(): Promise<void> {
 
   if (process.argv[2] === 'status') {
     await runStatus(targetDir);
+    return;
+  }
+
+  if (process.argv[2] === 'migrate') {
+    await runMigrate(targetDir);
     return;
   }
 
