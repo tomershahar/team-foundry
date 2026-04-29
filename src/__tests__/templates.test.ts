@@ -1400,7 +1400,7 @@ describe('Iteration 9b — F4.9 context priority hierarchy', () => {
   it('priority hierarchy includes outcomes and now-next-later', () => {
     const coachOutput = output();
     const priorityStart = coachOutput.search(/[Cc]ontext priority/);
-    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 600);
+    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 900);
     expect(prioritySection.toLowerCase()).toMatch(/outcomes/);
     expect(prioritySection.toLowerCase()).toMatch(/now.next.later/);
   });
@@ -1408,7 +1408,7 @@ describe('Iteration 9b — F4.9 context priority hierarchy', () => {
   it('instructs coach to name conflicts explicitly', () => {
     const coachOutput = output();
     const priorityStart = coachOutput.search(/[Cc]ontext priority/);
-    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 600);
+    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 900);
     expect(prioritySection.toLowerCase()).toMatch(/name.*conflict|conflict.*explicit/);
   });
 });

@@ -50,7 +50,8 @@ before answering. Files with recent \`last_updated\` dates are more reliable tha
 | Design principles and tone | \`team-foundry/design/principles.md\` |
 | Metric definitions | \`team-foundry/data/metrics.md\` |
 | Domain terms and acronyms | \`team-foundry/context/glossary.md\` |
-| Stakeholders and what they care about | \`team-foundry/context/stakeholders.md\` |
+| Stakeholders and what they care about | \`team-foundry/context/stakeholders.md\` |${ctx.profile === 'full' ? `
+| Which source wins when context conflicts | \`.team-foundry/hierarchy.md\` |` : ''}
 
 ## Coach
 

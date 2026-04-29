@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { TemplateContext } from '../types.js';
-import { hierarchyTemplate } from '../templates/index.js';
+import { hierarchyTemplate, rootClaudeTemplate, rootGeminiTemplate, coachTemplate } from '../templates/index.js';
 import { expectedPaths } from '../scaffold.js';
 
 const baseCtx: TemplateContext = {
@@ -75,6 +75,34 @@ describe('v3 Task 3 — hierarchy.md template', () => {
     const aiPos = expertSection.search(/AI.*(general|knowledge)/i);
     expect(expertPos).toBeGreaterThan(-1);
     expect(aiPos).toBeGreaterThan(expertPos);
+  });
+});
+
+describe('v3 Task 4 — hierarchy.md pointer in root files and coach', () => {
+  it('full profile CLAUDE.md references hierarchy.md', () => {
+    expect(rootClaudeTemplate(baseCtx)).toContain('hierarchy.md');
+  });
+
+  it('full profile GEMINI.md references hierarchy.md', () => {
+    expect(rootGeminiTemplate(baseCtx)).toContain('hierarchy.md');
+  });
+
+  it('solo profile CLAUDE.md does NOT reference hierarchy.md', () => {
+    expect(rootClaudeTemplate(soloCtx)).not.toContain('hierarchy.md');
+  });
+
+  it('solo profile GEMINI.md does NOT reference hierarchy.md', () => {
+    expect(rootGeminiTemplate(soloCtx)).not.toContain('hierarchy.md');
+  });
+
+  it('full profile coach.md context priority section references hierarchy.md', () => {
+    const output = coachTemplate(baseCtx);
+    const prioritySection = output.slice(output.indexOf('## Context priority'));
+    expect(prioritySection).toContain('hierarchy.md');
+  });
+
+  it('solo profile coach.md does NOT reference hierarchy.md', () => {
+    expect(coachTemplate(soloCtx)).not.toContain('hierarchy.md');
   });
 });
 

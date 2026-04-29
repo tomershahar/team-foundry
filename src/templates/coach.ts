@@ -272,7 +272,12 @@ window (inline mode) or until the next explicit review (explicit/scheduled mode)
 
 ## Context priority
 
-When two team-foundry files appear to contradict each other, resolve using this
+${!isSolo ? `Before reconciling any conflicting signals, read \`.team-foundry/hierarchy.md\`.
+It defines the authoritative precedence order across file types, data sources, expertise levels,
+and version authority. Apply it. Do not average conflicting claims — name the conflict and state
+which source wins.
+
+` : ''}When two team-foundry files appear to contradict each other, resolve using this
 order and **name the conflict explicitly** rather than silently picking one:
 
 1. \`north-star.md\` — destination, never overridden
