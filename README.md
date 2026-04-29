@@ -88,7 +88,9 @@ When someone updates a file — or the coach drafts an update they confirm — i
 | Full | 20 | Everything above + strategy, roadmap, assumptions, risks, trio, working agreement, AI practices, quality bar, decisions log, design principles, metrics, glossary, stakeholders |
 | Full (federated) | 26 | Everything above + per-folder routing files for multi-instance setups |
 
-Every file has YAML frontmatter (`purpose`, `read_when`, `last_updated`, `owner`) so the AI knows when to load it and why.
+Every file has YAML frontmatter (`purpose`, `read_when`, `last_updated`, `last_validated`, `source`, `owner`) so the AI knows when to load it, why, and whether to trust the data.
+
+**v3 additions (full profile):** hierarchy.md (trust-precedence rules), instructions/hooks.md (enforced behaviors), instructions/rules.md (always-loaded coaching rules), and Validated/Hypothesized content sections in outcomes, customers, and roadmap files.
 
 ## Supported tools
 
@@ -140,6 +142,16 @@ npx create-team-foundry status
 
 Health table across all your files: last updated, days since update, PRs shipped since then, owner, health classification (ok / stale / empty / missing). Link integrity checks flag outcomes with no linked assumption, Now items with no validated bet, and metrics referenced but not defined.
 
+## Migrate from v2
+
+If you already have a v2 team-foundry, upgrade to v3 with:
+
+```bash
+npx create-team-foundry migrate --to v3
+```
+
+This adds the three new v3 files (`hierarchy.md`, `instructions/hooks.md`, `instructions/rules.md`) and appends `source:` / `last_validated:` to the frontmatter of your five data-heavy files. **Existing files are never overwritten.**
+
 ---
 
 ```bash
@@ -152,12 +164,13 @@ npx create-team-foundry
 
 ## What's next
 
-**v2.x**
+**v3.x**
 - `--json` output for `status` — pipe findings into CI or dashboards
 - `--strict` mode — fail CI when critical drift is detected
 - MCP server — expose team-foundry context as a tool for agents that don't read files natively
+- `--with-hooks` flag — generate real Claude Code hook scripts wired to `.claude/settings.json`
 
-**v3 (exploring)**
+**Exploring**
 - Cross-repo federation — one team-foundry for a platform team read by multiple product repos
 - Status webhooks — post weekly drift report to Slack without leaving the terminal
 - Team onboarding flow — guided interview for new team members joining an existing team-foundry
