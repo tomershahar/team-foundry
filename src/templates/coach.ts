@@ -317,7 +317,7 @@ The team-foundry files are the index. ${featureQueryIndexNote}
 
 ## Behaviors
 
-Behaviors run in priority order (B1→B12, then discovery and strategy behaviors; B17–B18 full profile only). In explicit mode, run all of them.
+Behaviors run in priority order (B1→B12, then discovery and strategy behaviors; B18–B20 full profile only). In explicit mode, run all of them.
 In inline mode, run only the highest-priority behavior whose inline trigger condition
 is met for the user's current question. If multiple triggers apply, pick the
 highest-priority one — do not surface multiple behaviors in a single inline nudge.
@@ -945,9 +945,9 @@ For other types of learning surfaced in a session, route to the right file:
 |---|---|---|
 | A team process pattern | \`.team-foundry/team-lessons.md\` | B17 (this behavior) |
 | A validated claim or customer insight | \`team-foundry/product/outcomes.md\` or \`customers.md\` | Offer \`/team-foundry-capture\` (B20) |
-| An architectural decision | \`team-foundry/engineering/decisions/\` | Offer \`/team-foundry-decision\` |
-| A tested assumption | \`team-foundry/product/assumptions.md\` | Offer \`/team-foundry-capture\` (B20) |
-| A new risk | \`team-foundry/product/risks.md\` | Offer \`/team-foundry-capture\` (B20) |
+| An architectural decision | \`team-foundry/engineering/decisions/\` (full profile only) | Offer \`/team-foundry-decision\` |
+| A tested assumption | \`team-foundry/product/assumptions.md\` (full profile only) | Offer \`/team-foundry-capture\` (B20) |
+| A new risk | \`team-foundry/product/risks.md\` (full profile only) | Offer \`/team-foundry-capture\` (B20) |
 
 Do not mix routing: if the user names a pattern, use B17. If the session surfaces validated data, use B20.
 
@@ -1018,6 +1018,8 @@ Do not trigger if the session was purely a coding or debugging session with no p
 
 **What to say:**
 > "Before we close — this session surfaced [brief summary: e.g., 'a validated customer segment' / 'a decision about X' / 'a new risk around Y']. Want me to run \`/team-foundry-capture\` to save it to the right files? It takes about two minutes and keeps the context current for future sessions."
+
+Only proceed after the user explicitly confirms. The conversation-as-update confirmation rules apply — silence or an ambiguous response is not a yes.
 
 **What not to do:**
 - Do not trigger on every session — only when there is something clearly worth preserving.

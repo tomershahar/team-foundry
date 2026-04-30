@@ -175,7 +175,7 @@ The longer you use team-foundry, the more useful it gets:
 
 1. **Set up** — scaffold files, run the interview, fill in what you know
 2. **Work** — AI reads context, gives better answers, flags gaps inline
-3. **Learn** — session ends, coach offers to capture what changed (`/team-foundry-capture`)
+3. **Learn** — when something was decided or validated, the coach offers to capture it (`/team-foundry-capture`)
 4. **Update** — confirm the draft, it commits to git, everyone pulls
 5. **Review** — next session, AI reads the updated files → answers get better
 

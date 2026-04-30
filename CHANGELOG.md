@@ -24,8 +24,8 @@ Six slash commands ship with every Claude Code setup (tool: claude or both):
 
 Skills are pointers, not copies — they read your team-foundry files and act on them. The knowledge lives in your files.
 
-**Knowledge capture flywheel (full profile)**
-Coach Behavior 20: at the end of a session where something was learned or decided, the coach offers to run `/team-foundry-capture`. Coach Behavior 17 now includes a routing table distinguishing team process patterns (→ `team-lessons.md`) from validated data, decisions, and risks (→ `/team-foundry-capture` or `/team-foundry-decision`).
+**Knowledge capture flywheel (full profile only)**
+Coach Behavior 20 (full profile only): at the end of a session where something was learned or decided, the coach offers to run `/team-foundry-capture`. Coach Behavior 17 now includes a routing table distinguishing team process patterns (→ `team-lessons.md`) from validated data, decisions, and risks (→ `/team-foundry-capture` or `/team-foundry-decision`).
 
 **Migration command**
 `npx create-team-foundry migrate --to v3` upgrades existing v2 repos: adds the three new v3 files and appends `source:` / `last_validated:` frontmatter to the five data-heavy files. Additive only — existing content is never overwritten.
