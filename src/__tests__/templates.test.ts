@@ -1849,8 +1849,9 @@ describe('v3 Task 10 — Coach B19: validated without evidence behavior', () => 
     const output = coachTemplate(baseCtx);
     const b19Start = output.indexOf('Behavior 19');
     const section = output.slice(b19Start, b19Start + 1500);
-    expect(section).toContain('## Validated outcomes');
-    expect(section).toContain('## Now (validated outcomes)');
+    expect(section).toMatch(/`## Validated`/);           // customers.md
+    expect(section).toContain('## Validated outcomes');  // outcomes.md
+    expect(section).toContain('## Now (validated outcomes)'); // now-next-later.md
   });
 
   it('B19 is NOT present in solo coach output', () => {
