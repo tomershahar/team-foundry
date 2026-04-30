@@ -54,6 +54,13 @@ See \`team-foundry/engineering/quality-bar.md\` for the quality bar, bug triage 
 - **Private folder** — \`team-foundry/private/\` is gitignored. Do not read from or write to it.${isSolo ? '' : `
 - **ADR commitments** — architecture decisions in \`team-foundry/engineering/decisions/\` represent committed choices. Treat them as constraints unless the user explicitly opens a discussion.`}
 
+## Claude Code skills
+
+If you are running as Claude Code, pre-built skills are available in \`.claude/skills/\`:
+\`/team-foundry-intro\`, \`/team-foundry-status\`, \`/team-foundry-review\`,
+\`/team-foundry-capture\`, \`/team-foundry-decision\`, \`/team-foundry-feature\`.
+See CLAUDE.md for the full skill table.
+
 ## Working with the team-foundry coach
 
 The coach runs in three modes — inline (always on, surfaces one-sentence nudges), explicit (triggered by "coach mode" or "let's do a team-foundry review"), and scheduled (weekly check-in, top 3 findings). See CLAUDE.md or GEMINI.md for the full trigger phrase table and loading instructions.

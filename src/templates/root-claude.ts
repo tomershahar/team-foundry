@@ -75,5 +75,18 @@ it notices something relevant to your current work. You can also invoke it direc
      - Inline mode nudges: if you notice a clear gap in a team-foundry file while answering
        a normal question, surface it in one sentence — without loading the full coach.md.
        Keep it brief and non-blocking. Do not coach unprompted on back-to-back messages. -->
+
+## Skills
+
+Pre-built Claude Code skills are in \`.claude/skills/\`. Invoke them with a slash command:
+
+| Skill | What it does |
+|---|---|
+| \`/team-foundry-intro\` | Orient to the team — reads all context files, produces a summary |
+| \`/team-foundry-status\` | Status read — what's on track, at risk, or blocked this cycle |
+| \`/team-foundry-review\` | Full audit — all files checked, findings by severity |
+| \`/team-foundry-capture\` | Capture what was learned in this session into the right file |
+| \`/team-foundry-decision\` | Draft an ADR from the current conversation |
+| \`/team-foundry-feature\` | Synthesize everything team-foundry knows about a specific feature |
 `;
 }

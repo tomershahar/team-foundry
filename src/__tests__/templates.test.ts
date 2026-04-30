@@ -146,6 +146,22 @@ describe('template stubs', () => {
     expect(rootCursorTemplate(baseCtx)).toMatch(/coach|team-foundry review/i);
   });
 
+  it('root-claude Skills section lists all 6 skills', () => {
+    const output = rootClaudeTemplate(baseCtx);
+    expect(output).toContain('/team-foundry-intro');
+    expect(output).toContain('/team-foundry-status');
+    expect(output).toContain('/team-foundry-review');
+    expect(output).toContain('/team-foundry-capture');
+    expect(output).toContain('/team-foundry-decision');
+    expect(output).toContain('/team-foundry-feature');
+  });
+
+  it('root-agents mentions Claude Code skills', () => {
+    const output = rootAgentsTemplate(baseCtx);
+    expect(output).toContain('.claude/skills/');
+    expect(output).toContain('/team-foundry-intro');
+  });
+
   it('root-cursor contains last_updated frontmatter', () => {
     expect(rootCursorTemplate(baseCtx)).toContain('last_updated');
   });
