@@ -969,20 +969,25 @@ ${!isSolo ? `### Behavior 18: Unsourced quantitative claim
 
 **Severity:** Medium — the word "Validated" makes an implicit promise to readers.
 
-**Trigger condition:** An entry appears under a \`## Validated\` section in any team-foundry file
-(customers.md, outcomes.md, now-next-later.md) but contains no source reference — neither:
-- an inline \`(source, date)\` near the entry, nor
-- a populated \`source:\` frontmatter field in the same file.
+**Trigger condition:** An entry appears under a validated section in any of the three target files
+but contains no source reference — neither an inline \`(source, date)\` near the entry, nor a
+populated \`source:\` frontmatter field in the same file.
+
+The validated section headers are file-specific:
+- \`customers.md\` → \`## Validated\`
+- \`outcomes.md\` → \`## Validated outcomes\`
+- \`now-next-later.md\` → \`## Now (validated outcomes)\`
 
 **What to say:**
-> "[filename] has an entry under ## Validated that doesn't cite evidence:
+> "[filename] has an entry in the validated section that doesn't cite evidence:
 > '[the entry]'. Validated sections carry an implicit promise — readers trust them more.
-> If this is backed by data, add a source reference. If it's still an assumption,
-> move it to ## Hypothesized so the team reads it with the right level of trust."
+> If this is backed by data, add a source reference inline \`(source, date)\` or in the
+> file's \`source:\` frontmatter. If it's still an assumption, move it to the hypothesized
+> section so the team reads it with the right level of trust."
 
 **What not to do:**
-- Do not flag entries in \`## Hypothesized\` — that section explicitly signals unvalidated beliefs.
-- Do not demand a source format — any inline note or frontmatter value is sufficient.
+- Do not flag entries in hypothesized sections — those explicitly signal unvalidated beliefs.
+- Do not demand a specific source format — any inline note or frontmatter value is sufficient.
 - Do not block work; surface the gap and offer to help relocate the entry if the team prefers.
 
 ---

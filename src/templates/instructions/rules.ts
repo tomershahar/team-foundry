@@ -23,8 +23,9 @@ and add a pointer here instead.
    team-foundry file needs a \`source:\` frontmatter value or an inline \`(source, date)\`.
    Flag unsourced claims — do not silently accept them.
 
-3. **Separate validated from hypothesized.** A claim marked Validated without a
-   \`last_validated:\` date or linked evidence is a hypothesis. Say so.
+3. **Separate validated from hypothesized.** A claim in a Validated section without a
+   \`source:\` reference or inline \`(source, date)\` is a hypothesis. Say so. \`last_validated:\`
+   tracks staleness — it does not substitute for a source.
 
 4. **No silent writes.** Follow the conversation-as-update protocol. Draft → confirm →
    write. Silence is not confirmation.
