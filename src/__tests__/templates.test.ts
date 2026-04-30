@@ -1487,6 +1487,22 @@ describe('B17 — team-specific lesson capture', () => {
     expect(soloOutput).toMatch(/Behavior 17|team.specific lesson/i);
     expect(fullOutput).toMatch(/Behavior 17|team.specific lesson/i);
   });
+
+  it('B17 knowledge routing table covers validated claims and decisions', () => {
+    const coachOutput = coachTemplate(baseCtx);
+    const b17Start = coachOutput.search(/Behavior 17|team.specific lesson/i);
+    const section = coachOutput.slice(b17Start, b17Start + 3000);
+    expect(section).toContain('/team-foundry-capture');
+    expect(section).toContain('/team-foundry-decision');
+    expect(section).toContain('Knowledge routing');
+  });
+
+  it('B17 routing table does not mix pattern capture with data capture', () => {
+    const coachOutput = coachTemplate(baseCtx);
+    const b17Start = coachOutput.search(/Behavior 17|team.specific lesson/i);
+    const section = coachOutput.slice(b17Start, b17Start + 3000);
+    expect(section).toContain('Do not mix routing');
+  });
 });
 
 describe('Iteration 9b — scaffold strategy.md wiring', () => {

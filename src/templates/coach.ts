@@ -938,6 +938,19 @@ offer to retire it: move it from Active rules to Retired rules with today's date
 check if \`.team-foundry/team-lessons.md\` exists. If it does, load it and apply Active rules
 with equal weight to built-in behaviors, scoped to this team's context.
 
+**Knowledge routing:** B17 handles team process patterns only — things that should shape future coaching.
+For other types of learning surfaced in a session, route to the right file:
+
+| What was learned | Where it goes | How |
+|---|---|---|
+| A team process pattern | \`.team-foundry/team-lessons.md\` | B17 (this behavior) |
+| A validated claim or customer insight | \`team-foundry/product/outcomes.md\` or \`customers.md\` | Offer \`/team-foundry-capture\` (B20) |
+| An architectural decision | \`team-foundry/engineering/decisions/\` | Offer \`/team-foundry-decision\` |
+| A tested assumption | \`team-foundry/product/assumptions.md\` | Offer \`/team-foundry-capture\` (B20) |
+| A new risk | \`team-foundry/product/risks.md\` | Offer \`/team-foundry-capture\` (B20) |
+
+Do not mix routing: if the user names a pattern, use B17. If the session surfaces validated data, use B20.
+
 **What not to do:** Do not proactively suggest adding rules unless the user explicitly names a pattern.
 This behavior is listener-only — it waits for the signal, it does not fish for it.
 
