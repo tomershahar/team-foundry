@@ -107,7 +107,7 @@ When someone updates a file — or the coach drafts an update they confirm — i
 | Full | 24 | Everything above + strategy, roadmap, assumptions, risks, trio, working agreement, AI practices, quality bar, decisions log, design principles, metrics, glossary, stakeholders, hierarchy, hooks, rules |
 | Full (federated) | 30 | Everything above + per-folder routing files for multi-instance setups |
 
-Every file has YAML frontmatter (`purpose`, `read_when`, `last_updated`, `last_validated`, `source`, `owner`) so the AI knows when to load it, why, and whether to trust the data.
+Every file has YAML frontmatter (`purpose`, `read_when`, `last_updated`, `owner`) so the AI knows when to load it and why. Data-heavy files (outcomes, customers, metrics, assumptions, roadmap) also include `source:` and `last_validated:` so the AI knows whether to trust the data.
 
 ## Supported tools
 
@@ -190,7 +190,7 @@ npx create-team-foundry
 | "I don't have time to learn a new tool" | There's nothing to learn. Run one command. The files appear. Your AI tool reads them automatically — no new workflow, no new app. |
 | "We already document things" | Documentation lives in Notion or Confluence and your AI tool has never seen it. team-foundry puts it in your repo, in plain markdown, where every AI tool reads it every session. |
 | "I'm not technical enough" | The CLI asks plain-English questions. The files it creates are markdown. The coach speaks in sentences. No code required. |
-| "AI output isn't good enough yet" | It's not good enough *without context*. Every team we've seen using Claude Code or Cursor with team-foundry gets more relevant, more specific answers than without it — because the AI knows your product, not a generic product. |
+| "AI output isn't good enough yet" | That's exactly what context fixes. team-foundry gives the AI your product reality so its answers are specific to your team, not generic. |
 
 ---
 
