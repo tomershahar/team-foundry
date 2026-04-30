@@ -2,10 +2,21 @@ import fs from 'fs/promises';
 import path from 'path';
 import { outro, log, confirm } from '@clack/prompts';
 import { runPrompts } from './prompts.js';
-import { scaffold } from './scaffold.js';
+import { scaffold, gitAddCommand } from './scaffold.js';
 import { writeGitignore } from './gitignore.js';
 import { runStatus } from './status.js';
 import { runMigrate } from './migrate.js';
+
+function groupByFolder(paths: string[]): Record<string, string[]> {
+  const groups: Record<string, string[]> = {};
+  for (const p of paths) {
+    const parts = p.split('/');
+    const folder = parts.length > 1 ? parts[0] : '.';
+    const file = parts.length > 1 ? parts.slice(1).join('/') : p;
+    (groups[folder] ??= []).push(file);
+  }
+  return groups;
+}
 
 const TOOL_LABEL: Record<string, string> = {
   claude: 'Claude Code',
@@ -86,8 +97,20 @@ async function main(): Promise<void> {
   const answers = await runPrompts();
   const date = new Date().toISOString().split('T')[0];
 
-  await scaffold({ ...answers, targetDir, date });
+  const writtenPaths = await scaffold({ ...answers, targetDir, date });
   await writeGitignore(targetDir);
+
+  if (writtenPaths.length > 0) {
+    const grouped = groupByFolder(writtenPaths);
+    const lines = ['', 'Files created:'];
+    for (const [folder, files] of Object.entries(grouped)) {
+      lines.push(`  ${folder}/`);
+      for (const file of files) lines.push(`    ${file}`);
+    }
+    lines.push('', 'Commit when ready:');
+    lines.push(`  ${gitAddCommand(answers.tool)}`);
+    log.info(lines.join('\n'));
+  }
 
   if (answers.ingestion === 'paste' || answers.ingestion === 'repo+paste') {
     const pastePath = path.join(targetDir, '.team-foundry', 'paste-content.md');

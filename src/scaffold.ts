@@ -127,7 +127,7 @@ function rootEntries(tool: ScaffoldOptions['tool']): FileEntry[] {
   ];
 }
 
-export async function scaffold(options: ScaffoldOptions): Promise<void> {
+export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
   const { targetDir, profile, tool, repoVisibility, date, ingestionPath, ingestion, federated } = options;
 
   const ctx: TemplateContext = { profile, tool, repoVisibility, date, ingestionPath, ingestion };
@@ -142,6 +142,8 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
     ...(profile === 'full' && federated ? FEDERATED_ENTRIES : []),
     ...(includesSkills ? CLAUDE_SKILLS_ENTRIES : []),
   ];
+
+  const written: string[] = [];
 
   for (const entry of entries) {
     const fullPath = path.join(targetDir, entry.relativePath);
@@ -159,7 +161,28 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
     }
 
     await fs.writeFile(fullPath, entry.content(ctx), 'utf-8');
+    written.push(entry.relativePath);
   }
+
+  return written;
+}
+
+/** Returns the git add + commit command appropriate for the chosen tool. */
+export function gitAddCommand(tool: ScaffoldOptions['tool']): string {
+  const toolFiles: string[] = [];
+  if (tool === 'claude' || tool === 'both') toolFiles.push('CLAUDE.md', '.claude/');
+  if (tool === 'gemini' || tool === 'both') toolFiles.push('GEMINI.md');
+  if (tool === 'cursor') toolFiles.push('.cursor/');
+
+  const paths = [
+    'team-foundry/',
+    '.team-foundry/',
+    'AGENTS.md',
+    'GETTING_STARTED.md',
+    ...toolFiles,
+  ].join(' ');
+
+  return `git add ${paths} && git commit -m "Add team-foundry"`;
 }
 
 /** Returns the expected file paths for a given profile, tool, and layout (relative to targetDir) */

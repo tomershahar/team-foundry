@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import { scaffold, expectedPaths } from '../scaffold.js';
+import { scaffold, expectedPaths, gitAddCommand } from '../scaffold.js';
 import type { ScaffoldOptions } from '../types.js';
 
 async function makeTempDir(): Promise<string> {
@@ -383,5 +383,73 @@ describe('scaffold() — federated mode', () => {
         .then(() => true).catch(() => false);
       expect(exists, `team-foundry/${folder}/CLAUDE.md should not exist for solo profile`).toBe(false);
     }
+  });
+});
+
+describe('scaffold() — returns written file paths', () => {
+  let tmpDir: string;
+  beforeEach(async () => { tmpDir = await makeTempDir(); });
+  afterEach(async () => { await cleanup(tmpDir); });
+
+  it('returns an array of relative paths for files written', async () => {
+    const written = await scaffold({ ...baseOptions, targetDir: tmpDir });
+    expect(Array.isArray(written)).toBe(true);
+    expect(written.length).toBeGreaterThan(0);
+  });
+
+  it('returns only files that were written, not skipped', async () => {
+    const written1 = await scaffold({ ...baseOptions, targetDir: tmpDir });
+    const written2 = await scaffold({ ...baseOptions, targetDir: tmpDir });
+    expect(written2).toHaveLength(0);
+    expect(written1.length).toBe(expectedPaths('full', 'claude').length);
+  });
+
+  it('returned paths are relative (no leading slash)', async () => {
+    const written = await scaffold({ ...baseOptions, targetDir: tmpDir });
+    for (const p of written) {
+      expect(p.startsWith('/')).toBe(false);
+    }
+  });
+});
+
+describe('gitAddCommand()', () => {
+  it('includes CLAUDE.md and .claude/ for claude tool', () => {
+    const cmd = gitAddCommand('claude');
+    expect(cmd).toContain('CLAUDE.md');
+    expect(cmd).toContain('.claude/');
+    expect(cmd).not.toContain('GEMINI.md');
+  });
+
+  it('includes GEMINI.md but not .claude/ for gemini tool', () => {
+    const cmd = gitAddCommand('gemini');
+    expect(cmd).toContain('GEMINI.md');
+    expect(cmd).not.toContain('.claude/');
+    expect(cmd).not.toContain('CLAUDE.md');
+  });
+
+  it('includes .cursor/ for cursor tool', () => {
+    const cmd = gitAddCommand('cursor');
+    expect(cmd).toContain('.cursor/');
+    expect(cmd).not.toContain('CLAUDE.md');
+    expect(cmd).not.toContain('GEMINI.md');
+  });
+
+  it('includes both CLAUDE.md and GEMINI.md and .claude/ for both tool', () => {
+    const cmd = gitAddCommand('both');
+    expect(cmd).toContain('CLAUDE.md');
+    expect(cmd).toContain('GEMINI.md');
+    expect(cmd).toContain('.claude/');
+  });
+
+  it('always includes team-foundry/ and AGENTS.md', () => {
+    for (const tool of ['claude', 'gemini', 'cursor', 'both'] as const) {
+      const cmd = gitAddCommand(tool);
+      expect(cmd).toContain('team-foundry/');
+      expect(cmd).toContain('AGENTS.md');
+    }
+  });
+
+  it('ends with a git commit command', () => {
+    expect(gitAddCommand('claude')).toContain('git commit');
   });
 });
