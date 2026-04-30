@@ -10,7 +10,7 @@ vi.mock('@clack/prompts', () => ({
 }));
 
 import { intro, select, text } from '@clack/prompts';
-import { runPrompts } from '../prompts.js';
+import { runPrompts, questionCount } from '../prompts.js';
 
 describe('runPrompts()', () => {
   beforeEach(() => {
@@ -204,5 +204,41 @@ describe('runPrompts()', () => {
     await runPrompts();
 
     expect(select).toHaveBeenCalledTimes(5);
+  });
+});
+
+describe('questionCount()', () => {
+  it('returns 5 estimate when profile is unknown', () => {
+    expect(questionCount(undefined, undefined, undefined)).toBe(5);
+  });
+
+  it('returns 4 for solo, no local ingestion', () => {
+    expect(questionCount('solo', undefined, 'skip')).toBe(4);
+    expect(questionCount('solo', undefined, 'repo')).toBe(4);
+  });
+
+  it('returns 5 for solo, local ingestion', () => {
+    expect(questionCount('solo', undefined, 'local')).toBe(5);
+    expect(questionCount('solo', undefined, 'repo+local')).toBe(5);
+  });
+
+  it('returns 5 for full-flat, no local ingestion', () => {
+    expect(questionCount('full', false, 'skip')).toBe(5);
+    expect(questionCount('full', false, 'repo')).toBe(5);
+  });
+
+  it('returns 6 for full-flat, local ingestion', () => {
+    expect(questionCount('full', false, 'local')).toBe(6);
+    expect(questionCount('full', false, 'repo+local')).toBe(6);
+  });
+
+  it('returns 6 for full-federated, no local ingestion', () => {
+    expect(questionCount('full', true, 'skip')).toBe(6);
+    expect(questionCount('full', true, 'repo')).toBe(6);
+  });
+
+  it('returns 7 for full-federated, local ingestion', () => {
+    expect(questionCount('full', true, 'local')).toBe(7);
+    expect(questionCount('full', true, 'repo+local')).toBe(7);
   });
 });
