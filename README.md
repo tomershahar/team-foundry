@@ -22,6 +22,7 @@ If your repo already has a README and commit history, setup takes about 1 minute
 - **Sourced facts** — every claim in a data-heavy file has a `source:` and `last_validated:` field. The AI knows when to trust a number and when to ask where it came from.
 - **Validated vs hypothesized** — outcomes, customers, and roadmap items are explicitly split into what's backed by evidence and what's a bet. The coach flags when a hypothesis gets treated as a fact.
 - **Instruction architecture** — full profile gets `hierarchy.md` (which source wins when context conflicts), `instructions/hooks.md` (enforced pre-action behaviors), and `instructions/rules.md` (always-loaded coaching rules). The root file stays minimal; depth loads on demand.
+- **Pre-built skills** (Claude Code) — six slash commands that run directly in your Claude Code session: orient to context, check status, audit files, capture learnings, draft decisions, and synthesize a feature brief. Your knowledge stays in your files — skills are just pointers, not copies.
 
 ---
 
@@ -152,6 +153,33 @@ Every finding cites the specific file, the specific content, and the evidence. N
 | `"review our outcomes"` | Targeted review of one file |
 | `"tell me about feature X"` | Synthesizes status, rationale, customer evidence, open bets |
 | `"run the weekly review"` | Top 3 issues, draft fixes offered |
+
+### Pre-built skills (Claude Code)
+
+Six slash commands ship with every Claude Code setup. They read your team-foundry files and act on them — no extra configuration needed.
+
+| Skill | What it does |
+|---|---|
+| `/team-foundry-intro` | Orient to the team — reads all context files, produces a summary |
+| `/team-foundry-status` | Status read — what's on track, at risk, or blocked this cycle |
+| `/team-foundry-review` | Full audit — all files checked, findings by severity |
+| `/team-foundry-capture` | Capture what was learned in this session into the right file |
+| `/team-foundry-decision` | Draft an ADR from the current conversation |
+| `/team-foundry-feature` | Synthesize everything team-foundry knows about a specific feature |
+
+**Pointers, not copies.** Skills don't duplicate your team context — they point Claude Code at the right team-foundry files and tell it what to do with them. The knowledge lives in your files. The skills just know how to read it.
+
+### The flywheel
+
+The longer you use team-foundry, the more useful it gets:
+
+1. **Set up** — scaffold files, run the interview, fill in what you know
+2. **Work** — AI reads context, gives better answers, flags gaps inline
+3. **Learn** — session ends, coach offers to capture what changed (`/team-foundry-capture`)
+4. **Update** — confirm the draft, it commits to git, everyone pulls
+5. **Review** — next session, AI reads the updated files → answers get better
+
+Each cycle tightens the loop. The coach makes step 3→4 nearly automatic.
 
 ## Status command
 
