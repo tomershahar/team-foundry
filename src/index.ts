@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { outro, log, confirm } from '@clack/prompts';
+import { outro, log, confirm, select, isCancel } from '@clack/prompts';
 import { runPrompts } from './prompts.js';
 import { scaffold, gitAddCommand } from './scaffold.js';
 import { writeGitignore } from './gitignore.js';
@@ -79,6 +79,35 @@ async function checkDirectory(targetDir: string): Promise<void> {
   }
 }
 
+async function checkExistingInstall(targetDir: string): Promise<'status' | 'migrate' | 'continue' | null> {
+  try {
+    await fs.access(path.join(targetDir, 'team-foundry'));
+  } catch {
+    return null; // not installed
+  }
+
+  log.warn(
+    'team-foundry is already set up in this directory.\n' +
+    'What would you like to do?',
+  );
+
+  const choice = await select({
+    message: 'Choose an option:',
+    options: [
+      { value: 'status', label: 'Run status — see which files are stale or missing' },
+      { value: 'migrate', label: 'Run migrate — upgrade to the latest profile' },
+      { value: 'continue', label: 'Continue anyway — re-run setup (adds any missing files)' },
+    ],
+  });
+
+  if (isCancel(choice)) {
+    outro('Cancelled.');
+    process.exit(0);
+  }
+
+  return choice as 'status' | 'migrate' | 'continue';
+}
+
 async function main(): Promise<void> {
   const targetDir = process.cwd();
 
@@ -93,6 +122,10 @@ async function main(): Promise<void> {
   }
 
   await checkDirectory(targetDir);
+
+  const installChoice = await checkExistingInstall(targetDir);
+  if (installChoice === 'status') { await runStatus(targetDir); return; }
+  if (installChoice === 'migrate') { await runMigrate(targetDir); return; }
 
   const answers = await runPrompts();
   const date = new Date().toISOString().split('T')[0];
