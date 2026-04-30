@@ -67,7 +67,7 @@ export async function runPrompts(): Promise<PromptResult> {
   if (profile === 'full') {
     const federatedAnswer = await select({
       message: 'Context layout?',
-      hint: `4 of ${questionCount(profileTyped, undefined, undefined)}`,
+      hint: '4 of ?',
       options: [
         { value: 'flat', label: 'Flat  (one root CLAUDE.md — simpler, recommended for most teams)' },
         { value: 'federated', label: 'Federated  (CLAUDE.md per folder — for larger teams, 8+ people)' },
@@ -78,7 +78,7 @@ export async function runPrompts(): Promise<PromptResult> {
   }
 
   const federatedResolved = federated ?? false;
-  const ingestionQ = profileTyped === 'solo' ? 4 : federated ? 5 : 5;
+  const ingestionQ = profileTyped === 'solo' ? 4 : 5;
 
   const ingestion = await select({
     message:

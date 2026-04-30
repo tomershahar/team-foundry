@@ -401,7 +401,7 @@ describe('scaffold() — returns written file paths', () => {
     const written1 = await scaffold({ ...baseOptions, targetDir: tmpDir });
     const written2 = await scaffold({ ...baseOptions, targetDir: tmpDir });
     expect(written2).toHaveLength(0);
-    expect(written1.length).toBe(expectedPaths('full', 'claude').length);
+    expect(new Set(written1)).toEqual(new Set(expectedPaths('full', 'claude')));
   });
 
   it('returned paths are relative (no leading slash)', async () => {

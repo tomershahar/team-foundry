@@ -34,7 +34,7 @@ That context used to live in someone's head, a Notion page nobody reads, or a wi
 **No cloud. No sync service. No extra accounts.** team-foundry uses your existing repo as the shared space.
 
 **One person sets it up**
-Run `npx create-team-foundry` in your shared repo. The CLI scaffolds a `team-foundry/` folder, generates the right tool file (`CLAUDE.md`, `GEMINI.md`, or `.cursor/rules/`), and commits everything to git.
+Run `npx create-team-foundry` in your shared repo. The CLI scaffolds a `team-foundry/` folder and generates the right tool file (`CLAUDE.md`, `GEMINI.md`, or `.cursor/rules/`). Commit with your normal git flow and you're done.
 
 **Everyone else pulls**
 Teammates `git pull`. They now have the same team-foundry files locally. Their Claude Code, Cursor, or Gemini CLI reads from the same files yours does. No installs, no logins, no setup.
@@ -67,9 +67,8 @@ When someone updates a file — or the coach drafts an update they confirm — i
 
 *Your repo is the shared space. Git is the sync. team-foundry adds the structure and the coach.*
 
----
-
-## How it fits together
+<details>
+<summary>How it fits together</summary>
 
 | Layer | What it is | team-foundry component |
 |---|---|---|
@@ -77,6 +76,8 @@ When someone updates a file — or the coach drafts an update they confirm — i
 | **Behavior** | How the AI acts on it | `CLAUDE.md` / `GEMINI.md` / `.cursor/rules/` + `hierarchy.md` + `instructions/` |
 | **Actions** | What you can trigger | Coach commands, `status`, `migrate` |
 | **Connections** | Where it runs | Git, Claude Code, Cursor, Gemini CLI, Codex / generic agents |
+
+</details>
 
 ---
 
@@ -156,14 +157,6 @@ npx create-team-foundry migrate --to v3
 This adds the three new v3 files (`hierarchy.md`, `instructions/hooks.md`, `instructions/rules.md`) and appends `source:` / `last_validated:` to the frontmatter of your five data-heavy files. **Existing files are never overwritten.** Your content is preserved exactly — the migration is additive only.
 
 Existing v2 repos continue to work without migrating. v3 is the new default for new repos.
-
----
-
-```bash
-npx create-team-foundry
-```
-
-**Run in your shared repo. Then say: `"Let's set up our team-foundry."`**
 
 ---
 

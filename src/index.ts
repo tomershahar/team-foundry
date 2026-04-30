@@ -133,6 +133,16 @@ async function main(): Promise<void> {
   const writtenPaths = await scaffold({ ...answers, targetDir, date });
   await writeGitignore(targetDir);
 
+  if (answers.ingestion === 'paste' || answers.ingestion === 'repo+paste') {
+    const pastePath = path.join(targetDir, '.team-foundry', 'paste-content.md');
+    try {
+      await fs.access(pastePath);
+    } catch {
+      await fs.writeFile(pastePath, PASTE_PLACEHOLDER, 'utf-8');
+      writtenPaths.push('.team-foundry/paste-content.md');
+    }
+  }
+
   if (writtenPaths.length > 0) {
     const grouped = groupByFolder(writtenPaths);
     const lines = ['', 'Files created:'];
@@ -143,15 +153,8 @@ async function main(): Promise<void> {
     lines.push('', 'Commit when ready:');
     lines.push(`  ${gitAddCommand(answers.tool)}`);
     log.info(lines.join('\n'));
-  }
-
-  if (answers.ingestion === 'paste' || answers.ingestion === 'repo+paste') {
-    const pastePath = path.join(targetDir, '.team-foundry', 'paste-content.md');
-    try {
-      await fs.access(pastePath);
-    } catch {
-      await fs.writeFile(pastePath, PASTE_PLACEHOLDER, 'utf-8');
-    }
+  } else {
+    log.info('No new files created — all files already exist.');
   }
 
   const tool = TOOL_LABEL[answers.tool];
