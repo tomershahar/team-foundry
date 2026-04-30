@@ -1,6 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import type { TemplateContext } from '../types.js';
 import {
+  introSkillTemplate,
+  statusSkillTemplate,
+  reviewSkillTemplate,
+  captureSkillTemplate,
+  decisionSkillTemplate,
+  featureSkillTemplate,
+} from '../templates/skills/index.js';
+import {
   rootAgentsTemplate,
   rootClaudeTemplate,
   rootGeminiTemplate,
@@ -1873,5 +1881,78 @@ describe('Iteration v2.4 — team member IDs in trio template', () => {
   it('coach onboarding asks for GitHub handles', () => {
     const coachOutput = coachTemplate(baseCtx);
     expect(coachOutput).toMatch(/github|handle/i);
+  });
+});
+
+describe('v3 skills — Tasks 17-22', () => {
+  const ctx = baseCtx;
+
+  const skills = [
+    { name: 'intro', fn: introSkillTemplate },
+    { name: 'status', fn: statusSkillTemplate },
+    { name: 'review', fn: reviewSkillTemplate },
+    { name: 'capture', fn: captureSkillTemplate },
+    { name: 'decision', fn: decisionSkillTemplate },
+    { name: 'feature', fn: featureSkillTemplate },
+  ];
+
+  for (const { name, fn } of skills) {
+    it(`${name} skill has description frontmatter`, () => {
+      expect(fn(ctx)).toMatch(/^---\ndescription:/);
+    });
+
+    it(`${name} skill has real content (not a stub)`, () => {
+      expect(fn(ctx)).not.toContain('<!-- stub');
+      expect(fn(ctx).length).toBeGreaterThan(200);
+    });
+
+    it(`${name} skill has a ## What to do section`, () => {
+      expect(fn(ctx)).toContain('## What to do');
+    });
+  }
+
+  it('intro skill references north-star.md', () => {
+    expect(introSkillTemplate(ctx)).toContain('north-star.md');
+  });
+
+  it('status skill references outcomes.md', () => {
+    expect(statusSkillTemplate(ctx)).toContain('outcomes.md');
+  });
+
+  it('review skill covers all domain folders', () => {
+    const output = reviewSkillTemplate(ctx);
+    expect(output).toContain('team-foundry/product/');
+    expect(output).toContain('team-foundry/engineering/');
+  });
+
+  it('capture skill maps learning types to files', () => {
+    const output = captureSkillTemplate(ctx);
+    expect(output).toContain('outcomes.md');
+    expect(output).toContain('assumptions.md');
+    expect(output).toContain('decisions/');
+  });
+
+  it('capture skill requires confirmation before writing', () => {
+    expect(captureSkillTemplate(ctx)).toContain('confirmation');
+  });
+
+  it('decision skill produces ADR format with status field', () => {
+    const output = decisionSkillTemplate(ctx);
+    expect(output).toContain('status: Proposed');
+    expect(output).toContain('## Rationale');
+  });
+
+  it('decision skill requires confirmation before writing', () => {
+    expect(decisionSkillTemplate(ctx)).toContain('confirmation');
+  });
+
+  it('feature skill references customer segments and outcomes', () => {
+    const output = featureSkillTemplate(ctx);
+    expect(output).toContain('customers.md');
+    expect(output).toContain('outcomes.md');
+  });
+
+  it('feature skill instructs AI to surface gaps rather than invent context', () => {
+    expect(featureSkillTemplate(ctx)).toContain("Don't invent context");
   });
 });
