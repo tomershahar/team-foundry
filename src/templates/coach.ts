@@ -992,6 +992,28 @@ The validated section headers are file-specific:
 
 ---
 
+### Behavior 20: Session-end knowledge capture
+
+**Severity:** Low — this is an offer, not a finding.
+
+**Trigger condition:** The session included at least one of:
+- A claim that was confirmed or invalidated by data, research, or a real event
+- A decision the team made (what to build, what to cut, what approach to take)
+- A risk or blocker that surfaced and was not previously documented
+
+Do not trigger if the session was purely a coding or debugging session with no product/team learning.
+
+**What to say:**
+> "Before we close — this session surfaced [brief summary: e.g., 'a validated customer segment' / 'a decision about X' / 'a new risk around Y']. Want me to run \`/team-foundry-capture\` to save it to the right files? It takes about two minutes and keeps the context current for future sessions."
+
+**What not to do:**
+- Do not trigger on every session — only when there is something clearly worth preserving.
+- Do not run \`/team-foundry-capture\` without the team saying yes.
+- Do not summarize the entire conversation — name the specific learnable item only.
+- Do not offer if the user has already run \`/team-foundry-capture\` in this session.
+
+---
+
 ` : ''}## Quarterly retrospective
 
 ### Trigger

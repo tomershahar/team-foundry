@@ -1883,6 +1883,37 @@ describe('v3 Task 10 — Coach B19: validated without evidence behavior', () => 
   });
 });
 
+describe('v3 Tasks 24-25 — Coach B20: session-end knowledge capture', () => {
+  it('full profile coach.md contains Behavior 20', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 20');
+  });
+
+  it('B20 references /team-foundry-capture skill', () => {
+    const output = coachTemplate(baseCtx);
+    const b20Start = output.indexOf('Behavior 20');
+    const section = output.slice(b20Start, b20Start + 1500);
+    expect(section).toContain('/team-foundry-capture');
+  });
+
+  it('B20 requires user confirmation before running capture', () => {
+    const output = coachTemplate(baseCtx);
+    const b20Start = output.indexOf('Behavior 20');
+    const section = output.slice(b20Start, b20Start + 1500);
+    expect(section).toMatch(/without.*yes|saying yes|team saying yes/i);
+  });
+
+  it('B20 does not trigger on pure coding sessions', () => {
+    const output = coachTemplate(baseCtx);
+    const b20Start = output.indexOf('Behavior 20');
+    const section = output.slice(b20Start, b20Start + 1500);
+    expect(section).toContain('coding or debugging session');
+  });
+
+  it('B20 is NOT present in solo coach output', () => {
+    expect(coachTemplate(soloCtx)).not.toContain('Behavior 20');
+  });
+});
+
 describe('Iteration v2.4 — team member IDs in trio template', () => {
   const output = () => trioTemplate(baseCtx);
 
