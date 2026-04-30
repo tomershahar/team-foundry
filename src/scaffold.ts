@@ -10,6 +10,14 @@ import {
   federatedContextTemplate,
 } from './templates/federated/index.js';
 import {
+  introSkillTemplate,
+  statusSkillTemplate,
+  reviewSkillTemplate,
+  captureSkillTemplate,
+  decisionSkillTemplate,
+  featureSkillTemplate,
+} from './templates/skills/index.js';
+import {
   rootClaudeTemplate,
   rootGeminiTemplate,
   rootCursorTemplate,
@@ -92,6 +100,16 @@ const FEDERATED_ENTRIES: FileEntry[] = [
   { relativePath: 'team-foundry/context/CLAUDE.md', content: federatedContextTemplate },
 ];
 
+/** Pre-built Claude Code skill files — written when tool is claude or both */
+const CLAUDE_SKILLS_ENTRIES: FileEntry[] = [
+  { relativePath: '.claude/skills/team-foundry-intro.md', content: introSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-status.md', content: statusSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-review.md', content: reviewSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-capture.md', content: captureSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-decision.md', content: decisionSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-feature.md', content: featureSkillTemplate },
+];
+
 /** Returns the root instruction file entry/entries based on tool choice */
 function rootEntries(tool: ScaffoldOptions['tool']): FileEntry[] {
   if (tool === 'claude') {
@@ -114,12 +132,15 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
 
   const ctx: TemplateContext = { profile, tool, repoVisibility, date, ingestionPath, ingestion };
 
+  const includesSkills = tool === 'claude' || tool === 'both';
+
   const entries: FileEntry[] = [
     ...ALWAYS_ROOT_ENTRIES,
     ...rootEntries(tool),
     ...SOLO_ENTRIES,
     ...(profile === 'full' ? FULL_ONLY_ENTRIES : []),
     ...(profile === 'full' && federated ? FEDERATED_ENTRIES : []),
+    ...(includesSkills ? CLAUDE_SKILLS_ENTRIES : []),
   ];
 
   for (const entry of entries) {
@@ -160,6 +181,7 @@ export function expectedPaths(
   const solo = SOLO_ENTRIES.map((e) => e.relativePath);
   const full = profile === 'full' ? FULL_ONLY_ENTRIES.map((e) => e.relativePath) : [];
   const fed = profile === 'full' && federated ? FEDERATED_ENTRIES.map((e) => e.relativePath) : [];
+  const skills = (tool === 'claude' || tool === 'both') ? CLAUDE_SKILLS_ENTRIES.map((e) => e.relativePath) : [];
 
-  return [...alwaysRoot, ...roots, ...solo, ...full, ...fed];
+  return [...alwaysRoot, ...roots, ...solo, ...full, ...fed, ...skills];
 }
