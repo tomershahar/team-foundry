@@ -1,10 +1,22 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { outro, log, confirm } from '@clack/prompts';
+import { outro, log, confirm, select, isCancel } from '@clack/prompts';
 import { runPrompts } from './prompts.js';
-import { scaffold } from './scaffold.js';
+import { scaffold, gitAddCommand } from './scaffold.js';
 import { writeGitignore } from './gitignore.js';
 import { runStatus } from './status.js';
+import { runMigrate } from './migrate.js';
+
+function groupByFolder(paths: string[]): Record<string, string[]> {
+  const groups: Record<string, string[]> = {};
+  for (const p of paths) {
+    const parts = p.split('/');
+    const folder = parts.length > 1 ? parts[0] : '.';
+    const file = parts.length > 1 ? parts.slice(1).join('/') : p;
+    (groups[folder] ??= []).push(file);
+  }
+  return groups;
+}
 
 const TOOL_LABEL: Record<string, string> = {
   claude: 'Claude Code',
@@ -67,6 +79,35 @@ async function checkDirectory(targetDir: string): Promise<void> {
   }
 }
 
+async function checkExistingInstall(targetDir: string): Promise<'status' | 'migrate' | 'continue' | null> {
+  try {
+    await fs.access(path.join(targetDir, 'team-foundry'));
+  } catch {
+    return null; // not installed
+  }
+
+  log.warn(
+    'team-foundry is already set up in this directory.\n' +
+    'What would you like to do?',
+  );
+
+  const choice = await select({
+    message: 'Choose an option:',
+    options: [
+      { value: 'status', label: 'Run status — see which files are stale or missing' },
+      { value: 'migrate', label: 'Run migrate — upgrade to the latest profile' },
+      { value: 'continue', label: 'Continue anyway — re-run setup (adds any missing files)' },
+    ],
+  });
+
+  if (isCancel(choice)) {
+    outro('Cancelled.');
+    process.exit(0);
+  }
+
+  return choice as 'status' | 'migrate' | 'continue';
+}
+
 async function main(): Promise<void> {
   const targetDir = process.cwd();
 
@@ -75,12 +116,21 @@ async function main(): Promise<void> {
     return;
   }
 
+  if (process.argv[2] === 'migrate') {
+    await runMigrate(targetDir);
+    return;
+  }
+
   await checkDirectory(targetDir);
+
+  const installChoice = await checkExistingInstall(targetDir);
+  if (installChoice === 'status') { await runStatus(targetDir); return; }
+  if (installChoice === 'migrate') { await runMigrate(targetDir); return; }
 
   const answers = await runPrompts();
   const date = new Date().toISOString().split('T')[0];
 
-  await scaffold({ ...answers, targetDir, date });
+  const writtenPaths = await scaffold({ ...answers, targetDir, date });
   await writeGitignore(targetDir);
 
   if (answers.ingestion === 'paste' || answers.ingestion === 'repo+paste') {
@@ -89,7 +139,22 @@ async function main(): Promise<void> {
       await fs.access(pastePath);
     } catch {
       await fs.writeFile(pastePath, PASTE_PLACEHOLDER, 'utf-8');
+      writtenPaths.push('.team-foundry/paste-content.md');
     }
+  }
+
+  if (writtenPaths.length > 0) {
+    const grouped = groupByFolder(writtenPaths);
+    const lines = ['', 'Files created:'];
+    for (const [folder, files] of Object.entries(grouped)) {
+      lines.push(`  ${folder}/`);
+      for (const file of files) lines.push(`    ${file}`);
+    }
+    lines.push('', 'Commit when ready:');
+    lines.push(`  ${gitAddCommand(answers.tool)}`);
+    log.info(lines.join('\n'));
+  } else {
+    log.info('No new files created — all files already exist.');
   }
 
   const tool = TOOL_LABEL[answers.tool];

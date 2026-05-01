@@ -1,5 +1,41 @@
 # Changelog
 
+## [3.0.0] — 2026-04-30
+
+### What's new in v3
+
+**Sourced facts**
+Five data-heavy files (`outcomes.md`, `customers.md`, `assumptions.md`, `now-next-later.md`, `metrics.md`) now include `source:` and `last_validated:` frontmatter fields. The AI knows when to trust a number and when to ask where it came from. Coach Behavior 18 flags unsourced quantitative claims; Behavior 19 flags validated entries with no evidence.
+
+**Validated vs hypothesized sections**
+Outcomes, customers, and roadmap items are explicitly split into what's backed by evidence and what's a bet. Hypothesis sections carry a signal to the AI that these items are unconfirmed. Coach Behavior 19 fires when a hypothesis gets treated as a fact.
+
+**Instruction architecture**
+Full profile adds three new files: `hierarchy.md` (which source wins when context conflicts), `instructions/hooks.md` (enforced pre-action behaviors), and `instructions/rules.md` (always-loaded coaching rules). The root instruction file stays minimal; depth loads on demand.
+
+**Pre-built Claude Code skills**
+Six slash commands ship with every Claude Code setup (tool: claude or both):
+- `/team-foundry-intro` — orient to the team, produce a session summary
+- `/team-foundry-status` — what's on track, at risk, or blocked this cycle
+- `/team-foundry-review` — full audit, findings by severity
+- `/team-foundry-capture` — capture session learnings into the right files
+- `/team-foundry-decision` — draft an ADR from the current conversation
+- `/team-foundry-feature` — synthesize everything known about a specific feature
+
+Skills are pointers, not copies — they read your team-foundry files and act on them. The knowledge lives in your files.
+
+**Knowledge capture flywheel (full profile only)**
+Coach Behavior 20 (full profile only): at the end of a session where something was learned or decided, the coach offers to run `/team-foundry-capture`. Coach Behavior 17 now includes a routing table distinguishing team process patterns (→ `team-lessons.md`) from validated data, decisions, and risks (→ `/team-foundry-capture` or `/team-foundry-decision`).
+
+**Migration command**
+`npx create-team-foundry migrate --to v3` upgrades existing v2 repos: adds the three new v3 files and appends `source:` / `last_validated:` frontmatter to the five data-heavy files. Additive only — existing content is never overwritten.
+
+### Breaking changes
+
+None. v2 scaffolds are fully compatible with v3. Run `npx create-team-foundry migrate --to v3` to add v3 features to an existing repo.
+
+---
+
 ## [2.0.0] — 2026-04-25
 
 ### What's new in v2

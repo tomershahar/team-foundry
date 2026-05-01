@@ -10,6 +10,14 @@ import {
   federatedContextTemplate,
 } from './templates/federated/index.js';
 import {
+  introSkillTemplate,
+  statusSkillTemplate,
+  reviewSkillTemplate,
+  captureSkillTemplate,
+  decisionSkillTemplate,
+  featureSkillTemplate,
+} from './templates/skills/index.js';
+import {
   rootClaudeTemplate,
   rootGeminiTemplate,
   rootCursorTemplate,
@@ -33,6 +41,9 @@ import {
   glossaryTemplate,
   stakeholdersTemplate,
   strategyTemplate,
+  hierarchyTemplate,
+  hooksTemplate,
+  rulesTemplate,
 } from './templates/index.js';
 
 interface FileEntry {
@@ -74,6 +85,9 @@ const FULL_ONLY_ENTRIES: FileEntry[] = [
   { relativePath: 'team-foundry/context/glossary.md', content: glossaryTemplate },
   { relativePath: 'team-foundry/context/stakeholders.md', content: stakeholdersTemplate },
   { relativePath: 'team-foundry/product/strategy.md', content: strategyTemplate },
+  { relativePath: '.team-foundry/hierarchy.md', content: hierarchyTemplate },
+  { relativePath: '.team-foundry/instructions/hooks.md', content: hooksTemplate },
+  { relativePath: '.team-foundry/instructions/rules.md', content: rulesTemplate },
 ];
 
 /** Per-folder CLAUDE.md files written only for full profile in federated layout */
@@ -84,6 +98,16 @@ const FEDERATED_ENTRIES: FileEntry[] = [
   { relativePath: 'team-foundry/design/CLAUDE.md', content: federatedDesignTemplate },
   { relativePath: 'team-foundry/data/CLAUDE.md', content: federatedDataTemplate },
   { relativePath: 'team-foundry/context/CLAUDE.md', content: federatedContextTemplate },
+];
+
+/** Pre-built Claude Code skill files — written when tool is claude or both */
+const CLAUDE_SKILLS_ENTRIES: FileEntry[] = [
+  { relativePath: '.claude/skills/team-foundry-intro.md', content: introSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-status.md', content: statusSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-review.md', content: reviewSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-capture.md', content: captureSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-decision.md', content: decisionSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-feature.md', content: featureSkillTemplate },
 ];
 
 /** Returns the root instruction file entry/entries based on tool choice */
@@ -103,10 +127,12 @@ function rootEntries(tool: ScaffoldOptions['tool']): FileEntry[] {
   ];
 }
 
-export async function scaffold(options: ScaffoldOptions): Promise<void> {
+export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
   const { targetDir, profile, tool, repoVisibility, date, ingestionPath, ingestion, federated } = options;
 
   const ctx: TemplateContext = { profile, tool, repoVisibility, date, ingestionPath, ingestion };
+
+  const includesSkills = tool === 'claude' || tool === 'both';
 
   const entries: FileEntry[] = [
     ...ALWAYS_ROOT_ENTRIES,
@@ -114,7 +140,10 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
     ...SOLO_ENTRIES,
     ...(profile === 'full' ? FULL_ONLY_ENTRIES : []),
     ...(profile === 'full' && federated ? FEDERATED_ENTRIES : []),
+    ...(includesSkills ? CLAUDE_SKILLS_ENTRIES : []),
   ];
+
+  const written: string[] = [];
 
   for (const entry of entries) {
     const fullPath = path.join(targetDir, entry.relativePath);
@@ -132,7 +161,28 @@ export async function scaffold(options: ScaffoldOptions): Promise<void> {
     }
 
     await fs.writeFile(fullPath, entry.content(ctx), 'utf-8');
+    written.push(entry.relativePath);
   }
+
+  return written;
+}
+
+/** Returns the git add + commit command appropriate for the chosen tool. */
+export function gitAddCommand(tool: ScaffoldOptions['tool']): string {
+  const toolFiles: string[] = [];
+  if (tool === 'claude' || tool === 'both') toolFiles.push('CLAUDE.md', '.claude/');
+  if (tool === 'gemini' || tool === 'both') toolFiles.push('GEMINI.md');
+  if (tool === 'cursor') toolFiles.push('.cursor/');
+
+  const paths = [
+    'team-foundry/',
+    '.team-foundry/',
+    'AGENTS.md',
+    'GETTING_STARTED.md',
+    ...toolFiles,
+  ].join(' ');
+
+  return `git add ${paths} && git commit -m "Add team-foundry"`;
 }
 
 /** Returns the expected file paths for a given profile, tool, and layout (relative to targetDir) */
@@ -154,6 +204,7 @@ export function expectedPaths(
   const solo = SOLO_ENTRIES.map((e) => e.relativePath);
   const full = profile === 'full' ? FULL_ONLY_ENTRIES.map((e) => e.relativePath) : [];
   const fed = profile === 'full' && federated ? FEDERATED_ENTRIES.map((e) => e.relativePath) : [];
+  const skills = (tool === 'claude' || tool === 'both') ? CLAUDE_SKILLS_ENTRIES.map((e) => e.relativePath) : [];
 
-  return [...alwaysRoot, ...roots, ...solo, ...full, ...fed];
+  return [...alwaysRoot, ...roots, ...solo, ...full, ...fed, ...skills];
 }

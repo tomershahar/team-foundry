@@ -8,5 +8,6 @@ uat-mock-docs/
 
 # Internal working documents
 docs/
+tasks/
 new_features_idea.md
 SPEC*.md

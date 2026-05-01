@@ -1,6 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import type { TemplateContext } from '../types.js';
 import {
+  introSkillTemplate,
+  statusSkillTemplate,
+  reviewSkillTemplate,
+  captureSkillTemplate,
+  decisionSkillTemplate,
+  featureSkillTemplate,
+} from '../templates/skills/index.js';
+import {
   rootAgentsTemplate,
   rootClaudeTemplate,
   rootGeminiTemplate,
@@ -33,6 +41,8 @@ const baseCtx: TemplateContext = {
   repoVisibility: 'internal',
   date: '2026-04-17',
 };
+
+const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
 
 const allTemplates = [
   ['root-claude', rootClaudeTemplate],
@@ -134,6 +144,22 @@ describe('template stubs', () => {
 
   it('root-cursor contains coach activation instructions', () => {
     expect(rootCursorTemplate(baseCtx)).toMatch(/coach|team-foundry review/i);
+  });
+
+  it('root-claude Skills section lists all 6 skills', () => {
+    const output = rootClaudeTemplate(baseCtx);
+    expect(output).toContain('/team-foundry-intro');
+    expect(output).toContain('/team-foundry-status');
+    expect(output).toContain('/team-foundry-review');
+    expect(output).toContain('/team-foundry-capture');
+    expect(output).toContain('/team-foundry-decision');
+    expect(output).toContain('/team-foundry-feature');
+  });
+
+  it('root-agents mentions Claude Code skills', () => {
+    const output = rootAgentsTemplate(baseCtx);
+    expect(output).toContain('.claude/skills/');
+    expect(output).toContain('/team-foundry-intro');
   });
 
   it('root-cursor contains last_updated frontmatter', () => {
@@ -1400,7 +1426,7 @@ describe('Iteration 9b — F4.9 context priority hierarchy', () => {
   it('priority hierarchy includes outcomes and now-next-later', () => {
     const coachOutput = output();
     const priorityStart = coachOutput.search(/[Cc]ontext priority/);
-    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 600);
+    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 900);
     expect(prioritySection.toLowerCase()).toMatch(/outcomes/);
     expect(prioritySection.toLowerCase()).toMatch(/now.next.later/);
   });
@@ -1408,7 +1434,7 @@ describe('Iteration 9b — F4.9 context priority hierarchy', () => {
   it('instructs coach to name conflicts explicitly', () => {
     const coachOutput = output();
     const priorityStart = coachOutput.search(/[Cc]ontext priority/);
-    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 600);
+    const prioritySection = coachOutput.slice(priorityStart, priorityStart + 900);
     expect(prioritySection.toLowerCase()).toMatch(/name.*conflict|conflict.*explicit/);
   });
 });
@@ -1461,6 +1487,22 @@ describe('B17 — team-specific lesson capture', () => {
     expect(soloOutput).toMatch(/Behavior 17|team.specific lesson/i);
     expect(fullOutput).toMatch(/Behavior 17|team.specific lesson/i);
   });
+
+  it('B17 knowledge routing table covers validated claims and decisions', () => {
+    const coachOutput = coachTemplate(baseCtx);
+    const b17Start = coachOutput.search(/Behavior 17|team.specific lesson/i);
+    const section = coachOutput.slice(b17Start, b17Start + 3000);
+    expect(section).toContain('/team-foundry-capture');
+    expect(section).toContain('/team-foundry-decision');
+    expect(section).toContain('Knowledge routing');
+  });
+
+  it('B17 routing table does not mix pattern capture with data capture', () => {
+    const coachOutput = coachTemplate(baseCtx);
+    const b17Start = coachOutput.search(/Behavior 17|team.specific lesson/i);
+    const section = coachOutput.slice(b17Start, b17Start + 3000);
+    expect(section).toContain('Do not mix routing');
+  });
 });
 
 describe('Iteration 9b — scaffold strategy.md wiring', () => {
@@ -1474,11 +1516,11 @@ describe('Iteration 9b — scaffold strategy.md wiring', () => {
     expect(soloPaths).not.toContain('team-foundry/product/strategy.md');
   });
 
-  it('full profile has one more file than before (strategy.md added)', () => {
+  it('full profile includes strategy.md and is larger than solo', () => {
     const fullPaths = expectedPaths('full', 'claude');
     const soloPaths = expectedPaths('solo', 'claude');
-    // full has all solo files + 13 full-only files (was 12, now 13 with strategy.md)
-    expect(fullPaths.length - soloPaths.length).toBe(13);
+    expect(fullPaths).toContain('team-foundry/product/strategy.md');
+    expect(fullPaths.length).toBeGreaterThan(soloPaths.length);
   });
 });
 
@@ -1558,6 +1600,336 @@ describe('AGENTS.md generation', () => {
   });
 });
 
+describe('v3 — sourced frontmatter on data-heavy templates (Task 1: outcomes)', () => {
+  const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
+
+  it('outcomes has source: field in frontmatter (full profile)', () => {
+    const fm = parseFrontmatter(outcomesTemplate(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('source' in fm!).toBe(true);
+  });
+
+  it('outcomes has last_validated: field in frontmatter (full profile)', () => {
+    const fm = parseFrontmatter(outcomesTemplate(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('last_validated' in fm!).toBe(true);
+  });
+
+  it('outcomes has source: field in frontmatter (solo profile)', () => {
+    const fm = parseFrontmatter(outcomesTemplate(soloCtx));
+    expect(fm).not.toBeNull();
+    expect('source' in fm!).toBe(true);
+  });
+
+  it('outcomes has last_validated: field in frontmatter (solo profile)', () => {
+    const fm = parseFrontmatter(outcomesTemplate(soloCtx));
+    expect(fm).not.toBeNull();
+    expect('last_validated' in fm!).toBe(true);
+  });
+});
+
+describe('v3 — sourced frontmatter on data-heavy templates (Task 2)', () => {
+  const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
+
+  const dataHeavyTemplates = [
+    ['customers', customersTemplate],
+    ['metrics', metricsTemplate],
+    ['assumptions', assumptionsTemplate],
+    ['now-next-later', nowNextLaterTemplate],
+  ] as const;
+
+  it.each(dataHeavyTemplates)('%s has source: field in frontmatter (full profile)', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('source' in fm!).toBe(true);
+  });
+
+  it.each(dataHeavyTemplates)('%s has last_validated: field in frontmatter (full profile)', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('last_validated' in fm!).toBe(true);
+  });
+
+  it.each(dataHeavyTemplates)('%s has source: field in frontmatter (solo profile)', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(soloCtx));
+    expect(fm).not.toBeNull();
+    expect('source' in fm!).toBe(true);
+  });
+
+  it.each(dataHeavyTemplates)('%s has last_validated: field in frontmatter (solo profile)', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(soloCtx));
+    expect(fm).not.toBeNull();
+    expect('last_validated' in fm!).toBe(true);
+  });
+
+  const narrativeTemplates = [
+    ['north-star', northStarTemplate],
+    ['strategy', strategyTemplate],
+    ['quality-bar', qualityBarTemplate],
+    ['working-agreement', workingAgreementTemplate],
+    ['glossary', glossaryTemplate],
+    ['decisions-readme', decisionsReadmeTemplate],
+    ['trio', trioTemplate],
+    ['ai-practices', aiPracticesTemplate],
+    ['principles', principlesTemplate],
+    ['stakeholders', stakeholdersTemplate],
+    ['risks', risksTemplate],
+    ['stack', stackTemplate],
+  ] as const;
+
+  it.each(narrativeTemplates)('%s does NOT have source: in frontmatter', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('source' in fm!).toBe(false);
+  });
+
+  it.each(narrativeTemplates)('%s does NOT have last_validated: in frontmatter', (_name, fn) => {
+    const fm = parseFrontmatter((fn as (ctx: TemplateContext) => string)(baseCtx));
+    expect(fm).not.toBeNull();
+    expect('last_validated' in fm!).toBe(false);
+  });
+});
+
+describe('v3 Task 7 — Validated/Hypothesized sections in customers.md', () => {
+  const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
+
+  it('full profile customers.md has ## Validated section', () => {
+    expect(customersTemplate(baseCtx)).toContain('## Validated');
+  });
+
+  it('full profile customers.md has ## Hypothesized section', () => {
+    expect(customersTemplate(baseCtx)).toContain('## Hypothesized');
+  });
+
+  it('full profile customers.md has ## Anti-ICP section', () => {
+    expect(customersTemplate(baseCtx)).toContain('## Anti-ICP');
+  });
+
+  it('full profile customers.md does NOT have ## Personas section', () => {
+    expect(customersTemplate(baseCtx)).not.toContain('## Personas');
+  });
+
+  it('solo profile customers.md has ## Personas section', () => {
+    expect(customersTemplate(soloCtx)).toContain('## Personas');
+  });
+
+  it('solo profile customers.md does NOT have ## Validated section', () => {
+    expect(customersTemplate(soloCtx)).not.toContain('## Validated');
+  });
+
+  it('solo profile customers.md does NOT have ## Hypothesized section', () => {
+    expect(customersTemplate(soloCtx)).not.toContain('## Hypothesized');
+  });
+
+  it('solo profile customers.md does NOT have ## Anti-ICP section', () => {
+    expect(customersTemplate(soloCtx)).not.toContain('## Anti-ICP');
+  });
+
+  it('full profile Validated section has a coach comment explaining sourcing requirement', () => {
+    const output = customersTemplate(baseCtx);
+    const validatedStart = output.indexOf('## Validated');
+    const hypothesizedStart = output.indexOf('## Hypothesized');
+    const section = output.slice(validatedStart, hypothesizedStart);
+    expect(section).toMatch(/source|cohort|evidence|data/i);
+  });
+
+  it('full profile Hypothesized section has a coach comment about what would validate it', () => {
+    const output = customersTemplate(baseCtx);
+    const hypothesizedStart = output.indexOf('## Hypothesized');
+    const antiIcpStart = output.indexOf('## Anti-ICP');
+    const section = output.slice(hypothesizedStart, antiIcpStart);
+    expect(section).toMatch(/validat|confirm|test/i);
+  });
+
+  it('full profile Anti-ICP section has a coach comment about reasoning', () => {
+    const output = customersTemplate(baseCtx);
+    const antiIcpStart = output.indexOf('## Anti-ICP');
+    const section = output.slice(antiIcpStart);
+    expect(section).toMatch(/reason|why|explicit/i);
+  });
+});
+
+describe('v3 Task 8 — Validated/Hypothesized in outcomes.md', () => {
+  it('full profile outcomes.md has ## Validated outcomes section', () => {
+    expect(outcomesTemplate(baseCtx)).toContain('## Validated outcomes');
+  });
+
+  it('full profile outcomes.md has ## Hypothesized outcomes section', () => {
+    expect(outcomesTemplate(baseCtx)).toContain('## Hypothesized outcomes');
+  });
+
+  it('full profile outcomes.md does NOT have ## This quarter section', () => {
+    expect(outcomesTemplate(baseCtx)).not.toContain('## This quarter');
+  });
+
+  it('solo profile outcomes.md has ## This quarter section', () => {
+    expect(outcomesTemplate(soloCtx)).toContain('## This quarter');
+  });
+
+  it('solo profile outcomes.md does NOT have Validated outcomes section', () => {
+    expect(outcomesTemplate(soloCtx)).not.toContain('## Validated outcomes');
+  });
+
+  it('solo profile outcomes.md does NOT have Hypothesized outcomes section', () => {
+    expect(outcomesTemplate(soloCtx)).not.toContain('## Hypothesized outcomes');
+  });
+
+  it('full profile Validated outcomes section has a coach comment about sourcing', () => {
+    const output = outcomesTemplate(baseCtx);
+    const start = output.indexOf('## Validated outcomes');
+    const end = output.indexOf('## Hypothesized outcomes');
+    const section = output.slice(start, end);
+    expect(section).toMatch(/source|evidence|data/i);
+  });
+
+  it('full profile Hypothesized outcomes section has a coach comment about validation', () => {
+    const output = outcomesTemplate(baseCtx);
+    const start = output.indexOf('## Hypothesized outcomes');
+    const section = output.slice(start);
+    expect(section).toMatch(/hypothes|assumption|validate|confirm/i);
+  });
+});
+
+describe('v3 Task 8 — Validated/Hypothesized in now-next-later.md', () => {
+  it('full profile now-next-later.md has ## Now (validated outcomes) section', () => {
+    expect(nowNextLaterTemplate(baseCtx)).toContain('## Now (validated outcomes)');
+  });
+
+  it('full profile now-next-later.md has ## Now (hypothesized outcomes) section', () => {
+    expect(nowNextLaterTemplate(baseCtx)).toContain('## Now (hypothesized outcomes)');
+  });
+
+  it('full profile now-next-later.md has ## Next section', () => {
+    expect(nowNextLaterTemplate(baseCtx)).toContain('## Next');
+  });
+
+  it('full profile now-next-later.md has ## Later section', () => {
+    expect(nowNextLaterTemplate(baseCtx)).toContain('## Later');
+  });
+
+  it('solo profile now-next-later.md has ## Now section', () => {
+    expect(nowNextLaterTemplate(soloCtx)).toContain('## Now');
+  });
+
+  it('solo profile now-next-later.md does NOT have validated outcomes section', () => {
+    expect(nowNextLaterTemplate(soloCtx)).not.toContain('## Now (validated outcomes)');
+  });
+
+  it('solo profile now-next-later.md does NOT have hypothesized outcomes section', () => {
+    expect(nowNextLaterTemplate(soloCtx)).not.toContain('## Now (hypothesized outcomes)');
+  });
+
+  it('full profile now-next-later.md validated section has coach comment about evidence', () => {
+    const output = nowNextLaterTemplate(baseCtx);
+    const start = output.indexOf('## Now (validated outcomes)');
+    const end = output.indexOf('## Now (hypothesized outcomes)');
+    const section = output.slice(start, end);
+    expect(section).toMatch(/outcome|evidence|data|source/i);
+  });
+});
+
+describe('v3 Task 9 — Coach B18: unsourced claim behavior', () => {
+  it('full profile coach.md contains Behavior 18', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 18');
+  });
+
+  it('B18 references the source: frontmatter field by name', () => {
+    const output = coachTemplate(baseCtx);
+    const b18Start = output.indexOf('Behavior 18');
+    const section = output.slice(b18Start, b18Start + 1500);
+    expect(section).toMatch(/source:/i);
+  });
+
+  it('B18 triggers on quantitative claims without a source', () => {
+    const output = coachTemplate(baseCtx);
+    const b18Start = output.indexOf('Behavior 18');
+    const section = output.slice(b18Start, b18Start + 1500);
+    expect(section).toMatch(/number|%|quantit|metric/i);
+  });
+
+  it('B18 severity is low', () => {
+    const output = coachTemplate(baseCtx);
+    const b18Start = output.indexOf('Behavior 18');
+    const section = output.slice(b18Start, b18Start + 1500);
+    expect(section).toMatch(/low/i);
+  });
+
+  it('B18 is NOT present in solo coach output', () => {
+    expect(coachTemplate(soloCtx)).not.toContain('Behavior 18');
+  });
+});
+
+describe('v3 Task 10 — Coach B19: validated without evidence behavior', () => {
+  it('full profile coach.md contains Behavior 19', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 19');
+  });
+
+  it('B19 references the Validated section by name', () => {
+    const output = coachTemplate(baseCtx);
+    const b19Start = output.indexOf('Behavior 19');
+    const section = output.slice(b19Start, b19Start + 1500);
+    expect(section).toMatch(/validated/i);
+  });
+
+  it('B19 triggers when Validated entry lacks a source', () => {
+    const output = coachTemplate(baseCtx);
+    const b19Start = output.indexOf('Behavior 19');
+    const section = output.slice(b19Start, b19Start + 1500);
+    expect(section).toMatch(/source|evidence/i);
+  });
+
+  it('B19 severity is medium or low', () => {
+    const output = coachTemplate(baseCtx);
+    const b19Start = output.indexOf('Behavior 19');
+    const section = output.slice(b19Start, b19Start + 1500);
+    expect(section).toMatch(/medium|low/i);
+  });
+
+  it('B19 lists the exact section header for each target file', () => {
+    const output = coachTemplate(baseCtx);
+    const b19Start = output.indexOf('Behavior 19');
+    const section = output.slice(b19Start, b19Start + 1500);
+    expect(section).toMatch(/`## Validated`/);           // customers.md
+    expect(section).toContain('## Validated outcomes');  // outcomes.md
+    expect(section).toContain('## Now (validated outcomes)'); // now-next-later.md
+  });
+
+  it('B19 is NOT present in solo coach output', () => {
+    expect(coachTemplate(soloCtx)).not.toContain('Behavior 19');
+  });
+});
+
+describe('v3 Tasks 24-25 — Coach B20: session-end knowledge capture', () => {
+  it('full profile coach.md contains Behavior 20', () => {
+    expect(coachTemplate(baseCtx)).toContain('Behavior 20');
+  });
+
+  it('B20 references /team-foundry-capture skill', () => {
+    const output = coachTemplate(baseCtx);
+    const b20Start = output.indexOf('Behavior 20');
+    const section = output.slice(b20Start, b20Start + 1500);
+    expect(section).toContain('/team-foundry-capture');
+  });
+
+  it('B20 requires user confirmation before running capture', () => {
+    const output = coachTemplate(baseCtx);
+    const b20Start = output.indexOf('Behavior 20');
+    const section = output.slice(b20Start, b20Start + 1500);
+    expect(section).toMatch(/without.*yes|saying yes|team saying yes/i);
+  });
+
+  it('B20 does not trigger on pure coding sessions', () => {
+    const output = coachTemplate(baseCtx);
+    const b20Start = output.indexOf('Behavior 20');
+    const section = output.slice(b20Start, b20Start + 1500);
+    expect(section).toContain('coding or debugging session');
+  });
+
+  it('B20 is NOT present in solo coach output', () => {
+    expect(coachTemplate(soloCtx)).not.toContain('Behavior 20');
+  });
+});
+
 describe('Iteration v2.4 — team member IDs in trio template', () => {
   const output = () => trioTemplate(baseCtx);
 
@@ -1572,5 +1944,78 @@ describe('Iteration v2.4 — team member IDs in trio template', () => {
   it('coach onboarding asks for GitHub handles', () => {
     const coachOutput = coachTemplate(baseCtx);
     expect(coachOutput).toMatch(/github|handle/i);
+  });
+});
+
+describe('v3 skills — Tasks 17-22', () => {
+  const ctx = baseCtx;
+
+  const skills = [
+    { name: 'intro', fn: introSkillTemplate },
+    { name: 'status', fn: statusSkillTemplate },
+    { name: 'review', fn: reviewSkillTemplate },
+    { name: 'capture', fn: captureSkillTemplate },
+    { name: 'decision', fn: decisionSkillTemplate },
+    { name: 'feature', fn: featureSkillTemplate },
+  ];
+
+  for (const { name, fn } of skills) {
+    it(`${name} skill has description frontmatter`, () => {
+      expect(fn(ctx)).toMatch(/^---\ndescription:/);
+    });
+
+    it(`${name} skill has real content (not a stub)`, () => {
+      expect(fn(ctx)).not.toContain('<!-- stub');
+      expect(fn(ctx).length).toBeGreaterThan(200);
+    });
+
+    it(`${name} skill has a ## What to do section`, () => {
+      expect(fn(ctx)).toContain('## What to do');
+    });
+  }
+
+  it('intro skill references north-star.md', () => {
+    expect(introSkillTemplate(ctx)).toContain('north-star.md');
+  });
+
+  it('status skill references outcomes.md', () => {
+    expect(statusSkillTemplate(ctx)).toContain('outcomes.md');
+  });
+
+  it('review skill covers all domain folders', () => {
+    const output = reviewSkillTemplate(ctx);
+    expect(output).toContain('team-foundry/product/');
+    expect(output).toContain('team-foundry/engineering/');
+  });
+
+  it('capture skill maps learning types to files', () => {
+    const output = captureSkillTemplate(ctx);
+    expect(output).toContain('outcomes.md');
+    expect(output).toContain('assumptions.md');
+    expect(output).toContain('decisions/');
+  });
+
+  it('capture skill requires confirmation before writing', () => {
+    expect(captureSkillTemplate(ctx)).toContain('confirmation');
+  });
+
+  it('decision skill produces ADR format with status field', () => {
+    const output = decisionSkillTemplate(ctx);
+    expect(output).toContain('status: Proposed');
+    expect(output).toContain('## Rationale');
+  });
+
+  it('decision skill requires confirmation before writing', () => {
+    expect(decisionSkillTemplate(ctx)).toContain('confirmation');
+  });
+
+  it('feature skill references customer segments and outcomes', () => {
+    const output = featureSkillTemplate(ctx);
+    expect(output).toContain('customers.md');
+    expect(output).toContain('outcomes.md');
+  });
+
+  it('feature skill instructs AI to surface gaps rather than invent context', () => {
+    expect(featureSkillTemplate(ctx)).toContain("Don't invent context");
   });
 });

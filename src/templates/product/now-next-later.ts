@@ -5,7 +5,9 @@ export function nowNextLaterTemplate(ctx: TemplateContext): string {
 purpose: What we're building now, what we're committed to next, and what's directional
 read_when: Sprint planning, stakeholder updates, evaluating new requests, prioritization discussions
 last_updated: ${ctx.date}
-owner: 
+last_validated: ~
+source: ~
+owner:
 ---
 
 # Now / Next / Later
@@ -32,7 +34,39 @@ owner:
      What have you committed to doing after that?
      What's directional but not yet committed?" -->
 
-## Now
+${ctx.profile === 'full' ? `## Now (validated outcomes)
+
+<!-- Active work connected to a validated outcome — something backed by data or direct
+     customer evidence. Each item has an outcome reference and a source.
+
+     Format: item → outcome reference | evidence | owner | started date.
+     Example:
+     - **Self-serve report fix flow** → "ops managers close reconciliation in <30 min"
+       Evidence: usability study (March 2026) | Owner: [name] | Started: [date] -->
+
+## Now (hypothesized outcomes)
+
+<!-- Active work connected to a hypothesized outcome — believed to matter but not yet
+     validated. These are bets, not commitments. The outcome link should be explicit so the
+     AI can flag it when the hypothesis is later confirmed or invalidated.
+
+     Format: item → hypothesis | what would validate | owner.
+     Example:
+     - **Onboarding redesign** → hypothesis: "new sellers list first item within 48h"
+       Validate: track time-to-first-listing for next cohort | Owner: [name] -->
+
+## Next
+
+<!-- Committed work, sequenced. Whether linked to a validated or hypothesized outcome,
+     the commitment is real — there's a reason this follows from what's in Now.
+
+     If everything in Next could plausibly be first, it isn't sequenced — it's a list. -->
+
+## Later
+
+<!-- Directional bets. Not scheduled, not promised. Label each with its outcome hypothesis
+     so the AI can flag it if that hypothesis is validated or invalidated before you get here. -->
+` : `## Now
 
 <!-- Active work. For each item: what it is, which outcome it serves, who owns it.
 
@@ -56,5 +90,6 @@ owner:
 
      It's okay for "later" to be short. A short, honest "later" is better than a long,
      wishful one. -->
+`}
 `;
 }

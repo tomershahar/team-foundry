@@ -1,7 +1,9 @@
 ---
 purpose: Roadmap in Now/Next/Later format — execution, not strategy
 read_when: When discussing what's being built, sprint planning, or stakeholder updates
-last_updated: 2026-04-25
+last_updated: 2026-04-29
+last_validated: 2026-04-25
+source: Q2 planning session (Sarah, Marcus, Apr 2026)
 owner: Sarah
 ---
 
@@ -9,30 +11,46 @@ owner: Sarah
 
 *Now = active this sprint or blocked for launch. Next = committed for this quarter. Later = real intention, no date.*
 
-### Now
+## Now (validated outcomes)
 
-## Exception UI v2
+Active work connected to a validated outcome (O1–O3) with evidence backing the bet.
 
-Assumption: A1 — AP leads will trust the exception UI if it explains the "why"
-Redesigned exception detail view showing why an invoice was flagged and what to check. In development (Priya + Leo). Target: ship by May 9.
+### Exception UI v2
+→ O3: Finance managers trust the exception queue enough to stop spot-checking
+Evidence: 6/10 customers manually verify auto-approvals (customer interviews, Apr 2026)
+In development (Priya + Leo). Target: ship by May 9.
 
-## Approval routing by invoice amount
+### Approval routing by invoice amount
+→ O1: AP leads process month-end in under 2 days
+Evidence: approval fatigue is the #1 NPS verbatim theme this quarter
+In development (Jake). Unblocked.
 
-Assumption: A2 — Approval fatigue is the primary reason approvers approve without reading
-Threshold-based routing so low-risk invoices skip senior approver. In development (Jake). Unblocked.
+### Tolerance configuration audit trail
+→ O3: Finance managers trust the exception queue
+Evidence: Mira Halonen raised this directly (Apr 2026 session)
+Scoped, starting next sprint (Aino).
 
-## Tolerance configuration audit trail
+## Now (hypothesized outcomes)
 
-Assumption: A1 — AP leads will trust the exception UI if it explains the "why"
-Show history of changes to auto-approval tolerance per customer. Scoped, starting next sprint (Aino).
+Active work connected to an outcome we believe in but haven't fully validated.
 
-### Next
+### Onboarding flow rework
+→ O2: New customers reach first auto-approved invoice within 5 days (hypothesis: friction in current onboarding is the cause)
+What would validate it: time-to-first-auto-approval drops from 6.2 to ≤5 days in next cohort
+Owner: Emma (design), Priya (eng). Requires customer journey research first (scheduled May 14).
 
-- **Onboarding flow rework** — reduce time-to-first-auto-approval from 6.2 to ≤5 days. Owner: Emma (design), Priya (eng). Requires customer journey research first (scheduled May 14).
-- **Multi-approver workflow (basic)** — sequential approval for invoices above a configurable threshold. Required for O4 (stretch). Only starts if O1–O2 on track by May 15.
-- **Vendor matching confidence score** — show AP lead how confident Clearline is in the vendor match, not just the match result. Taru's indirect ask.
+### Multi-approver workflow (basic)
+→ O4: One enterprise customer reaches 80% auto-processing rate (stretch — not yet validated)
+Only starts if O1–O2 on track by May 15. Required for O4 but O4 itself is hypothesized.
 
-### Later
+### Vendor matching confidence score
+→ O3: Finance managers trust the exception queue
+Hypothesis: showing match confidence (not just the match result) reduces manual verification
+Taru's indirect ask; not confirmed as a primary driver yet.
+
+## Later
+
+*Not scheduled, not promised. Current thinking, subject to change as we learn.*
 
 - International invoice formats (VAT number validation, different date formats) — 3 customers asked; not enough to prioritize
 - Mobile notification for pending approvals — James mentioned it; unclear if it changes behavior or just moves noise

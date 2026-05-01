@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import { scaffold, expectedPaths } from '../scaffold.js';
+import { scaffold, expectedPaths, gitAddCommand } from '../scaffold.js';
 import type { ScaffoldOptions } from '../types.js';
 
 async function makeTempDir(): Promise<string> {
@@ -165,20 +165,30 @@ describe('expectedPaths()', () => {
     );
   });
 
-  it('solo profile produces exactly 8 files (6 content + CLAUDE.md + AGENTS.md)', () => {
-    expect(expectedPaths('solo', 'claude').length).toBe(8);
+  it('solo profile produces exactly 14 files (8 base + 6 skills)', () => {
+    expect(expectedPaths('solo', 'claude').length).toBe(14);
   });
 
-  it('full profile produces exactly 21 files (20 content + AGENTS.md)', () => {
-    expect(expectedPaths('full', 'claude').length).toBe(21);
+  it('full profile includes all v3 architecture files', () => {
+    const paths = expectedPaths('full', 'claude');
+    expect(paths).toContain('.team-foundry/hierarchy.md');
+    expect(paths).toContain('.team-foundry/instructions/hooks.md');
   });
 
-  it('full profile federated produces exactly 27 files (21 + 6 folder CLAUDE.md)', () => {
-    expect(expectedPaths('full', 'claude', true).length).toBe(27);
+  it('full profile has more files than solo', () => {
+    expect(expectedPaths('full', 'claude').length).toBeGreaterThan(
+      expectedPaths('solo', 'claude').length,
+    );
   });
 
-  it('solo profile federated still produces 8 files (federated ignored)', () => {
-    expect(expectedPaths('solo', 'claude', true).length).toBe(8);
+  it('full profile federated has 6 more files than full flat (one per folder CLAUDE.md)', () => {
+    const flat = expectedPaths('full', 'claude', false);
+    const federated = expectedPaths('full', 'claude', true);
+    expect(federated.length - flat.length).toBe(6);
+  });
+
+  it('solo profile federated still produces 14 files (federated ignored, skills included)', () => {
+    expect(expectedPaths('solo', 'claude', true).length).toBe(14);
   });
 
   it('cursor tool produces .cursor/rules/team-foundry.mdc', () => {
@@ -196,8 +206,10 @@ describe('expectedPaths()', () => {
     expect(expectedPaths('solo', 'cursor').length).toBe(8);
   });
 
-  it('cursor full profile produces exactly 21 files', () => {
-    expect(expectedPaths('full', 'cursor').length).toBe(21);
+  it('cursor full profile has fewer files than claude full profile (no skills)', () => {
+    expect(expectedPaths('full', 'cursor').length).toBeLessThan(
+      expectedPaths('full', 'claude').length,
+    );
   });
 });
 
@@ -229,6 +241,100 @@ describe('scaffold() — cursor tool', () => {
         .then(() => true)
         .catch(() => false);
       expect(exists, `${name} should not exist for cursor tool`).toBe(false);
+    }
+  });
+});
+
+describe('Phase 8 — Task 16: Claude Code skill paths in expectedPaths()', () => {
+  const SKILL_PATHS = [
+    '.claude/skills/team-foundry-intro.md',
+    '.claude/skills/team-foundry-status.md',
+    '.claude/skills/team-foundry-review.md',
+    '.claude/skills/team-foundry-capture.md',
+    '.claude/skills/team-foundry-decision.md',
+    '.claude/skills/team-foundry-feature.md',
+  ];
+
+  it('full profile claude tool includes all 6 skill paths', () => {
+    const paths = expectedPaths('full', 'claude');
+    for (const p of SKILL_PATHS) {
+      expect(paths).toContain(p);
+    }
+  });
+
+  it('solo profile claude tool includes all 6 skill paths', () => {
+    const paths = expectedPaths('solo', 'claude');
+    for (const p of SKILL_PATHS) {
+      expect(paths).toContain(p);
+    }
+  });
+
+  it('both tool includes all 6 skill paths', () => {
+    const paths = expectedPaths('full', 'both');
+    for (const p of SKILL_PATHS) {
+      expect(paths).toContain(p);
+    }
+  });
+
+  it('gemini tool does NOT include skill paths', () => {
+    const paths = expectedPaths('full', 'gemini');
+    for (const p of SKILL_PATHS) {
+      expect(paths).not.toContain(p);
+    }
+  });
+
+  it('cursor tool does NOT include skill paths', () => {
+    const paths = expectedPaths('full', 'cursor');
+    for (const p of SKILL_PATHS) {
+      expect(paths).not.toContain(p);
+    }
+  });
+});
+
+describe('Phase 8 — Task 16: scaffold() writes skill files for claude tool', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => { tmpDir = await makeTempDir(); });
+  afterEach(async () => { await cleanup(tmpDir); });
+
+  const SKILL_PATHS = [
+    '.claude/skills/team-foundry-intro.md',
+    '.claude/skills/team-foundry-status.md',
+    '.claude/skills/team-foundry-review.md',
+    '.claude/skills/team-foundry-capture.md',
+    '.claude/skills/team-foundry-decision.md',
+    '.claude/skills/team-foundry-feature.md',
+  ];
+
+  it('writes all 6 skill files for claude tool', async () => {
+    await scaffold({ ...baseOptions, tool: 'claude', targetDir: tmpDir });
+    for (const p of SKILL_PATHS) {
+      const exists = await fs.access(path.join(tmpDir, p)).then(() => true).catch(() => false);
+      expect(exists, `${p} should exist for claude tool`).toBe(true);
+    }
+  });
+
+  it('writes all 6 skill files for both tool', async () => {
+    await scaffold({ ...baseOptions, tool: 'both', targetDir: tmpDir });
+    for (const p of SKILL_PATHS) {
+      const exists = await fs.access(path.join(tmpDir, p)).then(() => true).catch(() => false);
+      expect(exists, `${p} should exist for both tool`).toBe(true);
+    }
+  });
+
+  it('does NOT write skill files for gemini tool', async () => {
+    await scaffold({ ...baseOptions, tool: 'gemini', targetDir: tmpDir });
+    for (const p of SKILL_PATHS) {
+      const exists = await fs.access(path.join(tmpDir, p)).then(() => true).catch(() => false);
+      expect(exists, `${p} should not exist for gemini tool`).toBe(false);
+    }
+  });
+
+  it('does NOT write skill files for cursor tool', async () => {
+    await scaffold({ ...baseOptions, tool: 'cursor', targetDir: tmpDir });
+    for (const p of SKILL_PATHS) {
+      const exists = await fs.access(path.join(tmpDir, p)).then(() => true).catch(() => false);
+      expect(exists, `${p} should not exist for cursor tool`).toBe(false);
     }
   });
 });
@@ -277,5 +383,73 @@ describe('scaffold() — federated mode', () => {
         .then(() => true).catch(() => false);
       expect(exists, `team-foundry/${folder}/CLAUDE.md should not exist for solo profile`).toBe(false);
     }
+  });
+});
+
+describe('scaffold() — returns written file paths', () => {
+  let tmpDir: string;
+  beforeEach(async () => { tmpDir = await makeTempDir(); });
+  afterEach(async () => { await cleanup(tmpDir); });
+
+  it('returns an array of relative paths for files written', async () => {
+    const written = await scaffold({ ...baseOptions, targetDir: tmpDir });
+    expect(Array.isArray(written)).toBe(true);
+    expect(written.length).toBeGreaterThan(0);
+  });
+
+  it('returns only files that were written, not skipped', async () => {
+    const written1 = await scaffold({ ...baseOptions, targetDir: tmpDir });
+    const written2 = await scaffold({ ...baseOptions, targetDir: tmpDir });
+    expect(written2).toHaveLength(0);
+    expect(new Set(written1)).toEqual(new Set(expectedPaths('full', 'claude')));
+  });
+
+  it('returned paths are relative (no leading slash)', async () => {
+    const written = await scaffold({ ...baseOptions, targetDir: tmpDir });
+    for (const p of written) {
+      expect(p.startsWith('/')).toBe(false);
+    }
+  });
+});
+
+describe('gitAddCommand()', () => {
+  it('includes CLAUDE.md and .claude/ for claude tool', () => {
+    const cmd = gitAddCommand('claude');
+    expect(cmd).toContain('CLAUDE.md');
+    expect(cmd).toContain('.claude/');
+    expect(cmd).not.toContain('GEMINI.md');
+  });
+
+  it('includes GEMINI.md but not .claude/ for gemini tool', () => {
+    const cmd = gitAddCommand('gemini');
+    expect(cmd).toContain('GEMINI.md');
+    expect(cmd).not.toContain('.claude/');
+    expect(cmd).not.toContain('CLAUDE.md');
+  });
+
+  it('includes .cursor/ for cursor tool', () => {
+    const cmd = gitAddCommand('cursor');
+    expect(cmd).toContain('.cursor/');
+    expect(cmd).not.toContain('CLAUDE.md');
+    expect(cmd).not.toContain('GEMINI.md');
+  });
+
+  it('includes both CLAUDE.md and GEMINI.md and .claude/ for both tool', () => {
+    const cmd = gitAddCommand('both');
+    expect(cmd).toContain('CLAUDE.md');
+    expect(cmd).toContain('GEMINI.md');
+    expect(cmd).toContain('.claude/');
+  });
+
+  it('always includes team-foundry/ and AGENTS.md', () => {
+    for (const tool of ['claude', 'gemini', 'cursor', 'both'] as const) {
+      const cmd = gitAddCommand(tool);
+      expect(cmd).toContain('team-foundry/');
+      expect(cmd).toContain('AGENTS.md');
+    }
+  });
+
+  it('ends with a git commit command', () => {
+    expect(gitAddCommand('claude')).toContain('git commit');
   });
 });

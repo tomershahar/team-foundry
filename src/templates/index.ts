@@ -21,3 +21,6 @@ export { glossaryTemplate } from './context/glossary.js';
 export { stakeholdersTemplate } from './context/stakeholders.js';
 export { strategyTemplate } from './strategy.js';
 export { rootAgentsTemplate } from './root-agents.js';
+export { hierarchyTemplate } from './hierarchy.js';
+export { hooksTemplate } from './instructions/hooks.js';
+export { rulesTemplate } from './instructions/rules.js';

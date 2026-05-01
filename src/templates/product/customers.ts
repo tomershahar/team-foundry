@@ -10,7 +10,9 @@ export function customersTemplate(ctx: TemplateContext): string {
 purpose: Named customers, personas, jobs to be done, and direct quotes from real conversations
 read_when: Writing specs, prioritizing features, evaluating tradeoffs, any time you're guessing what customers want
 last_updated: ${ctx.date}
-owner: 
+last_validated: ~
+source: ~
+owner:
 ---
 
 # Customers
@@ -34,7 +36,40 @@ ${visibilityNote}
      "Name three customers you've spoken to directly. For each: what did you learn,
      and when was the last time you talked to them?" -->
 
-## Personas
+${ctx.profile === 'full' ? `## Validated
+
+<!-- Customers confirmed by cohort data, win-rate analysis, or direct evidence.
+     Every entry here needs a source — inline (source, date) or in the file's source: frontmatter.
+     If you can't name the evidence, move the entry to Hypothesized.
+
+     Format per entry:
+     ### [Segment name — e.g. "IT consultancies, 20–50 staff"]
+     **Win rate / evidence:** [e.g. "62% win rate (cohort data, Q4 2025)"]
+     **Job to be done:** When [situation], I want to [motivation], so I can [expected outcome].
+     **Last direct contact:** YYYY-MM-DD
+     **Quote:** "[Something a real customer said]" -->
+
+## Hypothesized
+
+<!-- Customers you believe are a fit but haven't validated with data.
+     State the assumption explicitly and what would confirm it.
+
+     Format per entry:
+     ### [Segment name]
+     **Why we believe this:** [reasoning — pattern from sales calls, founder intuition, etc.]
+     **What would validate it:** [specific signal — cohort analysis, X wins in segment, etc.]
+     **Last direct contact:** YYYY-MM-DD (or "never") -->
+
+## Anti-ICP
+
+<!-- Explicitly who this product is NOT for — with reasoning.
+     Anti-ICP entries prevent scope creep and help the AI avoid suggesting work
+     that serves the wrong customer. Be explicit about why they're excluded.
+
+     Format per entry:
+     ### [Segment name]
+     **Why excluded:** [specific reason — wrong pain, wrong scale, misaligned incentives, etc.] -->
+` : `## Personas
 
 <!-- For each persona below:
      - Give them a name or a specific role (not a label like "power user")
@@ -55,5 +90,6 @@ ${visibilityNote}
 **Quote:** "[Something they actually said]"
 **What we learned:** [The non-obvious thing — the thing that would surprise an outsider]
 -->
+`}
 `;
 }

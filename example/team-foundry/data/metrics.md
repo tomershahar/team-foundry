@@ -1,7 +1,9 @@
 ---
 purpose: Metric definitions, ownership, and data sources — the single source of truth for what numbers mean
 read_when: When discussing metrics, writing specs with success criteria, or reviewing dashboards
-last_updated: 2026-04-25
+last_updated: 2026-04-29
+last_validated: 2026-04-25
+source: David (analytics), reviewed with Sarah + Marcus quarterly
 owner: David
 ---
 
