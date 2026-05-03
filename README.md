@@ -2,14 +2,14 @@
 
 **Make your AI's judgment calls match your product reality.**
 
-Not just the facts — the context that tells your AI which facts matter, which claims are validated, and which sources to trust when signals conflict.
+Not just the facts the context that tells your AI which facts matter, which claims are validated, and which sources to trust when signals conflict.
 
 ```bash
 npx create-team-foundry
 ```
 
 **Run in your shared repo. Then say: `"Let's set up our team-foundry."`**
-If your repo already has a README and commit history, setup takes about 1 minute — the AI reads your repo and pre-fills the answers. Starting fresh takes 15–25 minutes. Either way, your AI starts using the context immediately.
+If your repo already has a README and commit history, setup takes about 1 minute  the AI reads your repo and pre-fills the answers. Starting fresh takes 15–25 minutes. Either way, your AI starts using the context immediately.
 
 → **[See what it looks like when populated](example/)** — a fully filled-in team-foundry for Clearline, a fictional 8-person B2B SaaS team. Open `example/` in Claude Code or Cursor and ask anything.
 
@@ -20,12 +20,12 @@ If your repo already has a README and commit history, setup takes about 1 minute
 ## The problem
 
 **Before team-foundry:**
-> You ask the AI to help prioritize a sprint. It gives solid generic advice — but doesn't know your north star metric, hasn't seen your open assumptions, and has no idea that your top customer churned last month.
+> You ask the AI to help prioritize a sprint. It gives solid generic advice  but doesn't know your north star metric, hasn't seen your open assumptions, and has no idea that your top customer churned last month.
 
 **After team-foundry:**
 > The AI references your outcomes, flags an assumption that's been untested for 45 days, and notes that two roadmap items haven't been updated since 8 PRs shipped. It offers to draft the fixes. You confirm.
 
-That context used to live in someone's head, a Notion page nobody reads, or a wiki 6 months stale. team-foundry puts it in your shared repo — where every AI tool reads it every session.
+That context used to live in someone's head, a Notion page nobody reads, or a wiki 6 months stale. team-foundry puts it in your shared repo  where every AI tool reads it every session.
 
 ---
 
@@ -40,7 +40,7 @@ Run `npx create-team-foundry` in your shared repo. The CLI scaffolds a `team-fou
 Teammates `git pull`. They now have the same team-foundry files locally. Their Claude Code, Cursor, or Gemini CLI reads from the same files yours does. No installs, no logins, no setup.
 
 **Updates flow through git**
-When someone updates a file — or the coach drafts an update they confirm — it's a normal git commit. Push, pull, review in PRs. Everyone stays in sync the same way they already sync code.
+When someone updates a file — or the coach drafts an update they confirm  it's a normal git commit. Push, pull, review in PRs. Everyone stays in sync the same way they already sync code.
 
 ```
                 ┌────────────────────────┐
@@ -164,7 +164,7 @@ Existing v2 repos continue to work without migrating. v3 is the new default for 
 
 | Objection | Response |
 |---|---|
-| "I don't have time to learn a new tool" | There's nothing to learn. Run one command. The files appear. Your AI tool reads them automatically — no new workflow, no new app. |
+| "I don't have time to learn a new tool" | There's nothing to learn. Run one command. The files appear. Your AI tool reads them automatically  no new workflow, no new app. |
 | "We already document things" | Documentation lives in Notion or Confluence and your AI tool has never seen it. team-foundry puts it in your repo, in plain markdown, where every AI tool reads it every session. |
 | "I'm not technical enough" | The CLI asks plain-English questions. The files it creates are markdown. The coach speaks in sentences. No code required. |
 | "AI output isn't good enough yet" | That's exactly what context fixes. team-foundry gives the AI your product reality so its answers are specific to your team, not generic. |
@@ -176,7 +176,7 @@ Existing v2 repos continue to work without migrating. v3 is the new default for 
 - **Sourced facts** — every claim in a data-heavy file has a `source:` and `last_validated:` field. The AI knows when to trust a number and when to ask where it came from.
 - **Validated vs hypothesized** — outcomes, customers, and roadmap items are explicitly split into what's backed by evidence and what's a bet. The coach flags when a hypothesis gets treated as a fact.
 - **Instruction architecture** — full profile gets `hierarchy.md` (which source wins when context conflicts), `instructions/hooks.md` (enforced pre-action behaviors), and `instructions/rules.md` (always-loaded coaching rules). The root file stays minimal; depth loads on demand.
-- **Pre-built skills** (Claude Code) — six slash commands that run directly in your Claude Code session: orient to context, check status, audit files, capture learnings, draft decisions, and synthesize a feature brief. Your knowledge stays in your files — skills are just pointers, not copies.
+- **Pre-built skills** (Claude Code) six slash commands that run directly in your Claude Code session: orient to context, check status, audit files, capture learnings, draft decisions, and synthesize a feature brief. Your knowledge stays in your files — skills are just pointers, not copies.
 
 ## Advanced: Skills (Claude Code)
 
@@ -184,9 +184,9 @@ Six slash commands ship with every Claude Code setup. They read your team-foundr
 
 | Skill | What it does |
 |---|---|
-| `/team-foundry-intro` | Orient to the team — reads all context files, produces a summary |
-| `/team-foundry-status` | Status read — what's on track, at risk, or blocked this cycle |
-| `/team-foundry-review` | Full audit — all files checked, findings by severity |
+| `/team-foundry-intro` | Orient to the team reads all context files, produces a summary |
+| `/team-foundry-status` | Status read what's on track, at risk, or blocked this cycle |
+| `/team-foundry-review` | Full audit all files checked, findings by severity |
 | `/team-foundry-capture` | Capture what was learned in this session into the right file |
 | `/team-foundry-decision` | Draft an ADR from the current conversation |
 | `/team-foundry-feature` | Synthesize everything team-foundry knows about a specific feature |
