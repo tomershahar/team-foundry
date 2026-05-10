@@ -1,4 +1,4 @@
-import type { TemplateContext } from '../../types.js';
+import type { TemplateContext } from '../types.js';
 
 export function gettingStartedTemplate(ctx: TemplateContext): string {
   const toolName =

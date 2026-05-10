@@ -29,7 +29,6 @@ export async function runPrompts(): Promise<PromptResult> {
 
   const tool = await select({
     message: 'Which AI tool does your team use?',
-    hint: '1 of ~5',
     options: [
       { value: 'claude', label: 'Claude Code' },
       { value: 'gemini', label: 'Gemini CLI' },
@@ -41,7 +40,6 @@ export async function runPrompts(): Promise<PromptResult> {
 
   const profile = await select({
     message: 'Team size?',
-    hint: '2 of ~5',
     options: [
       { value: 'solo', label: '1–3 people  (solo profile — 7 files)' },
       { value: 'full', label: '4–15 people  (full profile — 20 files)' },
@@ -54,7 +52,6 @@ export async function runPrompts(): Promise<PromptResult> {
 
   const repoVisibility = await select({
     message: 'Is this repo public, internal-only, or private?',
-    hint: `3 of ${totalNoFed}`,
     options: [
       { value: 'public', label: 'Public  (GitHub public, open source)' },
       { value: 'internal', label: 'Internal  (company-private, not public)' },
@@ -67,7 +64,6 @@ export async function runPrompts(): Promise<PromptResult> {
   if (profile === 'full') {
     const federatedAnswer = await select({
       message: 'Context layout?',
-      hint: '4 of ?',
       options: [
         { value: 'flat', label: 'Flat  (one root CLAUDE.md — simpler, recommended for most teams)' },
         { value: 'federated', label: 'Federated  (CLAUDE.md per folder — for larger teams, 8+ people)' },
@@ -83,7 +79,6 @@ export async function runPrompts(): Promise<PromptResult> {
   const ingestion = await select({
     message:
       'Do you have existing docs to ingest?\n  (Strategy docs, old roadmaps, customer research — the interview uses them to pre-populate answers)',
-    hint: `${ingestionQ} of ${questionCount(profileTyped, federatedResolved, undefined)}`,
     options: [
       { value: 'repo', label: 'Repo signals only  (README, package.json, git history, GitHub PRs/issues)' },
       { value: 'repo+local', label: 'Repo + local docs folder  (repo signals + point me at a folder)' },
@@ -102,7 +97,6 @@ export async function runPrompts(): Promise<PromptResult> {
     const total = questionCount(profileTyped, federatedResolved, ingestion as string);
     const rawPath = await text({
       message: 'Path to the folder containing your docs?',
-      hint: `${total} of ${total}`,
       placeholder: './docs  or  /Users/you/exports',
       validate: (value) => {
         if (!value.trim()) return 'Please enter a path.';
