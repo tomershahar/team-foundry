@@ -8,14 +8,14 @@
 npx create-team-foundry
 ```
 
-30-second proof: browse [`example/`](example/) - a fully populated team-foundry for Clearline, a fictional 8-person B2B SaaS team. Open it in Claude Code or Cursor and ask a question. See below for what to try.
+30-second proof: browse [`example/`](example/)  -  a fully populated team-foundry for Clearline, a fictional 8-person B2B SaaS team. Open it in Claude Code or Cursor and ask a question. See below for what to try.
 
 ---
 
 ## Before and after
 
 **Before team-foundry:**
-> You ask the AI to help prioritize a sprint. It gives solid generic advice - but doesn't know your north star metric, hasn't seen your open assumptions, and has no idea that your top customer churned last month.
+> You ask the AI to help prioritize a sprint. It gives solid generic advice  -  but doesn't know your north star metric, hasn't seen your open assumptions, and has no idea that your top customer churned last month.
 
 **After team-foundry:**
 > The AI references your outcomes, flags an assumption that's been untested for 45 days, and notes that two roadmap items haven't been updated since 8 PRs shipped. It offers to draft the fixes. You confirm.
@@ -26,15 +26,23 @@ That context used to live in someone's head, a Notion page nobody reads, or a wi
 
 ## See it work
 
-The [`example/`](example/) folder is a complete team-foundry for Clearline, a fictional invoice-processing startup. Every file is populated with realistic content - real-feeling outcomes, customer quotes, ADRs, quality stances. Not placeholders.
+The [`example/`](example/) folder is a complete team-foundry for Clearline, a fictional invoice-processing startup. Every file is populated with realistic content  -  real-feeling outcomes, customer quotes, ADRs, quality stances. Not placeholders.
 
 Open `example/` in Claude Code or Cursor, then try these prompts:
 
-- `"What are we working toward this quarter?"` - the AI reads `outcomes.md` and summarizes the quarter's goals with customer context.
-- `"Should we prioritize collaborative editing?"` - the AI checks `assumptions.md`, finds no validated bet, and flags the build trap.
-- `"What architecture decisions have we made and why?"` - the AI walks the `decisions/` folder and synthesizes the reasoning.
+- `"What are we working toward this quarter?"`  -  the AI reads `outcomes.md` and summarizes the quarter's goals with customer context.
+- `"Should we prioritize collaborative editing?"`  -  the AI checks `assumptions.md`, finds no validated bet, and flags the build trap.
+- `"What architecture decisions have we made and why?"`  -  the AI walks the `decisions/` folder and synthesizes the reasoning.
 
 The difference from a repo without team-foundry: the AI doesn't guess. It cites specific files, specific evidence, specific staleness.
+
+Want to clone and explore locally:
+
+```bash
+git clone https://github.com/tomershahar/team-foundry-example
+```
+
+Then open the folder in Claude Code and ask anything.
 
 ---
 
@@ -77,8 +85,8 @@ Your repo is the shared space. Git is the sync. team-foundry adds the structure 
 
 ## What you get
 
-**Solo profile (1-3 people):** 8 files, ~1 minute with repo scan / ~15 minutes fresh.
-**Full profile (4-15 people):** 24 files, ~1 minute with repo scan / ~25 minutes fresh.
+**Solo profile (1–3 people):** 8 files, ~1 minute with repo scan / ~15 minutes fresh.
+**Full profile (4–15 people):** 24 files, ~1 minute with repo scan / ~25 minutes fresh.
 
 | Profile | Files | Includes |
 |---|---|---|
@@ -109,7 +117,7 @@ Every finding cites the specific file, the specific content, and the evidence. N
 
 | What to say | What happens |
 |---|---|
-| `"let's do a team-foundry review"` | Full audit - all files, findings by severity |
+| `"let's do a team-foundry review"` | Full audit  -  all files, findings by severity |
 | `"review our outcomes"` | Targeted review of one file |
 | `"tell me about feature X"` | Synthesizes status, rationale, customer evidence, open bets |
 | `"run the weekly review"` | Top 3 issues, draft fixes offered |
@@ -146,13 +154,13 @@ Health table across all your files: last updated, days since update, PRs shipped
 <details>
 <summary>Advanced: Skills (Claude Code)</summary>
 
-Six slash commands ship with every Claude Code setup. They read your team-foundry files and act on them - no extra configuration needed.
+Six slash commands ship with every Claude Code setup. They read your team-foundry files and act on them  -  no extra configuration needed.
 
 | Skill | What it does |
 |---|---|
-| `/team-foundry-intro` | Orient to the team - reads all context files, produces a summary |
-| `/team-foundry-status` | Status read - what's on track, at risk, or blocked this cycle |
-| `/team-foundry-review` | Full audit - all files checked, findings by severity |
+| `/team-foundry-intro` | Orient to the team  -  reads all context files, produces a summary |
+| `/team-foundry-status` | Status read  -  what's on track, at risk, or blocked this cycle |
+| `/team-foundry-review` | Full audit  -  all files checked, findings by severity |
 | `/team-foundry-capture` | Capture what was learned in this session into the right file |
 | `/team-foundry-decision` | Draft an ADR from the current conversation |
 | `/team-foundry-feature` | Synthesize everything team-foundry knows about a specific feature |
@@ -164,11 +172,11 @@ Skills don't duplicate your team context. They point Claude Code at the right fi
 <details>
 <summary>Advanced: The flywheel</summary>
 
-1. **Set up** - scaffold files, run the interview, fill in what you know
-2. **Work** - AI reads context, gives better answers, flags gaps inline
-3. **Learn** - when something was decided or validated, the coach offers to capture it (`/team-foundry-capture`)
-4. **Update** - confirm the draft, it commits to git, everyone pulls
-5. **Review** - next session, AI reads the updated files, answers get better
+1. **Set up**  -  scaffold files, run the interview, fill in what you know
+2. **Work**  -  AI reads context, gives better answers, flags gaps inline
+3. **Learn**  -  when something was decided or validated, the coach offers to capture it (`/team-foundry-capture`)
+4. **Update**  -  confirm the draft, it commits to git, everyone pulls
+5. **Review**  -  next session, AI reads the updated files, answers get better
 
 Each cycle tightens the loop. The coach makes step 3 to 4 nearly automatic.
 
@@ -177,10 +185,10 @@ Each cycle tightens the loop. The coach makes step 3 to 4 nearly automatic.
 <details>
 <summary>What's new in v3</summary>
 
-- **Sourced facts** - every claim in a data-heavy file has a `source:` and `last_validated:` field. The AI knows when to trust a number and when to ask where it came from.
-- **Validated vs hypothesized** - outcomes, customers, and roadmap items are split into what's backed by evidence and what's a bet. The coach flags when a hypothesis gets treated as a fact.
-- **Instruction architecture** - full profile gets `hierarchy.md` (which source wins when context conflicts), `instructions/hooks.md` (enforced pre-action behaviors), and `instructions/rules.md` (always-loaded coaching rules). The root file stays minimal; depth loads on demand.
-- **Pre-built skills** (Claude Code) - six slash commands that run directly in your Claude Code session.
+- **Sourced facts**  -  every claim in a data-heavy file has a `source:` and `last_validated:` field. The AI knows when to trust a number and when to ask where it came from.
+- **Validated vs hypothesized**  -  outcomes, customers, and roadmap items are split into what's backed by evidence and what's a bet. The coach flags when a hypothesis gets treated as a fact.
+- **Instruction architecture**  -  full profile gets `hierarchy.md` (which source wins when context conflicts), `instructions/hooks.md` (enforced pre-action behaviors), and `instructions/rules.md` (always-loaded coaching rules). The root file stays minimal; depth loads on demand.
+- **Pre-built skills** (Claude Code)  -  six slash commands that run directly in your Claude Code session.
 
 </details>
 
@@ -191,7 +199,7 @@ Each cycle tightens the loop. The coach makes step 3 to 4 nearly automatic.
 npx create-team-foundry migrate --to v3
 ```
 
-Adds the three new v3 files (`hierarchy.md`, `instructions/hooks.md`, `instructions/rules.md`) and appends `source:` / `last_validated:` to the frontmatter of your five data-heavy files. **Existing files are never overwritten.** Your content is preserved exactly - the migration is additive only.
+Adds the three new v3 files (`hierarchy.md`, `instructions/hooks.md`, `instructions/rules.md`) and appends `source:` / `last_validated:` to the frontmatter of your five data-heavy files. **Existing files are never overwritten.** Your content is preserved exactly  -  the migration is additive only.
 
 Existing v2 repos continue to work without migrating. v3 is the new default for new repos.
 
@@ -202,7 +210,7 @@ Existing v2 repos continue to work without migrating. v3 is the new default for 
 
 | Objection | Response |
 |---|---|
-| "I don't have time to learn a new tool" | There's nothing to learn. Run one command. The files appear. Your AI tool reads them automatically - no new workflow, no new app. |
+| "I don't have time to learn a new tool" | There's nothing to learn. Run one command. The files appear. Your AI tool reads them automatically  -  no new workflow, no new app. |
 | "We already document things" | Documentation lives in Notion or Confluence and your AI tool has never seen it. team-foundry puts it in your repo, in plain markdown, where every AI tool reads it every session. |
 | "I'm not technical enough" | The CLI asks plain-English questions. The files it creates are markdown. The coach speaks in sentences. No code required. |
 | "AI output isn't good enough yet" | That's exactly what context fixes. team-foundry gives the AI your product reality so its answers are specific to your team, not generic. |
