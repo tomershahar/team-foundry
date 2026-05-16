@@ -2,11 +2,11 @@
 
 **This is what a populated team-foundry looks like.**
 
-Clearline is a fictional 8-person product team building B2B invoice processing software. Every file in this repo is populated with realistic content — not placeholders, not lorem ipsum. Real-feeling outcomes, customer quotes, ADRs, quality discussions.
+Clearline is a fictional 8-person product team building B2B invoice processing software. Every file in this repo is populated with realistic content  -  not placeholders, not lorem ipsum. Real-feeling outcomes, customer quotes, ADRs, quality discussions.
 
 Clone it, open it in Claude Code or Gemini CLI, and ask questions about the team. You'll get grounded answers.
 
-> This is a mature team-foundry. Yours can start much smaller — even a solo profile with 7 files is enough to make your AI tool useful. This example shows the ceiling, not the floor.
+> This is a mature team-foundry. Yours can start much smaller  -  even a solo profile with 7 files is enough to make your AI tool useful. This example shows the ceiling, not the floor.
 
 ## How to use this
 

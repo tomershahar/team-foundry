@@ -13,7 +13,7 @@ You have been asked to draft an Architecture Decision Record (ADR) from this con
 
 **Do not write any file until you have shown the proposed content and received explicit confirmation.**
 
-### Step 1 — extract the decision
+### Step 1  -  extract the decision
 
 From the conversation, identify:
 
@@ -25,7 +25,7 @@ From the conversation, identify:
 
 If any of these are unclear, ask before drafting.
 
-### Step 2 — draft the ADR
+### Step 2  -  draft the ADR
 
 Use this format:
 
@@ -55,11 +55,11 @@ status: Proposed
 - What we're committing to: [...]
 \`\`\`
 
-### Step 3 — pick the file name
+### Step 3  -  pick the file name
 
 ADRs go in \`team-foundry/engineering/decisions/\`. Use the format \`NNN-short-title.md\` where NNN is the next sequential number. List the files in \`team-foundry/engineering/decisions/\` to find the highest existing number, then use that number + 1. If the directory is empty or does not exist, start at \`001\`.
 
-### Step 4 — confirm and write
+### Step 4  -  confirm and write
 
 Show the draft. Ask: "Should I write this to \`team-foundry/engineering/decisions/[filename].md\`?"
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.0.0] — 2026-04-30
+## [3.0.0]  -  2026-04-30
 
 ### What's new in v3
 
@@ -15,20 +15,20 @@ Full profile adds three new files: `hierarchy.md` (which source wins when contex
 
 **Pre-built Claude Code skills**
 Six slash commands ship with every Claude Code setup (tool: claude or both):
-- `/team-foundry-intro` — orient to the team, produce a session summary
-- `/team-foundry-status` — what's on track, at risk, or blocked this cycle
-- `/team-foundry-review` — full audit, findings by severity
-- `/team-foundry-capture` — capture session learnings into the right files
-- `/team-foundry-decision` — draft an ADR from the current conversation
-- `/team-foundry-feature` — synthesize everything known about a specific feature
+- `/team-foundry-intro`  -  orient to the team, produce a session summary
+- `/team-foundry-status`  -  what's on track, at risk, or blocked this cycle
+- `/team-foundry-review`  -  full audit, findings by severity
+- `/team-foundry-capture`  -  capture session learnings into the right files
+- `/team-foundry-decision`  -  draft an ADR from the current conversation
+- `/team-foundry-feature`  -  synthesize everything known about a specific feature
 
-Skills are pointers, not copies — they read your team-foundry files and act on them. The knowledge lives in your files.
+Skills are pointers, not copies  -  they read your team-foundry files and act on them. The knowledge lives in your files.
 
 **Knowledge capture flywheel (full profile only)**
 Coach Behavior 20 (full profile only): at the end of a session where something was learned or decided, the coach offers to run `/team-foundry-capture`. Coach Behavior 17 now includes a routing table distinguishing team process patterns (→ `team-lessons.md`) from validated data, decisions, and risks (→ `/team-foundry-capture` or `/team-foundry-decision`).
 
 **Migration command**
-`npx create-team-foundry migrate --to v3` upgrades existing v2 repos: adds the three new v3 files and appends `source:` / `last_validated:` frontmatter to the five data-heavy files. Additive only — existing content is never overwritten.
+`npx create-team-foundry migrate --to v3` upgrades existing v2 repos: adds the three new v3 files and appends `source:` / `last_validated:` frontmatter to the five data-heavy files. Additive only  -  existing content is never overwritten.
 
 ### Breaking changes
 
@@ -36,24 +36,24 @@ None. v2 scaffolds are fully compatible with v3. Run `npx create-team-foundry mi
 
 ---
 
-## [2.0.0] — 2026-04-25
+## [2.0.0]  -  2026-04-25
 
 ### What's new in v2
 
 **Cursor support**
-`npx create-team-foundry` now supports Cursor as a tool option. Generates `.cursor/rules/team-foundry.mdc` with `alwaysApply: true` — works alongside Claude Code and Gemini CLI, or on its own.
+`npx create-team-foundry` now supports Cursor as a tool option. Generates `.cursor/rules/team-foundry.mdc` with `alwaysApply: true`  -  works alongside Claude Code and Gemini CLI, or on its own.
 
 **Federated CLAUDE.md layout**
 Full-profile teams can opt into federated mode: each major folder (`product/`, `team/`, `engineering/`, `design/`, `data/`, `context/`) gets its own `CLAUDE.md` routing file. Designed for teams using multiple Claude Code instances or per-folder context loading.
 
 **Status command**
-`npx create-team-foundry status` — shows a health table across all team-foundry files: last updated, days since update, PRs shipped since update, owner, and health classification (ok / stale / empty / missing). Stale files include a "why this nudge" explanation with specific evidence.
+`npx create-team-foundry status`  -  shows a health table across all team-foundry files: last updated, days since update, PRs shipped since update, owner, and health classification (ok / stale / empty / missing). Stale files include a "why this nudge" explanation with specific evidence.
 
 **Owner metadata**
 All content templates now include an `owner:` field in YAML frontmatter. Set it to the person responsible for keeping that file current. The status command surfaces files with no owner set.
 
 **Reality observation layer**
-The coach now reads recent git activity at the start of every explicit/scheduled review session. Drift findings cite specific commit messages and day counts — not vague "this looks stale" observations.
+The coach now reads recent git activity at the start of every explicit/scheduled review session. Drift findings cite specific commit messages and day counts  -  not vague "this looks stale" observations.
 
 **Feature queries**
 The coach handles "tell me about feature X" queries by reading the relevant files across the repo (outcomes, customers, now-next-later, assumptions, decisions) and synthesizing a single response. Profile-aware: solo and full profiles get appropriately scoped answers.
@@ -70,6 +70,6 @@ None. v1 scaffolds are fully compatible with v2. Run `npx create-team-foundry st
 
 ---
 
-## [1.0.0] — 2025-12-01
+## [1.0.0]  -  2025-12-01
 
 Initial release. Solo and full profiles. Claude Code support. Coach playbook with 17 drift-detection behaviors. Onboarding interview (18–25 questions) to populate files from scratch or from existing docs.

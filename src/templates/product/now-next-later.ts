@@ -15,7 +15,7 @@ owner:
 <!-- COACH: This is a roadmap format, not a backlog. The key distinction:
 
      NOW = active work. Things in progress right now, with owners and outcomes.
-     NEXT = committed but not started. Sequenced — there's a reason this comes after "now."
+     NEXT = committed but not started. Sequenced  -  there's a reason this comes after "now."
      LATER = directional only. Not a promise, not a queue. Subject to change as you learn.
 
      Common failure modes:
@@ -36,7 +36,7 @@ owner:
 
 ${ctx.profile === 'full' ? `## Now (validated outcomes)
 
-<!-- Active work connected to a validated outcome — something backed by data or direct
+<!-- Active work connected to a validated outcome  -  something backed by data or direct
      customer evidence. Each item has an outcome reference and a source.
 
      Format: item → outcome reference | evidence | owner | started date.
@@ -46,7 +46,7 @@ ${ctx.profile === 'full' ? `## Now (validated outcomes)
 
 ## Now (hypothesized outcomes)
 
-<!-- Active work connected to a hypothesized outcome — believed to matter but not yet
+<!-- Active work connected to a hypothesized outcome  -  believed to matter but not yet
      validated. These are bets, not commitments. The outcome link should be explicit so the
      AI can flag it when the hypothesis is later confirmed or invalidated.
 
@@ -58,9 +58,9 @@ ${ctx.profile === 'full' ? `## Now (validated outcomes)
 ## Next
 
 <!-- Committed work, sequenced. Whether linked to a validated or hypothesized outcome,
-     the commitment is real — there's a reason this follows from what's in Now.
+     the commitment is real  -  there's a reason this follows from what's in Now.
 
-     If everything in Next could plausibly be first, it isn't sequenced — it's a list. -->
+     If everything in Next could plausibly be first, it isn't sequenced  -  it's a list. -->
 
 ## Later
 
@@ -76,10 +76,10 @@ ${ctx.profile === 'full' ? `## Now (validated outcomes)
 
 ## Next
 
-<!-- Committed, sequenced. Not just "things we want to do" — things with a clear reason
+<!-- Committed, sequenced. Not just "things we want to do"  -  things with a clear reason
      they follow from what's in "now."
 
-     If everything in "next" could plausibly be first, it isn't sequenced — it's a list.
+     If everything in "next" could plausibly be first, it isn't sequenced  -  it's a list.
      What's the actual ordering rationale? -->
 
 ## Later

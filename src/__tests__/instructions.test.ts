@@ -12,7 +12,7 @@ const baseCtx: TemplateContext = {
 
 const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
 
-describe('v3 Task 5 — instructions/hooks.md template', () => {
+describe('v3 Task 5  -  instructions/hooks.md template', () => {
   it('hooksTemplate is a function that returns a string', () => {
     expect(typeof hooksTemplate).toBe('function');
     expect(typeof hooksTemplate(baseCtx)).toBe('string');
@@ -56,7 +56,7 @@ describe('v3 Task 5 — instructions/hooks.md template', () => {
   });
 });
 
-describe('v3 Task 6 — instructions/rules.md template', () => {
+describe('v3 Task 6  -  instructions/rules.md template', () => {
   it('rulesTemplate is a function that returns a string', () => {
     expect(typeof rulesTemplate).toBe('function');
     expect(typeof rulesTemplate(baseCtx)).toBe('string');
@@ -98,7 +98,7 @@ describe('v3 Task 6 — instructions/rules.md template', () => {
   });
 });
 
-describe('v3 Task 6 — instructions/rules.md scaffold wiring', () => {
+describe('v3 Task 6  -  instructions/rules.md scaffold wiring', () => {
   it('full profile expectedPaths includes .team-foundry/instructions/rules.md', () => {
     expect(expectedPaths('full', 'claude')).toContain('.team-foundry/instructions/rules.md');
   });
@@ -108,7 +108,7 @@ describe('v3 Task 6 — instructions/rules.md scaffold wiring', () => {
   });
 });
 
-describe('v3 Task 5 — instructions/hooks.md scaffold wiring', () => {
+describe('v3 Task 5  -  instructions/hooks.md scaffold wiring', () => {
   it('full profile expectedPaths includes .team-foundry/instructions/hooks.md', () => {
     const paths = expectedPaths('full', 'claude');
     expect(paths).toContain('.team-foundry/instructions/hooks.md');

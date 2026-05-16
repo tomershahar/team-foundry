@@ -2,7 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function federatedDesignTemplate(ctx: TemplateContext): string {
   return `---
-purpose: Routing context for the design/ folder — read before answering design questions
+purpose: Routing context for the design/ folder  -  read before answering design questions
 read_when: Any question about UI copy, visual decisions, accessibility, or tone of voice
 last_updated: ${ctx.date}
 ---

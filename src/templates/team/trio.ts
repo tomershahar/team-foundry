@@ -2,7 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function trioTemplate(ctx: TemplateContext): string {
   return `---
-purpose: The product trio — who owns what decisions and how the three roles work together
+purpose: The product trio  -  who owns what decisions and how the three roles work together
 read_when: Escalations, onboarding, clarifying ownership, any "who decides this?" conversation
 last_updated: ${ctx.date}
 owner: 
@@ -14,7 +14,7 @@ owner:
      for the product. This file matters most when there's ambiguity about who decides what.
 
      The most common failure: the PM decides everything, engineering and design are consulted
-     but not empowered. That's not a trio — it's a PM with advisors. Empowered trios make
+     but not empowered. That's not a trio  -  it's a PM with advisors. Empowered trios make
      better decisions because the people with the deepest knowledge of each domain have real
      authority in it.
 
@@ -23,7 +23,7 @@ owner:
 
 <!-- GAP: No trio defined yet. The onboarding interview will ask:
      "Who are the three people on the product trio?
-     Where does decision-making actually live right now — who has the final call on what?" -->
+     Where does decision-making actually live right now  -  who has the final call on what?" -->
 
 ## Members
 
@@ -41,7 +41,7 @@ owner:
 
 ## How we make decisions
 
-<!-- Describe the actual dynamic — not the org chart version.
+<!-- Describe the actual dynamic  -  not the org chart version.
 
      Questions worth answering:
      - Who has the final call on prioritization?

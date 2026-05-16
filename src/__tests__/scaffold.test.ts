@@ -213,7 +213,7 @@ describe('expectedPaths()', () => {
   });
 });
 
-describe('scaffold() — cursor tool', () => {
+describe('scaffold()  -  cursor tool', () => {
   let tmpDir: string;
 
   beforeEach(async () => {
@@ -245,7 +245,7 @@ describe('scaffold() — cursor tool', () => {
   });
 });
 
-describe('Phase 8 — Task 16: Claude Code skill paths in expectedPaths()', () => {
+describe('Phase 8  -  Task 16: Claude Code skill paths in expectedPaths()', () => {
   const SKILL_PATHS = [
     '.claude/skills/team-foundry-intro.md',
     '.claude/skills/team-foundry-status.md',
@@ -291,7 +291,7 @@ describe('Phase 8 — Task 16: Claude Code skill paths in expectedPaths()', () =
   });
 });
 
-describe('Phase 8 — Task 16: scaffold() writes skill files for claude tool', () => {
+describe('Phase 8  -  Task 16: scaffold() writes skill files for claude tool', () => {
   let tmpDir: string;
 
   beforeEach(async () => { tmpDir = await makeTempDir(); });
@@ -339,7 +339,7 @@ describe('Phase 8 — Task 16: scaffold() writes skill files for claude tool', (
   });
 });
 
-describe('scaffold() — federated mode', () => {
+describe('scaffold()  -  federated mode', () => {
   let tmpDir: string;
 
   beforeEach(async () => { tmpDir = await makeTempDir(); });
@@ -386,7 +386,7 @@ describe('scaffold() — federated mode', () => {
   });
 });
 
-describe('scaffold() — returns written file paths', () => {
+describe('scaffold()  -  returns written file paths', () => {
   let tmpDir: string;
   beforeEach(async () => { tmpDir = await makeTempDir(); });
   afterEach(async () => { await cleanup(tmpDir); });

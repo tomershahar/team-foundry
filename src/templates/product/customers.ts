@@ -23,11 +23,11 @@ ${visibilityNote}
      What makes this file useful is specificity:
      - A real name (or anonymized role) you can point to
      - Something they said verbatim, or close to it
-     - A date you actually spoke with them — because customer knowledge decays
+     - A date you actually spoke with them  -  because customer knowledge decays
 
      "Sarah, Head of Ops at a mid-market retailer, told us in March: 'I spend every Monday
      morning fixing the same three report errors. My team thinks I have a process, but I'm
-     just firefighting.'" — that's useful context. An AI can reason from that.
+     just firefighting.'"  -  that's useful context. An AI can reason from that.
 
      The coach will flag any persona without a direct contact date in the last 60 days.
      If you haven't talked to customers recently, that's the gap worth naming. -->
@@ -39,11 +39,11 @@ ${visibilityNote}
 ${ctx.profile === 'full' ? `## Validated
 
 <!-- Customers confirmed by cohort data, win-rate analysis, or direct evidence.
-     Every entry here needs a source — inline (source, date) or in the file's source: frontmatter.
+     Every entry here needs a source  -  inline (source, date) or in the file's source: frontmatter.
      If you can't name the evidence, move the entry to Hypothesized.
 
      Format per entry:
-     ### [Segment name — e.g. "IT consultancies, 20–50 staff"]
+     ### [Segment name  -  e.g. "IT consultancies, 20–50 staff"]
      **Win rate / evidence:** [e.g. "62% win rate (cohort data, Q4 2025)"]
      **Job to be done:** When [situation], I want to [motivation], so I can [expected outcome].
      **Last direct contact:** YYYY-MM-DD
@@ -56,25 +56,25 @@ ${ctx.profile === 'full' ? `## Validated
 
      Format per entry:
      ### [Segment name]
-     **Why we believe this:** [reasoning — pattern from sales calls, founder intuition, etc.]
-     **What would validate it:** [specific signal — cohort analysis, X wins in segment, etc.]
+     **Why we believe this:** [reasoning  -  pattern from sales calls, founder intuition, etc.]
+     **What would validate it:** [specific signal  -  cohort analysis, X wins in segment, etc.]
      **Last direct contact:** YYYY-MM-DD (or "never") -->
 
 ## Anti-ICP
 
-<!-- Explicitly who this product is NOT for — with reasoning.
+<!-- Explicitly who this product is NOT for  -  with reasoning.
      Anti-ICP entries prevent scope creep and help the AI avoid suggesting work
      that serves the wrong customer. Be explicit about why they're excluded.
 
      Format per entry:
      ### [Segment name]
-     **Why excluded:** [specific reason — wrong pain, wrong scale, misaligned incentives, etc.] -->
+     **Why excluded:** [specific reason  -  wrong pain, wrong scale, misaligned incentives, etc.] -->
 ` : `## Personas
 
 <!-- For each persona below:
      - Give them a name or a specific role (not a label like "power user")
      - Record the last time you had a direct conversation with someone in this segment
-     - Write the job they're trying to get done — what they hired your product to do
+     - Write the job they're trying to get done  -  what they hired your product to do
      - List the friction points that get in their way
      - Include at least one direct quote, verbatim or paraphrased closely
 
@@ -82,13 +82,13 @@ ${ctx.profile === 'full' ? `## Validated
      It forces you to describe the context that triggers the need, not just the need itself. -->
 
 <!--
-### [Name or role — e.g. "Marcus, Senior Ops Analyst"]
+### [Name or role  -  e.g. "Marcus, Senior Ops Analyst"]
 **Segment:** [Company type, size, or context]
 **Last direct contact:** YYYY-MM-DD
 **Job to be done:** When [situation], I want to [motivation], so I can [expected outcome].
-**What gets in their way:** [Specific friction — the more concrete the better]
+**What gets in their way:** [Specific friction  -  the more concrete the better]
 **Quote:** "[Something they actually said]"
-**What we learned:** [The non-obvious thing — the thing that would surprise an outsider]
+**What we learned:** [The non-obvious thing  -  the thing that would surprise an outsider]
 -->
 `}
 `;

@@ -183,7 +183,7 @@ export function checkNowAssumptionLinks(
   if (!nowNextLaterContent.trim()) return [];
 
   const assumptionHeadings = extractHeadings(assumptionsContent);
-  if (assumptionHeadings.length === 0) return []; // no assumptions defined — nothing to check against
+  if (assumptionHeadings.length === 0) return []; // no assumptions defined  -  nothing to check against
 
   const nowItems = extractHeadings(nowNextLaterContent, 'Now');
   const bodies = extractSectionBodies(nowNextLaterContent);

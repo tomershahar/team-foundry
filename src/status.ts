@@ -141,10 +141,10 @@ function formatRow(s: FileStatus): string {
   const icon = healthIcon(s.health);
   const rawName = s.relativePath.replace('team-foundry/', '');
   const name = rawName.slice(0, 42).padEnd(42);
-  const updated = s.lastUpdated ?? '—';
-  const age = s.daysSinceUpdate !== null ? `${s.daysSinceUpdate}d` : '—';
-  const prs = s.prsSinceUpdate !== null ? `${s.prsSinceUpdate} PRs` : '—';
-  const owner = s.owner || '—';
+  const updated = s.lastUpdated ?? ' - ';
+  const age = s.daysSinceUpdate !== null ? `${s.daysSinceUpdate}d` : ' - ';
+  const prs = s.prsSinceUpdate !== null ? `${s.prsSinceUpdate} PRs` : ' - ';
+  const owner = s.owner || ' - ';
   return `  ${icon}  ${name} ${updated.padEnd(12)} ${age.padEnd(6)} ${prs.padEnd(8)} ${owner}`;
 }
 
@@ -231,7 +231,7 @@ export async function runStatus(targetDir: string): Promise<void> {
   }
 
   if (stale.length > 0) {
-    console.log('  Stale files — why this nudge:\n');
+    console.log('  Stale files  -  why this nudge:\n');
     for (const s of stale) {
       console.log(`    ~ ${s.relativePath.replace('team-foundry/', '')}`);
       console.log(`      ${whyNudge(s)}\n`);
@@ -239,7 +239,7 @@ export async function runStatus(targetDir: string): Promise<void> {
   }
 
   if (empty.length > 0) {
-    console.log('  Empty files — not yet filled in:\n');
+    console.log('  Empty files  -  not yet filled in:\n');
     for (const s of empty) {
       console.log(`    ○ ${s.relativePath.replace('team-foundry/', '')}`);
     }
@@ -247,7 +247,7 @@ export async function runStatus(targetDir: string): Promise<void> {
   }
 
   if (missing.length > 0) {
-    console.log('  Missing files — run `npx create-team-foundry` to scaffold:\n');
+    console.log('  Missing files  -  run `npx create-team-foundry` to scaffold:\n');
     for (const s of missing) {
       console.log(`    ✗ ${s.relativePath.replace('team-foundry/', '')}`);
     }

@@ -11,7 +11,7 @@ owner:
 # Architecture Decisions
 
 <!-- GAP: No decisions recorded yet. Add an ADR any time the team makes a significant
-     technical decision — especially one where a future engineer might ask "why did they do it this way?" -->
+     technical decision  -  especially one where a future engineer might ask "why did they do it this way?" -->
 
 Each file in this folder is an Architecture Decision Record.
 Name files: \`YYYYMMDD-short-description.md\` (e.g. \`20260401-use-postgres-not-dynamodb.md\`).
@@ -29,7 +29,7 @@ Not worth an ADR: routine implementation choices where one option is clearly bet
 ## ADR template
 
 \`\`\`markdown
-# [Decision title — imperative, specific]
+# [Decision title  -  imperative, specific]
 
 **Date:** YYYY-MM-DD
 **Status:** Proposed | Accepted | Deprecated | Superseded by [filename]
@@ -46,7 +46,7 @@ What did we decide?
 ## Rationale
 
 Why this option over the alternatives? What are we trading off?
-Be honest about the downsides — they're the most useful part for future engineers.
+Be honest about the downsides  -  they're the most useful part for future engineers.
 
 ## Consequences
 

@@ -18,7 +18,7 @@ async function cleanup(dir: string): Promise<void> {
   await fs.rm(dir, { recursive: true, force: true });
 }
 
-describe('v3 Task 11 — migrate: detectMigrateState', () => {
+describe('v3 Task 11  -  migrate: detectMigrateState', () => {
   let tmpDir: string;
 
   beforeEach(async () => {
@@ -57,7 +57,7 @@ describe('v3 Task 11 — migrate: detectMigrateState', () => {
   });
 });
 
-describe('v3 Task 12 — migrate: writeIfAbsent', () => {
+describe('v3 Task 12  -  migrate: writeIfAbsent', () => {
   let tmpDir: string;
 
   beforeEach(async () => {
@@ -91,7 +91,7 @@ describe('v3 Task 12 — migrate: writeIfAbsent', () => {
   });
 });
 
-describe('v3 Task 13 — migrate: appendFrontmatterFields', () => {
+describe('v3 Task 13  -  migrate: appendFrontmatterFields', () => {
   let tmpDir: string;
 
   beforeEach(async () => {
@@ -154,7 +154,7 @@ describe('v3 Task 13 — migrate: appendFrontmatterFields', () => {
   });
 });
 
-describe('v3 — migrate: detectTool', () => {
+describe('v3  -  migrate: detectTool', () => {
   let tmpDir: string;
 
   beforeEach(async () => {
@@ -193,7 +193,7 @@ describe('v3 — migrate: detectTool', () => {
   });
 });
 
-describe('v3 — migrate: runMigrate orchestration', () => {
+describe('v3  -  migrate: runMigrate orchestration', () => {
   let tmpDir: string;
 
   beforeEach(async () => {

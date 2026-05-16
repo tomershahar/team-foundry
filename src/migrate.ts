@@ -40,7 +40,7 @@ export async function detectMigrateState(targetDir: string): Promise<MigrateStat
   }
 }
 
-/** Writes a file only if it does not already exist (atomic — no TOCTOU window). */
+/** Writes a file only if it does not already exist (atomic  -  no TOCTOU window). */
 export async function writeIfAbsent(filePath: string, content: string): Promise<void> {
   await fs.mkdir(path.dirname(filePath), { recursive: true });
   try {

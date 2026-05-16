@@ -2,8 +2,8 @@ import type { TemplateContext } from '../types.js';
 
 export function rootCursorTemplate(ctx: TemplateContext): string {
   return `---
-purpose: Identity, routing map, and coach activation — read at the start of every session
-read_when: Every Cursor session in this repo — this is the root instruction file
+purpose: Identity, routing map, and coach activation  -  read at the start of every session
+read_when: Every Cursor session in this repo  -  this is the root instruction file
 last_updated: ${ctx.date}
 owner:
 alwaysApply: true
@@ -13,13 +13,13 @@ alwaysApply: true
 
 # team-foundry
 
-This repo uses **team-foundry** — structured files that give you real team context.
+This repo uses **team-foundry**  -  structured files that give you real team context.
 Read this file first. It tells you where to find everything and how to activate the coach.
 
 <!-- GAP: The onboarding interview hasn't run yet.
      When the user says "Let's set up our team-foundry" or similar, do this:
      1. Read GETTING_STARTED.md for context on what to expect
-     2. Load .team-foundry/coach.md — it contains the interview sequence
+     2. Load .team-foundry/coach.md  -  it contains the interview sequence
      3. Begin the onboarding interview as described there
      Do not improvise the interview. Follow the sequence in coach.md. -->
 
@@ -34,7 +34,7 @@ before answering. Files with recent \`last_updated\` dates are more reliable tha
 
 | Topic | File |
 |---|---|
-| Who we are / what this product does | team-foundry.mdc — "Who we are" section (this file) |
+| Who we are / what this product does | team-foundry.mdc  -  "Who we are" section (this file) |
 | What success looks like / vision | \`team-foundry/product/north-star.md\` |
 | What we're working toward this quarter | \`team-foundry/product/outcomes.md\` |
 | Who our customers are | \`team-foundry/product/customers.md\` |
@@ -61,7 +61,7 @@ it notices something relevant to your current work. You can also invoke it direc
 | What to say | What happens |
 |---|---|
 | "Let's set up our team-foundry" | Runs the onboarding interview (first time only) |
-| "let's do a team-foundry review" | Full audit — all files checked, findings listed |
+| "let's do a team-foundry review" | Full audit  -  all files checked, findings listed |
 | "coach mode" | Same as above |
 | "review our [outcomes / customers / stack / etc.]" | Targeted review of one file |
 | "what's missing from team-foundry?" | Lists gaps across all files |
@@ -73,7 +73,7 @@ it notices something relevant to your current work. You can also invoke it direc
      - Explicit mode / Scheduled mode / onboarding: load .team-foundry/coach.md in full
        before activating any mode. Triggered only by the phrases in the table above.
      - Inline mode nudges: if you notice a clear gap in a team-foundry file while answering
-       a normal question, surface it in one sentence — without loading the full coach.md.
+       a normal question, surface it in one sentence  -  without loading the full coach.md.
        Keep it brief and non-blocking. Do not coach unprompted on back-to-back messages. -->
 `;
 }

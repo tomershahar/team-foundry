@@ -11,10 +11,10 @@ owner:
 # Glossary
 
 <!-- COACH: Every team develops vocabulary that means something specific in their context
-     and something different everywhere else. "User," "customer," "account," "workspace" —
+     and something different everywhere else. "User," "customer," "account," "workspace"  - 
      these words carry meaning that newcomers and AI tools can only guess at.
 
-     This file doesn't need to be comprehensive — just the terms that would confuse an
+     This file doesn't need to be comprehensive  -  just the terms that would confuse an
      outsider, or that the team itself uses inconsistently.
 
      The coach will suggest adding terms when it notices words used without definition
@@ -31,11 +31,11 @@ owner:
 
      Example:
 
-     **Listing** — a single item posted for sale by a seller. Distinct from a "product"
+     **Listing**  -  a single item posted for sale by a seller. Distinct from a "product"
      (the catalog record) and a "transaction" (the completed sale). When we say "listings
      went up," we mean new posts, not catalog growth.
 
-     **Ops** — short for "operations team," always referring to internal ops, never
+     **Ops**  -  short for "operations team," always referring to internal ops, never
      to the seller's own operations. Context: this was confusing early on and caused
      miscommunication in several planning sessions. -->
 `;

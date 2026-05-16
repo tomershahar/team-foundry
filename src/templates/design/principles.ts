@@ -13,11 +13,11 @@ owner:
 <!-- COACH: Useful design principles resolve disagreements. If a principle doesn't help
      two people with different instincts reach the same decision, it's decorative.
 
-     "Simple and intuitive" is decorative — everyone agrees and it resolves nothing.
+     "Simple and intuitive" is decorative  -  everyone agrees and it resolves nothing.
      "When a feature adds complexity, default to not building it rather than adding
      progressive disclosure" resolves a real class of disagreements.
 
-     Aim for 3–5 principles that are specific enough to be wrong — meaning a reasonable
+     Aim for 3–5 principles that are specific enough to be wrong  -  meaning a reasonable
      person could disagree with them. Those are the ones that do work. -->
 
 <!-- GAP: No design principles defined yet. The onboarding interview will ask:
@@ -28,12 +28,12 @@ owner:
 
 <!-- For each principle:
      - State it as a clear preference, not a platitude
-     - Add a brief rationale (one sentence — the "because")
+     - Add a brief rationale (one sentence  -  the "because")
      - Optionally include an example of it in practice
 
      Example:
      **We show one path, not all options.**
-     Because our users are completing tasks under time pressure — presenting choices
+     Because our users are completing tasks under time pressure  -  presenting choices
      increases cognitive load without increasing success rates. When we've tested
      multiple-choice vs. guided flows, guided wins. -->
 
@@ -44,8 +44,8 @@ owner:
 
      Example:
      **Voice:** Direct, plain, calm.
-     ✓ "Your report is ready." — not "Your report has been successfully generated."
-     ✓ "Something went wrong. Try again." — not "An unexpected error has occurred." -->
+     ✓ "Your report is ready."  -  not "Your report has been successfully generated."
+     ✓ "Something went wrong. Try again."  -  not "An unexpected error has occurred." -->
 
 ## Accessibility
 

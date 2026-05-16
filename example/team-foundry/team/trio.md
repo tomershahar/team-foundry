@@ -1,5 +1,5 @@
 ---
-purpose: Product trio — who we are, how we make decisions, how we work together
+purpose: Product trio  -  who we are, how we make decisions, how we work together
 read_when: When discussing team dynamics, decision-making, or onboarding someone new
 last_updated: 2026-04-25
 owner: Sarah
@@ -37,7 +37,7 @@ owner: Sarah
 
 ## How we handle disagreement
 
-We name the disagreement explicitly — "I think we're making the wrong call here because X" — and give 24 hours for async response before scheduling a sync. We do not let disagreements fester silently. We do not ship something one of us has unresolved concerns about unless the timeline genuinely forces it, in which case we document the concern and revisit it within the quarter.
+We name the disagreement explicitly  -  "I think we're making the wrong call here because X"  -  and give 24 hours for async response before scheduling a sync. We do not let disagreements fester silently. We do not ship something one of us has unresolved concerns about unless the timeline genuinely forces it, in which case we document the concern and revisit it within the quarter.
 
 ## Constraints on each other
 

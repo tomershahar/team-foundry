@@ -61,7 +61,7 @@ describe('checkOutcomeMetricLinks()', () => {
   });
 
   it('does not flag ## headings outside Key Metrics section', () => {
-    // "## Overview" is a structural heading — should not be checked
+    // "## Overview" is a structural heading  -  should not be checked
     const findings = checkOutcomeMetricLinks(outcomesContent, '', metricsContent);
     expect(findings.every(f => f.item !== 'Overview')).toBe(true);
   });

@@ -3,7 +3,7 @@ import type { TemplateContext } from '../types.js';
 export function rootAgentsTemplate(ctx: TemplateContext): string {
   const isSolo = ctx.profile === 'solo';
   return `---
-purpose: Entry point for AI agents — routes to team-foundry context files
+purpose: Entry point for AI agents  -  routes to team-foundry context files
 read_when: always
 last_updated: ${ctx.date}
 owner:
@@ -11,7 +11,7 @@ owner:
 
 # Agents
 
-This repo uses **team-foundry** — structured files that give AI tools real team context.
+This repo uses **team-foundry**  -  structured files that give AI tools real team context.
 Use this file to orient yourself and find the right files before answering.
 
 ## Project overview
@@ -50,9 +50,9 @@ See \`team-foundry/engineering/quality-bar.md\` for the quality bar, bug triage 
 
 ## Areas of caution
 
-- **Silent edits** — the team-foundry coach never writes files without the user's explicit confirmation. Do not write to \`team-foundry/\` files without confirmation.
-- **Private folder** — \`team-foundry/private/\` is gitignored. Do not read from or write to it.${isSolo ? '' : `
-- **ADR commitments** — architecture decisions in \`team-foundry/engineering/decisions/\` represent committed choices. Treat them as constraints unless the user explicitly opens a discussion.`}
+- **Silent edits**  -  the team-foundry coach never writes files without the user's explicit confirmation. Do not write to \`team-foundry/\` files without confirmation.
+- **Private folder**  -  \`team-foundry/private/\` is gitignored. Do not read from or write to it.${isSolo ? '' : `
+- **ADR commitments**  -  architecture decisions in \`team-foundry/engineering/decisions/\` represent committed choices. Treat them as constraints unless the user explicitly opens a discussion.`}
 
 ## Claude Code skills
 
@@ -63,7 +63,7 @@ See CLAUDE.md for the full skill table.
 
 ## Working with the team-foundry coach
 
-The coach runs in three modes — inline (always on, surfaces one-sentence nudges), explicit (triggered by "coach mode" or "let's do a team-foundry review"), and scheduled (weekly check-in, top 3 findings). See CLAUDE.md or GEMINI.md for the full trigger phrase table and loading instructions.
+The coach runs in three modes  -  inline (always on, surfaces one-sentence nudges), explicit (triggered by "coach mode" or "let's do a team-foundry review"), and scheduled (weekly check-in, top 3 findings). See CLAUDE.md or GEMINI.md for the full trigger phrase table and loading instructions.
 
 **Draft-then-confirm rule:** the coach always shows a proposed file change and waits for confirmation before writing. Silence is not confirmation.
 ${isSolo ? '' : `

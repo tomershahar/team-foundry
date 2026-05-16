@@ -16,7 +16,7 @@ Finance professionals need to trust the information they see, not see all the in
 Every screen should answer: what am I looking at, what can I do here, and what happens next. We don't assume users navigate linearly. They jump between screens, come back to tasks mid-flow, and pick up where they left off. Design for interruption.
 
 **3. Errors are invitations, not conclusions**
-When the system flags something, it's not accusing — it's asking. Copy and visual treatment should reflect this. "This invoice looks different from your usual pattern — want to review it?" not "ERROR: Amount exceeds threshold."
+When the system flags something, it's not accusing  -  it's asking. Copy and visual treatment should reflect this. "This invoice looks different from your usual pattern  -  want to review it?" not "ERROR: Amount exceeds threshold."
 
 **4. Nothing should require a tutorial**
 If an AP lead has to read documentation to complete a core workflow, we've failed. We can offer tooltips and onboarding, but the workflow itself should be self-evident.
@@ -27,7 +27,7 @@ If an AP lead has to read documentation to complete a core workflow, we've faile
 
 **Grounded, not casual.** Finance is a domain where precision matters. We don't use exclamation marks in workflow states. We don't say "Looks great!" We say "Invoice approved."
 
-**Specific, not generic.** "Something went wrong" is never acceptable error copy. "The invoice amount doesn't match any open PO — check vendor ABC's PO list" is.
+**Specific, not generic.** "Something went wrong" is never acceptable error copy. "The invoice amount doesn't match any open PO  -  check vendor ABC's PO list" is.
 
 **Calm under pressure.** When something fails or is flagged, the copy stays calm. Finance professionals are under real deadline pressure. The last thing they need is our UI escalating.
 

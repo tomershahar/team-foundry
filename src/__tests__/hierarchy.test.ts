@@ -12,7 +12,7 @@ const baseCtx: TemplateContext = {
 
 const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
 
-describe('v3 Task 3 — hierarchy.md template', () => {
+describe('v3 Task 3  -  hierarchy.md template', () => {
   it('hierarchyTemplate is a function that returns a string', () => {
     expect(typeof hierarchyTemplate).toBe('function');
     expect(typeof hierarchyTemplate(baseCtx)).toBe('string');
@@ -78,7 +78,7 @@ describe('v3 Task 3 — hierarchy.md template', () => {
   });
 });
 
-describe('v3 Task 4 — hierarchy.md pointer in root files and coach', () => {
+describe('v3 Task 4  -  hierarchy.md pointer in root files and coach', () => {
   it('full profile CLAUDE.md references hierarchy.md', () => {
     expect(rootClaudeTemplate(baseCtx)).toContain('hierarchy.md');
   });
@@ -106,7 +106,7 @@ describe('v3 Task 4 — hierarchy.md pointer in root files and coach', () => {
   });
 });
 
-describe('v3 Task 3 — hierarchy.md scaffold wiring', () => {
+describe('v3 Task 3  -  hierarchy.md scaffold wiring', () => {
   it('full profile expectedPaths includes .team-foundry/hierarchy.md', () => {
     const paths = expectedPaths('full', 'claude');
     expect(paths).toContain('.team-foundry/hierarchy.md');

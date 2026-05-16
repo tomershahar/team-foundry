@@ -156,7 +156,7 @@ describe('runStatus()', () => {
   });
 
   it('checks only solo files when trio.md is absent', async () => {
-    // Only solo files exist — should not throw or report full-only files as missing unexpectedly
+    // Only solo files exist  -  should not throw or report full-only files as missing unexpectedly
     await writeFile(tmpDir, 'team-foundry/product/outcomes.md', CURRENT_CONTENT());
     await expect(runStatus(tmpDir)).resolves.not.toThrow();
   });

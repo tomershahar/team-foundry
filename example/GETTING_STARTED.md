@@ -6,7 +6,7 @@ last_updated: 2026-04-25
 
 # Getting Started with the Clearline Example
 
-This is a fully populated team-foundry for a fictional product team. You don't need to run any setup — the files are already populated.
+This is a fully populated team-foundry for a fictional product team. You don't need to run any setup  -  the files are already populated.
 
 ## Try it now
 

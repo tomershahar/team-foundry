@@ -210,7 +210,7 @@ describe('Ingestion path', () => {
   });
 });
 
-describe('Iteration 3 — root routing and coach', () => {
+describe('Iteration 3  -  root routing and coach', () => {
   it('root-claude contains routing map table', () => {
     const output = rootClaudeTemplate(baseCtx);
     expect(output).toContain('## Routing map');
@@ -303,7 +303,7 @@ describe('Iteration 3 — root routing and coach', () => {
   });
 });
 
-describe('Iteration 4 — onboarding interview', () => {
+describe('Iteration 4  -  onboarding interview', () => {
   it('coach contains onboarding interview section', () => {
     expect(coachTemplate(baseCtx)).toContain('## Onboarding interview');
   });
@@ -324,7 +324,7 @@ describe('Iteration 4 — onboarding interview', () => {
   it('coach solo profile contains all 9 theme headings (Theme 3 skipped via isSolo)', () => {
     const soloCtx = { ...baseCtx, profile: 'solo' as const };
     const output = coachTemplate(soloCtx);
-    // Theme 3 (Measurement) is full-only — not present in solo output
+    // Theme 3 (Measurement) is full-only  -  not present in solo output
     expect(output).not.toContain('### Theme 3: Measurement');
     // All other themes present
     expect(output).toContain('### Theme 1: Identity');
@@ -446,7 +446,7 @@ describe('Iteration 4 — onboarding interview', () => {
   });
 });
 
-describe('Iteration 5 — Coach behaviors core (1–4)', () => {
+describe('Iteration 5  -  Coach behaviors core (1–4)', () => {
   // Behavior 1: outputs-vs-outcomes
   it('coach contains Behavior 1 section heading', () => {
     expect(coachTemplate(baseCtx)).toContain('Behavior 1: Outputs framed as outcomes');
@@ -648,7 +648,7 @@ describe('Iteration 5 — Coach behaviors core (1–4)', () => {
   });
 });
 
-describe('Iteration 6 — Conversation-as-update', () => {
+describe('Iteration 6  -  Conversation-as-update', () => {
   it('protocol has a draft format block with File: header', () => {
     expect(coachTemplate(baseCtx)).toContain('### File: team-foundry/');
   });
@@ -674,7 +674,7 @@ describe('Iteration 6 — Conversation-as-update', () => {
 
   it('rejection path tells AI not to resurface within nudge window', () => {
     const output = coachTemplate(baseCtx);
-    expect(output).toContain("Got it — skipping that one");
+    expect(output).toContain("Got it  -  skipping that one");
   });
 
   it('B1 has a Draft looks like block', () => {
@@ -708,7 +708,7 @@ describe('Iteration 6 — Conversation-as-update', () => {
   });
 });
 
-describe('Iteration 9 — Coach behaviors B5–B12', () => {
+describe('Iteration 9  -  Coach behaviors B5–B12', () => {
   it('explicit mode instruction references all 12 behaviors', () => {
     expect(coachTemplate(baseCtx)).toContain('B1→B12');
   });
@@ -838,7 +838,7 @@ describe('Iteration 9 — Coach behaviors B5–B12', () => {
   });
 });
 
-describe('Iteration 7 — Artifact ingestion (local folder)', () => {
+describe('Iteration 7  -  Artifact ingestion (local folder)', () => {
   const ingestionCtx: TemplateContext = { ...baseCtx, ingestionPath: './docs' };
 
   it('ingestion block does not render when ingestionPath is absent', () => {
@@ -886,7 +886,7 @@ describe('Iteration 7 — Artifact ingestion (local folder)', () => {
   });
 });
 
-describe('Iteration 8 — Artifact ingestion (MCP + paste)', () => {
+describe('Iteration 8  -  Artifact ingestion (MCP + paste)', () => {
   const mcpCtx: TemplateContext = { ...baseCtx, ingestion: 'mcp' };
   const pasteCtx: TemplateContext = { ...baseCtx, ingestion: 'paste' };
   const skipCtx: TemplateContext = { ...baseCtx, ingestion: 'skip' };
@@ -942,7 +942,7 @@ describe('Iteration 8 — Artifact ingestion (MCP + paste)', () => {
   });
 
   it('paste block has fallback if nothing is pasted', () => {
-    expect(coachTemplate(pasteCtx)).toContain("No problem — I'll ask each question fresh");
+    expect(coachTemplate(pasteCtx)).toContain("No problem  -  I'll ask each question fresh");
   });
 
   it('paste block enforces no silent writes', () => {
@@ -955,7 +955,7 @@ describe('Iteration 8 — Artifact ingestion (MCP + paste)', () => {
   });
 });
 
-describe('Interview close — proactive next-step offer', () => {
+describe('Interview close  -  proactive next-step offer', () => {
   it('interview close offers to start filling the most valuable gap immediately', () => {
     expect(coachTemplate(baseCtx)).toContain('Want to start with');
   });
@@ -1140,7 +1140,7 @@ describe('Repo auto-ingestion', () => {
   });
 });
 
-describe('Iteration 10 — Quarterly retrospective', () => {
+describe('Iteration 10  -  Quarterly retrospective', () => {
   it('retro section has a trigger definition with last_retrospective and last_updated fallback', () => {
     const output = coachTemplate(baseCtx);
     const retroStart = output.indexOf('## Quarterly retrospective');
@@ -1217,7 +1217,7 @@ describe('Iteration 10 — Quarterly retrospective', () => {
   });
 });
 
-describe('Iteration 9b — strategy.md template', () => {
+describe('Iteration 9b  -  strategy.md template', () => {
   const output = () => strategyTemplate(baseCtx);
 
   it('has parseable frontmatter with required fields', () => {
@@ -1261,7 +1261,7 @@ describe('Iteration 9b — strategy.md template', () => {
   });
 });
 
-describe('Iteration 9b — assumptions.md new fields', () => {
+describe('Iteration 9b  -  assumptions.md new fields', () => {
   const output = () => assumptionsTemplate(baseCtx);
 
   it('contains Last Validated field', () => {
@@ -1284,7 +1284,7 @@ describe('Iteration 9b — assumptions.md new fields', () => {
   });
 });
 
-describe('Iteration 9b — B13 build-trap detector', () => {
+describe('Iteration 9b  -  B13 build-trap detector', () => {
   const output = () => coachTemplate(baseCtx);
 
   it('coach contains B13 build-trap section', () => {
@@ -1312,7 +1312,7 @@ describe('Iteration 9b — B13 build-trap detector', () => {
     expect(b13Section.toLowerCase()).toMatch(/draft.*assumption|assumption.*entry/);
   });
 
-  it('B13 does not block — no "will not proceed" language', () => {
+  it('B13 does not block  -  no "will not proceed" language', () => {
     const coachOutput = output();
     const b13Start = coachOutput.search(/B13|build.trap/i);
     const b13Section = coachOutput.slice(b13Start, b13Start + 800);
@@ -1320,7 +1320,7 @@ describe('Iteration 9b — B13 build-trap detector', () => {
   });
 });
 
-describe('Iteration 9b — B15 Phase 2 experiment readout', () => {
+describe('Iteration 9b  -  B15 Phase 2 experiment readout', () => {
   const output = () => coachTemplate(baseCtx);
 
   it('coach contains B15 Phase 2 section', () => {
@@ -1363,7 +1363,7 @@ describe('Iteration 9b — B15 Phase 2 experiment readout', () => {
   });
 });
 
-describe('Iteration 9b — B16 strategy coherence', () => {
+describe('Iteration 9b  -  B16 strategy coherence', () => {
   const output = () => coachTemplate(baseCtx);
 
   it('coach contains B16 strategy coherence section', () => {
@@ -1400,7 +1400,7 @@ describe('Iteration 9b — B16 strategy coherence', () => {
   });
 });
 
-describe('Iteration 9b — F4.9 context priority hierarchy', () => {
+describe('Iteration 9b  -  F4.9 context priority hierarchy', () => {
   const output = () => coachTemplate(baseCtx);
 
   it('coach contains context priority section', () => {
@@ -1439,7 +1439,7 @@ describe('Iteration 9b — F4.9 context priority hierarchy', () => {
   });
 });
 
-describe('B17 — team-specific lesson capture', () => {
+describe('B17  -  team-specific lesson capture', () => {
   const output = () => coachTemplate(baseCtx);
 
   it('coach contains B17 section', () => {
@@ -1505,7 +1505,7 @@ describe('B17 — team-specific lesson capture', () => {
   });
 });
 
-describe('Iteration 9b — scaffold strategy.md wiring', () => {
+describe('Iteration 9b  -  scaffold strategy.md wiring', () => {
   it('full profile includes strategy.md', () => {
     const fullPaths = expectedPaths('full', 'claude');
     expect(fullPaths).toContain('team-foundry/product/strategy.md');
@@ -1600,7 +1600,7 @@ describe('AGENTS.md generation', () => {
   });
 });
 
-describe('v3 — sourced frontmatter on data-heavy templates (Task 1: outcomes)', () => {
+describe('v3  -  sourced frontmatter on data-heavy templates (Task 1: outcomes)', () => {
   const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
 
   it('outcomes has source: field in frontmatter (full profile)', () => {
@@ -1628,7 +1628,7 @@ describe('v3 — sourced frontmatter on data-heavy templates (Task 1: outcomes)'
   });
 });
 
-describe('v3 — sourced frontmatter on data-heavy templates (Task 2)', () => {
+describe('v3  -  sourced frontmatter on data-heavy templates (Task 2)', () => {
   const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
 
   const dataHeavyTemplates = [
@@ -1690,7 +1690,7 @@ describe('v3 — sourced frontmatter on data-heavy templates (Task 2)', () => {
   });
 });
 
-describe('v3 Task 7 — Validated/Hypothesized sections in customers.md', () => {
+describe('v3 Task 7  -  Validated/Hypothesized sections in customers.md', () => {
   const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
 
   it('full profile customers.md has ## Validated section', () => {
@@ -1749,7 +1749,7 @@ describe('v3 Task 7 — Validated/Hypothesized sections in customers.md', () => 
   });
 });
 
-describe('v3 Task 8 — Validated/Hypothesized in outcomes.md', () => {
+describe('v3 Task 8  -  Validated/Hypothesized in outcomes.md', () => {
   it('full profile outcomes.md has ## Validated outcomes section', () => {
     expect(outcomesTemplate(baseCtx)).toContain('## Validated outcomes');
   });
@@ -1790,7 +1790,7 @@ describe('v3 Task 8 — Validated/Hypothesized in outcomes.md', () => {
   });
 });
 
-describe('v3 Task 8 — Validated/Hypothesized in now-next-later.md', () => {
+describe('v3 Task 8  -  Validated/Hypothesized in now-next-later.md', () => {
   it('full profile now-next-later.md has ## Now (validated outcomes) section', () => {
     expect(nowNextLaterTemplate(baseCtx)).toContain('## Now (validated outcomes)');
   });
@@ -1828,7 +1828,7 @@ describe('v3 Task 8 — Validated/Hypothesized in now-next-later.md', () => {
   });
 });
 
-describe('v3 Task 9 — Coach B18: unsourced claim behavior', () => {
+describe('v3 Task 9  -  Coach B18: unsourced claim behavior', () => {
   it('full profile coach.md contains Behavior 18', () => {
     expect(coachTemplate(baseCtx)).toContain('Behavior 18');
   });
@@ -1859,7 +1859,7 @@ describe('v3 Task 9 — Coach B18: unsourced claim behavior', () => {
   });
 });
 
-describe('v3 Task 10 — Coach B19: validated without evidence behavior', () => {
+describe('v3 Task 10  -  Coach B19: validated without evidence behavior', () => {
   it('full profile coach.md contains Behavior 19', () => {
     expect(coachTemplate(baseCtx)).toContain('Behavior 19');
   });
@@ -1899,7 +1899,7 @@ describe('v3 Task 10 — Coach B19: validated without evidence behavior', () => 
   });
 });
 
-describe('v3 Tasks 24-25 — Coach B20: session-end knowledge capture', () => {
+describe('v3 Tasks 24-25  -  Coach B20: session-end knowledge capture', () => {
   it('full profile coach.md contains Behavior 20', () => {
     expect(coachTemplate(baseCtx)).toContain('Behavior 20');
   });
@@ -1930,7 +1930,7 @@ describe('v3 Tasks 24-25 — Coach B20: session-end knowledge capture', () => {
   });
 });
 
-describe('Iteration v2.4 — team member IDs in trio template', () => {
+describe('Iteration v2.4  -  team member IDs in trio template', () => {
   const output = () => trioTemplate(baseCtx);
 
   it('trio template includes optional GitHub ID field', () => {
@@ -1947,7 +1947,7 @@ describe('Iteration v2.4 — team member IDs in trio template', () => {
   });
 });
 
-describe('v3 skills — Tasks 17-22', () => {
+describe('v3 skills  -  Tasks 17-22', () => {
   const ctx = baseCtx;
 
   const skills = [

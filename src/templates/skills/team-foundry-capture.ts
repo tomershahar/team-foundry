@@ -13,7 +13,7 @@ You have been asked to capture what was learned or decided in this session into 
 
 **Do not write any file until you have shown the proposed content and received explicit confirmation.**
 
-### Step 1 — identify what's worth keeping
+### Step 1  -  identify what's worth keeping
 
 Review this conversation for:
 
@@ -25,19 +25,19 @@ Review this conversation for:
 
 Ignore: process discussions, brainstorming that went nowhere, anything already in the files.
 
-### Step 2 — map to the right file
+### Step 2  -  map to the right file
 
 | What you learned | Where it goes |
 |------------------|---------------|
-| An outcome is now validated | \`team-foundry/product/outcomes.md\` — move to Validated section, add source |
-| A customer segment was confirmed | \`team-foundry/product/customers.md\` — add to Validated with source |
-| An assumption was tested | \`team-foundry/product/assumptions.md\` — update status, add result |
-| A key decision was made | \`team-foundry/engineering/decisions/\` — new ADR or update existing |
-| A new risk surfaced | \`team-foundry/product/risks.md\` — add with impact and mitigation |
-| A term needs defining | \`team-foundry/context/glossary.md\` — add entry |
-| A metric moved | \`team-foundry/data/metrics.md\` — update with date and source |
+| An outcome is now validated | \`team-foundry/product/outcomes.md\`  -  move to Validated section, add source |
+| A customer segment was confirmed | \`team-foundry/product/customers.md\`  -  add to Validated with source |
+| An assumption was tested | \`team-foundry/product/assumptions.md\`  -  update status, add result |
+| A key decision was made | \`team-foundry/engineering/decisions/\`  -  new ADR or update existing |
+| A new risk surfaced | \`team-foundry/product/risks.md\`  -  add with impact and mitigation |
+| A term needs defining | \`team-foundry/context/glossary.md\`  -  add entry |
+| A metric moved | \`team-foundry/data/metrics.md\`  -  update with date and source |
 
-### Step 3 — write the update
+### Step 3  -  write the update
 
 For each piece of learning, draft the update text and show it to the team before writing. Include:
 
@@ -45,7 +45,7 @@ For each piece of learning, draft the update text and show it to the team before
 - The source or evidence (who said it, what data, what date)
 - For validated items: update \`last_validated:\` in the frontmatter if stale
 
-### Step 4 — confirm and write
+### Step 4  -  confirm and write
 
 Show the proposed changes. Ask: "Should I write these to the files?"
 

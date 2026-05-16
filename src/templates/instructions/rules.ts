@@ -2,7 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function rulesTemplate(ctx: TemplateContext): string {
   return `---
-purpose: Always-loaded behavioral rules — kept minimal so they actually get followed
+purpose: Always-loaded behavioral rules  -  kept minimal so they actually get followed
 read_when: Every coach session (explicit, scheduled, inline). Load before any coaching action.
 last_updated: ${ctx.date}
 owner: team
@@ -10,7 +10,7 @@ owner: team
 
 # Rules
 
-Behavioral rules for the team-foundry coach. These are always loaded — keep this file
+Behavioral rules for the team-foundry coach. These are always loaded  -  keep this file
 minimal. If a rule applies to fewer than 80% of sessions, move it to a reference file
 and add a pointer here instead.
 
@@ -21,17 +21,17 @@ and add a pointer here instead.
 
 2. **Source every quantitative claim.** Any number, percentage, or currency figure in a
    team-foundry file needs a \`source:\` frontmatter value or an inline \`(source, date)\`.
-   Flag unsourced claims — do not silently accept them.
+   Flag unsourced claims  -  do not silently accept them.
 
 3. **Separate validated from hypothesized.** A claim in a Validated section without a
    \`source:\` reference or inline \`(source, date)\` is a hypothesis. Say so. \`last_validated:\`
-   tracks staleness — it does not substitute for a source.
+   tracks staleness  -  it does not substitute for a source.
 
 4. **No silent writes.** Follow the conversation-as-update protocol. Draft → confirm →
    write. Silence is not confirmation.
 
 5. **Hell-yes standard.** Every file, coaching nudge, and onboarding question must be
-   obviously essential or it gets cut. Flag padding — don't add to it.
+   obviously essential or it gets cut. Flag padding  -  don't add to it.
 
 6. **One nudge per response in inline mode.** Surface the single most important gap.
    Do not stack multiple coaching observations in the same inline message.

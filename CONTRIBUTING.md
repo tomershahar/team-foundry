@@ -1,6 +1,6 @@
 # Contributing to team-foundry
 
-Thanks for your interest. team-foundry is a small, opinionated tool — contributions that sharpen the existing scope are welcome. Contributions that expand scope are considered carefully.
+Thanks for your interest. team-foundry is a small, opinionated tool  -  contributions that sharpen the existing scope are welcome. Contributions that expand scope are considered carefully.
 
 ## What we're looking for
 
@@ -39,20 +39,20 @@ npm run lint        # eslint
 
 Tests live in `src/__tests__/`. Each iteration has its own test file. Add tests for any behavior you change.
 
-Content changes to `example/` (the Clearline worked example) have no automated tests — they're reviewed manually. If you improve example files, verify internal consistency: assumptions reference outcomes by exact heading text, Now items in now-next-later.md use `##` headings with linked assumptions, and metric names in north-star.md `### Key Metrics` match headings in data/metrics.md.
+Content changes to `example/` (the Clearline worked example) have no automated tests  -  they're reviewed manually. If you improve example files, verify internal consistency: assumptions reference outcomes by exact heading text, Now items in now-next-later.md use `##` headings with linked assumptions, and metric names in north-star.md `### Key Metrics` match headings in data/metrics.md.
 
 ## Templates
 
 Templates are pure functions in `src/templates/`. Each returns a string. They receive a `TemplateContext` (see `src/types.ts`). No side effects, no file I/O, no imports beyond types.
 
-The coach template (`src/templates/coach.ts`) is the most complex. It's a large template literal with profile-conditional blocks. Read the existing patterns before adding new ones — especially how `isSolo` gates full-only content.
+The coach template (`src/templates/coach.ts`) is the most complex. It's a large template literal with profile-conditional blocks. Read the existing patterns before adding new ones  -  especially how `isSolo` gates full-only content.
 
 ## Pull requests
 
 - Keep PRs small and focused. One behavior change per PR.
 - Tests must pass.
 - `npm run typecheck` and `npm run lint` must pass.
-- Describe what you changed and why in the PR description — not just what.
+- Describe what you changed and why in the PR description  -  not just what.
 - If you're changing coaching language, explain the reasoning. Coaching text is intentional; word choices matter.
 
 ## Content standard

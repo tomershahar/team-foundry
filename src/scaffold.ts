@@ -100,7 +100,7 @@ const FEDERATED_ENTRIES: FileEntry[] = [
   { relativePath: 'team-foundry/context/CLAUDE.md', content: federatedContextTemplate },
 ];
 
-/** Pre-built Claude Code skill files — written when tool is claude or both */
+/** Pre-built Claude Code skill files  -  written when tool is claude or both */
 const CLAUDE_SKILLS_ENTRIES: FileEntry[] = [
   { relativePath: '.claude/skills/team-foundry-intro.md', content: introSkillTemplate },
   { relativePath: '.claude/skills/team-foundry-status.md', content: statusSkillTemplate },
@@ -151,13 +151,13 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
 
     await fs.mkdir(dir, { recursive: true });
 
-    // Skip if already exists — never overwrite without user confirmation
+    // Skip if already exists  -  never overwrite without user confirmation
     try {
       await fs.access(fullPath);
-      // File exists — skip
+      // File exists  -  skip
       continue;
     } catch {
-      // File does not exist — write it
+      // File does not exist  -  write it
     }
 
     await fs.writeFile(fullPath, entry.content(ctx), 'utf-8');

@@ -16,6 +16,6 @@ labels: content
 
 **Have you tested the proposed change with an AI tool?**
 
-- [ ] Yes — the new content produced better AI responses
-- [ ] No — this is a structural / clarity improvement
+- [ ] Yes  -  the new content produced better AI responses
+- [ ] No  -  this is a structural / clarity improvement
 

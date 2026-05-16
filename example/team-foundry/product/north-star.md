@@ -1,5 +1,5 @@
 ---
-purpose: Vision, north star metric, and balancing metrics — the destination
+purpose: Vision, north star metric, and balancing metrics  -  the destination
 read_when: When discussing product direction, prioritization, or long-term bets
 last_updated: 2026-04-25
 owner: Sarah

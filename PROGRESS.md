@@ -1,4 +1,4 @@
-# PROGRESS.md — create-team-foundry
+# PROGRESS.md  -  create-team-foundry
 
 ## Current State
 
@@ -24,4 +24,4 @@
 2. <!-- Second action -->
 
 ---
-*Updated by harness-init on 2026-05-10 — edit this file at session end*
+*Updated by harness-init on 2026-05-10  -  edit this file at session end*

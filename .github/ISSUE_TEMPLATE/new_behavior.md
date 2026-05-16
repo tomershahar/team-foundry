@@ -14,7 +14,7 @@ labels: coach
 
 **What should the coach say?**
 
-(Draft the script in the coach's voice — diagnostic-first, offer to draft, no lectures)
+(Draft the script in the coach's voice  -  diagnostic-first, offer to draft, no lectures)
 
 **What should the coach offer to draft?**
 

@@ -1,5 +1,5 @@
 ---
-purpose: Enforced behavioral instructions — the AI must follow these before acting
+purpose: Enforced behavioral instructions  -  the AI must follow these before acting
 read_when: Before editing any team-foundry file; before using external tools or paid APIs
 last_updated: 2026-04-29
 owner: team
@@ -8,7 +8,7 @@ owner: team
 # Hooks
 
 These are markdown conventions, not executable scripts. They define behaviors the AI
-must treat as enforced — not suggestions to weigh against convenience.
+must treat as enforced  -  not suggestions to weigh against convenience.
 
 In v3.1, an optional `--with-hooks` flag will generate real Claude Code hook scripts
 wired to `.claude/settings.json`. For now, treat this file as the enforcement layer.

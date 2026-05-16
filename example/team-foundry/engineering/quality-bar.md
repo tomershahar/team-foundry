@@ -1,5 +1,5 @@
 ---
-purpose: Our honest quality stance — what "done" means, what debt we accept, and what we don't
+purpose: Our honest quality stance  -  what "done" means, what debt we accept, and what we don't
 read_when: When evaluating whether something is ready to ship, reviewing a PR, or discussing tech debt
 last_updated: 2026-04-25
 owner: Marcus
@@ -35,9 +35,9 @@ These are documented in `engineering/decisions/` or in Linear. We do not pretend
 
 ## Tech debt we do not accept
 
-- Any security-adjacent debt (auth, permissions, data access) — this is always P1 to resolve
-- Database schema debt that would require a long-running migration on a table with >1M rows — we plan schema changes carefully
-- Undocumented departures from our API contract — if we change behavior, we document it
+- Any security-adjacent debt (auth, permissions, data access)  -  this is always P1 to resolve
+- Database schema debt that would require a long-running migration on a table with >1M rows  -  we plan schema changes carefully
+- Undocumented departures from our API contract  -  if we change behavior, we document it
 
 ## Code review standard
 
@@ -46,7 +46,7 @@ Every PR gets at least one human reviewer who is not the author. The reviewer is
 - Flagging any bugs they find
 - Confirming tests exist and make sense
 
-The reviewer is not responsible for redesigning the approach. If you have a better approach, raise it in a comment — but that's a conversation, not a blocker unless it's a correctness issue.
+The reviewer is not responsible for redesigning the approach. If you have a better approach, raise it in a comment  -  but that's a conversation, not a blocker unless it's a correctness issue.
 
 ## On shipping imperfect things
 

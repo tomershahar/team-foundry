@@ -2,7 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function statusSkillTemplate(_ctx: TemplateContext): string {
   return `---
-description: Current sprint/cycle status — what's on track, what's at risk, what's blocked
+description: Current sprint/cycle status  -  what's on track, what's at risk, what's blocked
 ---
 
 # /team-foundry-status
@@ -13,10 +13,10 @@ You have been asked for a status read on this team's current work.
 
 Read these files:
 
-- \`team-foundry/product/outcomes.md\` — current cycle outcomes and their validation status
-- \`team-foundry/product/now-next-later.md\` — what's in flight, what's queued (if present)
-- \`team-foundry/product/assumptions.md\` — open assumptions that could invalidate work (if present)
-- \`team-foundry/product/risks.md\` — known risks and their mitigations (if present)
+- \`team-foundry/product/outcomes.md\`  -  current cycle outcomes and their validation status
+- \`team-foundry/product/now-next-later.md\`  -  what's in flight, what's queued (if present)
+- \`team-foundry/product/assumptions.md\`  -  open assumptions that could invalidate work (if present)
+- \`team-foundry/product/risks.md\`  -  known risks and their mitigations (if present)
 
 ## Report format
 

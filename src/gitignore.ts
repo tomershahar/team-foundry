@@ -14,7 +14,7 @@ export async function writeGitignore(targetDir: string): Promise<void> {
   try {
     existing = await fs.readFile(gitignorePath, 'utf-8');
   } catch {
-    // File doesn't exist — start fresh
+    // File doesn't exist  -  start fresh
   }
 
   // No-op if already present (check whole lines to avoid partial matches)

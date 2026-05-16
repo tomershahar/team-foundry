@@ -2,7 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function federatedProductTemplate(ctx: TemplateContext): string {
   return `---
-purpose: Routing context for the product/ folder — read before answering product questions
+purpose: Routing context for the product/ folder  -  read before answering product questions
 read_when: Any question about outcomes, customers, roadmap, strategy, assumptions, or risks
 last_updated: ${ctx.date}
 ---

@@ -1,5 +1,5 @@
 ---
-purpose: Metric definitions, ownership, and data sources — the single source of truth for what numbers mean
+purpose: Metric definitions, ownership, and data sources  -  the single source of truth for what numbers mean
 read_when: When discussing metrics, writing specs with success criteria, or reviewing dashboards
 last_updated: 2026-04-29
 last_validated: 2026-04-25
@@ -39,7 +39,7 @@ Current baseline: 74%
 Definition: any user with the AP Lead role who performs at least one invoice-related action (upload, review, approve, flag) in the calendar month.
 Owner: David
 Source: Mixpanel
-Note: "active" means action on invoice workflow specifically — logging in alone doesn't count.
+Note: "active" means action on invoice workflow specifically  -  logging in alone doesn't count.
 
 **Customer NPS**
 Definition: standard NPS methodology (0–10 scale, promoters 9–10, detractors 0–6). Surveyed quarterly via email, 3 months after onboarding for new customers.
@@ -51,7 +51,7 @@ Current baseline: 42
 
 Definition: % of invoices that trigger an exception flag and require human intervention before being processed. Excludes invoices auto-resolved by pre-set rules.
 Owner: Marcus (engineering), David (measurement)
-Source: `invoice_events` table — invoices with status `exception_flagged` that required manual action
+Source: `invoice_events` table  -  invoices with status `exception_flagged` that required manual action
 Current baseline: 8.3%
 Note: a rising exception rate could mean the auto-approval model is miscalibrated or that vendor data quality is degrading.
 
@@ -60,7 +60,7 @@ Note: a rising exception rate could mean the auto-approval model is miscalibrate
 **Auto-approval accuracy rate**
 Definition: % of auto-approved invoices that were not subsequently flagged by the customer as incorrect within 30 days.
 Owner: Marcus (engineering accountability), David (measurement)
-Source: `invoice_overrides` table — invoices marked as incorrectly auto-approved
+Source: `invoice_overrides` table  -  invoices marked as incorrectly auto-approved
 Current baseline: 99.1%
 Note: this is a lagging indicator. Customers don't always report errors.
 
@@ -72,6 +72,6 @@ Current: 0.8/month (rolling 3-month average)
 
 ## What we don't measure (and why)
 
-- **Feature adoption breadth** — we don't optimize for how many features customers use. Deep use of 3 features beats shallow use of 9.
-- **Invoice processing volume** — a vanity metric. Volume favors large customers over happy ones.
-- **Ticket resolution time** — we track ticket volume (as a signal of workflow errors), not resolution time. Resolution time incentivizes closing tickets fast, not fixing the underlying issue.
+- **Feature adoption breadth**  -  we don't optimize for how many features customers use. Deep use of 3 features beats shallow use of 9.
+- **Invoice processing volume**  -  a vanity metric. Volume favors large customers over happy ones.
+- **Ticket resolution time**  -  we track ticket volume (as a signal of workflow errors), not resolution time. Resolution time incentivizes closing tickets fast, not fixing the underlying issue.

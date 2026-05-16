@@ -41,8 +41,8 @@ export async function runPrompts(): Promise<PromptResult> {
   const profile = await select({
     message: 'Team size?',
     options: [
-      { value: 'solo', label: '1–3 people  (solo profile — 7 files)' },
-      { value: 'full', label: '4–15 people  (full profile — 20 files)' },
+      { value: 'solo', label: '1–3 people  (solo profile  -  7 files)' },
+      { value: 'full', label: '4–15 people  (full profile  -  20 files)' },
     ],
   });
   cancelIfNeeded(profile);
@@ -65,8 +65,8 @@ export async function runPrompts(): Promise<PromptResult> {
     const federatedAnswer = await select({
       message: 'Context layout?',
       options: [
-        { value: 'flat', label: 'Flat  (one root CLAUDE.md — simpler, recommended for most teams)' },
-        { value: 'federated', label: 'Federated  (CLAUDE.md per folder — for larger teams, 8+ people)' },
+        { value: 'flat', label: 'Flat  (one root CLAUDE.md  -  simpler, recommended for most teams)' },
+        { value: 'federated', label: 'Federated  (CLAUDE.md per folder  -  for larger teams, 8+ people)' },
       ],
     });
     cancelIfNeeded(federatedAnswer);
@@ -78,7 +78,7 @@ export async function runPrompts(): Promise<PromptResult> {
 
   const ingestion = await select({
     message:
-      'Do you have existing docs to ingest?\n  (Strategy docs, old roadmaps, customer research — the interview uses them to pre-populate answers)',
+      'Do you have existing docs to ingest?\n  (Strategy docs, old roadmaps, customer research  -  the interview uses them to pre-populate answers)',
     options: [
       { value: 'repo', label: 'Repo signals only  (README, package.json, git history, GitHub PRs/issues)' },
       { value: 'repo+local', label: 'Repo + local docs folder  (repo signals + point me at a folder)' },

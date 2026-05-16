@@ -2,7 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function federatedTeamTemplate(ctx: TemplateContext): string {
   return `---
-purpose: Routing context for the team/ folder — read before answering team questions
+purpose: Routing context for the team/ folder  -  read before answering team questions
 read_when: Any question about who owns decisions, how the team works, or AI tool usage
 last_updated: ${ctx.date}
 ---

@@ -1,7 +1,7 @@
 {
   "name": "create-team-foundry",
-  "version": "3.0.0",
-  "description": "Scaffold a team-foundry into any repo — structured context files for Claude Code, Gemini CLI, and Cursor",
+  "version": "3.0.1",
+  "description": "Scaffold a team-foundry into any repo  -  structured context files for Claude Code, Gemini CLI, and Cursor",
   "license": "MIT",
   "type": "module",
   "bin": {
@@ -32,7 +32,7 @@
     "prettier": "^3.2.0",
     "tsup": "^8.0.0",
     "typescript": "^5.4.0",
-    "vitest": "^1.4.0"
+    "vitest": "^4.1.5"
   },
   "engines": {
     "node": ">=18"

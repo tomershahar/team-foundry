@@ -19,21 +19,21 @@ owner: Sarah
 
 **Named contacts:**
 
-**Mira Halonen — AP Lead, Kestrel Logistics (Helsinki, 180 employees)**
+**Mira Halonen  -  AP Lead, Kestrel Logistics (Helsinki, 180 employees)**
 Last contact: 2026-04-11 (Sarah + Leo, 45-min session)
 Their situation: 300–400 invoices/month across 12 vendors. Two AP staff. Month-end takes 3.5 days.
 Quote: "I need to be confident the system caught the problem, not just that it processed the invoice. Right now I double-check everything because I've been burned twice."
 What they're trying not to do: hire a third AP person. They see Clearline as the alternative.
-Pain that's real: mismatched POs slip through when amounts are within a configurable tolerance — Mira doesn't trust the tolerance setting because she doesn't know how it was chosen.
+Pain that's real: mismatched POs slip through when amounts are within a configurable tolerance  -  Mira doesn't trust the tolerance setting because she doesn't know how it was chosen.
 
-**James Okafor — Finance Manager, Verdant Supply Co. (Dublin, 340 employees)**
+**James Okafor  -  Finance Manager, Verdant Supply Co. (Dublin, 340 employees)**
 Last contact: 2026-03-28 (Sarah, 30-min call)
 Their situation: 600–700 invoices/month. Three AP staff. Controller reviews exceptions manually.
 Quote: "The approvers are the bottleneck. Half the time they approve things without reading them because there are too many. I want the system to tell them what to look at, not show them everything."
-What they're trying not to do: replace the approval process — they need the paper trail for audits.
+What they're trying not to do: replace the approval process  -  they need the paper trail for audits.
 Pain that's real: approval fatigue. Too many low-stakes invoices in the queue make high-stakes ones invisible.
 
-**Taru Nieminen — CFO, Brightway Facilities (Tampere, 90 employees)**
+**Taru Nieminen  -  CFO, Brightway Facilities (Tampere, 90 employees)**
 Last contact: 2026-04-18 (Sarah, 20-min check-in)
 Their situation: 150 invoices/month. One AP person (part-time). Taru reviews exceptions personally.
 Quote: "I want to stop being in the loop for invoices under €500. I trust the AP process for those. I don't have time."
@@ -55,4 +55,4 @@ Pain that's real: no tiered approval by amount. Everything routes to the same qu
 
 ### Accounting firms processing invoices on behalf of clients
 
-**Why excluded:** They're a proxy, not the end user. The trust model is inverted — they need to explain the system to their clients, not own it. Our onboarding and support are designed for teams who own their AP process directly.
+**Why excluded:** They're a proxy, not the end user. The trust model is inverted  -  they need to explain the system to their clients, not own it. Our onboarding and support are designed for teams who own their AP process directly.

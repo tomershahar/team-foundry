@@ -2,7 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function assumptionsTemplate(ctx: TemplateContext): string {
   return `---
-purpose: Open assumptions and untested beliefs — the bets the team is currently making
+purpose: Open assumptions and untested beliefs  -  the bets the team is currently making
 read_when: Designing discovery work, scoping experiments, retros, any time a decision feels risky
 last_updated: ${ctx.date}
 last_validated: ~
@@ -20,7 +20,7 @@ owner:
      "Our engineers can build it in 6 weeks" is a third one. They have different failure modes.
 
      The coach will flag any assumption older than 30 days without a tested/invalidated note.
-     Not because 30 days is a magic number — but because an assumption that old with no
+     Not because 30 days is a magic number  -  but because an assumption that old with no
      evidence either way is a risk you've stopped thinking about. -->
 
 <!-- GAP: No assumptions logged yet. The onboarding interview will ask:
@@ -31,9 +31,9 @@ owner:
 
 <!-- Each assumption should include:
      - The belief itself, stated as a falsifiable claim (not a hope)
-     - When you added it — so you know how old it is
-     - What decision it affects — so you know what's at stake if it's wrong
-     - How you'd test it — the smallest experiment that would give you real signal
+     - When you added it  -  so you know how old it is
+     - What decision it affects  -  so you know what's at stake if it's wrong
+     - How you'd test it  -  the smallest experiment that would give you real signal
 
      Example:
      ### Ops managers will self-serve report fixes without training
@@ -56,17 +56,17 @@ owner:
 
 ## Invalidated
 
-<!-- Assumptions you proved wrong. Don't delete these — they're your most valuable history.
+<!-- Assumptions you proved wrong. Don't delete these  -  they're your most valuable history.
      Record what you assumed, what you found instead, and what you changed because of it. -->
 
 ## Experiment readouts
 
 <!-- Populated by the coach after experiment results arrive.
      Format: expected → actual, segment breakdown, conclusion, next step.
-     Do not pre-fill — the coach drafts this after confirming results with you.
+     Do not pre-fill  -  the coach drafts this after confirming results with you.
 
      Example structure:
-     ### Experiment readout — [name] ([date])
+     ### Experiment readout  -  [name] ([date])
      | | Expected | Actual |
      |---|---|---|
      | Overall | +X | +Y |

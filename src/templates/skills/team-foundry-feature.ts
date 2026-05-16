@@ -16,20 +16,20 @@ Ask (or infer from the conversation): **what feature or work item are we focusin
 Then read the team-foundry files for everything relevant to it:
 
 ### Product context
-- \`team-foundry/product/outcomes.md\` — which outcome(s) does this feature serve?
-- \`team-foundry/product/customers.md\` — which customer segment is this for?
-- \`team-foundry/product/now-next-later.md\` — where does this sit in the roadmap? (if present)
-- \`team-foundry/product/assumptions.md\` — what assumptions is this feature resting on? (if present)
+- \`team-foundry/product/outcomes.md\`  -  which outcome(s) does this feature serve?
+- \`team-foundry/product/customers.md\`  -  which customer segment is this for?
+- \`team-foundry/product/now-next-later.md\`  -  where does this sit in the roadmap? (if present)
+- \`team-foundry/product/assumptions.md\`  -  what assumptions is this feature resting on? (if present)
 
 ### Design and quality
-- \`team-foundry/design/principles.md\` — design constraints that apply (if present)
-- \`team-foundry/engineering/quality-bar.md\` — definition of done (if present)
+- \`team-foundry/design/principles.md\`  -  design constraints that apply (if present)
+- \`team-foundry/engineering/quality-bar.md\`  -  definition of done (if present)
 
 ### Prior decisions
-- \`team-foundry/engineering/decisions/\` — any ADRs that affect this feature's approach
+- \`team-foundry/engineering/decisions/\`  -  any ADRs that affect this feature's approach
 
 ### Domain context
-- \`team-foundry/context/glossary.md\` — terms relevant to this feature (if present)
+- \`team-foundry/context/glossary.md\`  -  terms relevant to this feature (if present)
 
 ## Output format
 

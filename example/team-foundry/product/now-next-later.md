@@ -1,5 +1,5 @@
 ---
-purpose: Roadmap in Now/Next/Later format — execution, not strategy
+purpose: Roadmap in Now/Next/Later format  -  execution, not strategy
 read_when: When discussing what's being built, sprint planning, or stakeholder updates
 last_updated: 2026-04-29
 last_validated: 2026-04-25
@@ -40,7 +40,7 @@ What would validate it: time-to-first-auto-approval drops from 6.2 to ≤5 days 
 Owner: Emma (design), Priya (eng). Requires customer journey research first (scheduled May 14).
 
 ### Multi-approver workflow (basic)
-→ O4: One enterprise customer reaches 80% auto-processing rate (stretch — not yet validated)
+→ O4: One enterprise customer reaches 80% auto-processing rate (stretch  -  not yet validated)
 Only starts if O1–O2 on track by May 15. Required for O4 but O4 itself is hypothesized.
 
 ### Vendor matching confidence score
@@ -52,10 +52,10 @@ Taru's indirect ask; not confirmed as a primary driver yet.
 
 *Not scheduled, not promised. Current thinking, subject to change as we learn.*
 
-- International invoice formats (VAT number validation, different date formats) — 3 customers asked; not enough to prioritize
-- Mobile notification for pending approvals — James mentioned it; unclear if it changes behavior or just moves noise
-- Audit package export (one-click PDF for external auditors) — common ask, low development complexity, likely Q3
-- ERP write-back for SAP Business One — 6 prospects mentioned it; blocked on partnership conversation
+- International invoice formats (VAT number validation, different date formats)  -  3 customers asked; not enough to prioritize
+- Mobile notification for pending approvals  -  James mentioned it; unclear if it changes behavior or just moves noise
+- Audit package export (one-click PDF for external auditors)  -  common ask, low development complexity, likely Q3
+- ERP write-back for SAP Business One  -  6 prospects mentioned it; blocked on partnership conversation
 
 ## Recently shipped (Q1 2026)
 

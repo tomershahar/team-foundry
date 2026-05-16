@@ -13,15 +13,15 @@ export function gettingStartedTemplate(ctx: TemplateContext): string {
 
   const ingestionNote =
     ctx.ingestionPath
-      ? `\n> **Tip:** Before saying the phrase above, tell ${toolName}:\n> "Read the docs in \`${ctx.ingestionPath}\` before we begin — use them to pre-populate answers."\n`
+      ? `\n> **Tip:** Before saying the phrase above, tell ${toolName}:\n> "Read the docs in \`${ctx.ingestionPath}\` before we begin  -  use them to pre-populate answers."\n`
       : ctx.ingestion === 'paste'
-        ? `\n> **Tip:** Paste your existing docs into \`.team-foundry/paste-content.md\` before saying the phrase above. Then add: "I've added docs to paste-content.md — use them to pre-populate answers."\n`
+        ? `\n> **Tip:** Paste your existing docs into \`.team-foundry/paste-content.md\` before saying the phrase above. Then add: "I've added docs to paste-content.md  -  use them to pre-populate answers."\n`
         : ctx.ingestion === 'mcp'
           ? `\n> **Tip:** Connect your MCP server in ${toolName} settings first. Then add to your message: "Pull any relevant strategy, roadmap, or customer research from [your MCP source] and use them to pre-populate answers."\n`
           : '';
 
   return `---
-purpose: First-run instructions — what to do immediately after scaffolding
+purpose: First-run instructions  -  what to do immediately after scaffolding
 read_when: First time setting up team-foundry; onboarding a new team member to the repo
 last_updated: ${ctx.date}
 ---
@@ -32,28 +32,28 @@ You've scaffolded ${fileCount} files. They're mostly empty. One thing to do now:
 
 > Open this project in **${toolName}** and say: **"Let's set up our team-foundry."**
 ${ingestionNote}
-The AI will walk you through a setup conversation — ${questionCount} questions, about 30 minutes.
+The AI will walk you through a setup conversation  -  ${questionCount} questions, about 30 minutes.
 By the end, most files will be meaningfully populated.
 
 ## What the setup covers
 
 Questions are grouped into themes, in this order:
 
-1. **Identity** — what the team is and what it's building
-2. **Purpose** — the outcomes you're working toward this quarter
-3. **Customers** — named customers, direct quotes, jobs to be done
-4. **Quality** — your honest stance on tech debt, bugs, and "shipped"
-5. **Team** — how the trio works, how decisions get made
-6. **Rhythm** — ceremonies, working norms, definition of done
-7. **Technical** — stack, conventions, deployment
-8. **Glossary** — domain terms and acronyms
+1. **Identity**  -  what the team is and what it's building
+2. **Purpose**  -  the outcomes you're working toward this quarter
+3. **Customers**  -  named customers, direct quotes, jobs to be done
+4. **Quality**  -  your honest stance on tech debt, bugs, and "shipped"
+5. **Team**  -  how the trio works, how decisions get made
+6. **Rhythm**  -  ceremonies, working norms, definition of done
+7. **Technical**  -  stack, conventions, deployment
+8. **Glossary**  -  domain terms and acronyms
 
 The interview asks for evidence where it matters most:
 - Customer names and direct quotes, not archetypes
 - Outcome statements, not feature lists
 - Your honest quality stance, not your aspirational one
 
-Anything you skip gets marked as a gap — not silently omitted.
+Anything you skip gets marked as a gap  -  not silently omitted.
 
 ## After the interview
 
@@ -61,12 +61,12 @@ The coach keeps running. Things you can say at any time in ${toolName}:
 
 | What to say | What happens |
 |---|---|
-| "let's do a team-foundry review" | Full audit — all files checked, findings listed |
+| "let's do a team-foundry review" | Full audit  -  all files checked, findings listed |
 | "review our outcomes" | Targeted review of one file (works for any file) |
 | "what's missing from team-foundry?" | Lists gaps across all files |
 | "run the weekly team-foundry review" | Weekly check-in, top 3 issues surfaced |
 
-You can also just work normally — the coach surfaces gaps inline when they're relevant
+You can also just work normally  -  the coach surfaces gaps inline when they're relevant
 to what you're doing, without you asking.
 
 ## File structure
@@ -81,7 +81,7 @@ ${ctx.profile === 'full' ? '├── design/      → principles\n├── dat
 
 team-foundry works best when everyone on the team is looking at the same files.
 If you commit this to a shared Git repo, sync it via a shared folder, or use any
-method your team already uses to share code — anyone using an AI tool will have
+method your team already uses to share code  -  anyone using an AI tool will have
 the same context.
 
 If you're using a local or self-hosted AI tool, that's fine too. Just make sure

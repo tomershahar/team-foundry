@@ -1,17 +1,17 @@
 ---
-purpose: Identity, routing map, and coach activation — read at the start of every session
-read_when: Every Claude Code session in this repo — this is the root instruction file
+purpose: Identity, routing map, and coach activation  -  read at the start of every session
+read_when: Every Claude Code session in this repo  -  this is the root instruction file
 last_updated: 2026-04-29
 ---
 
 # CLAUDE.md
 
-This repo uses **team-foundry** — structured files that give you real team context.
+This repo uses **team-foundry**  -  structured files that give you real team context.
 Read this file first. It tells you where to find everything and how to activate the coach.
 
 ## Who we are
 
-**Clearline** — we help mid-market finance teams process, approve, and reconcile vendor invoices without the spreadsheet chaos.
+**Clearline**  -  we help mid-market finance teams process, approve, and reconcile vendor invoices without the spreadsheet chaos.
 
 8-person product trio: Sarah Chen (PM), Marcus Rodriguez (EM), Priya Patel / Jake Morrison / Aino Virtanen (engineering), Leo Kwan / Emma Thornton (design), David Osei (analytics).
 
@@ -48,7 +48,7 @@ The team-foundry coach keeps these files honest over time.
 
 | What to say | What happens |
 |---|---|
-| "let's do a team-foundry review" | Full audit — all files checked, findings listed |
+| "let's do a team-foundry review" | Full audit  -  all files checked, findings listed |
 | "coach mode" | Same as above |
 | "review our outcomes" | Targeted review of one file |
 | "what's missing from team-foundry?" | Lists gaps across all files |
@@ -60,5 +60,5 @@ The team-foundry coach keeps these files honest over time.
      - Explicit mode / Scheduled mode / onboarding: load .team-foundry/coach.md in full
        before activating any mode. Triggered only by the phrases in the table above.
      - Inline mode nudges: if you notice a clear gap in a team-foundry file while answering
-       a normal question, surface it in one sentence — without loading the full coach.md.
+       a normal question, surface it in one sentence  -  without loading the full coach.md.
        Keep it brief and non-blocking. Do not coach unprompted on back-to-back messages. -->

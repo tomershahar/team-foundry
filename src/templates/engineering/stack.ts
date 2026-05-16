@@ -21,20 +21,20 @@ owner:
      - **Runtime:** Node 20 / TypeScript 5.4
      - **Framework:** Next.js 14 (App Router)
      - **Database:** PostgreSQL 15 via Prisma ORM
-     - **Infrastructure:** AWS — ECS for services, RDS for database, S3 for assets
+     - **Infrastructure:** AWS  -  ECS for services, RDS for database, S3 for assets
      - **CI/CD:** GitHub Actions → ECR → ECS deploy -->
 
 ## Conventions
 
 <!-- The things that would confuse a new engineer who otherwise knows the stack.
-     Don't document what TypeScript or React already document — document what's specific to this repo.
+     Don't document what TypeScript or React already document  -  document what's specific to this repo.
 
      Examples worth capturing:
      - "All API routes are in src/app/api/ and follow REST conventions except for X."
      - "We use Zod for all runtime validation at API boundaries."
-     - "Database queries go through the repository layer in src/repositories/ — never direct Prisma
+     - "Database queries go through the repository layer in src/repositories/  -  never direct Prisma
        calls in components or API routes."
-     - "Feature flags are managed in src/flags.ts — check there before shipping anything gated." -->
+     - "Feature flags are managed in src/flags.ts  -  check there before shipping anything gated." -->
 
 ## Local dev setup
 

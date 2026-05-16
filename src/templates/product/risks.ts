@@ -2,7 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function risksTemplate(ctx: TemplateContext): string {
   return `---
-purpose: The four product risks — tracked so they don't become surprises at launch
+purpose: The four product risks  -  tracked so they don't become surprises at launch
 read_when: Scoping new features, go/no-go decisions, discovery planning, quarterly reviews
 last_updated: ${ctx.date}
 owner: 
@@ -30,7 +30,7 @@ owner:
 ## Value risk
 
 <!-- Will customers care enough to change their behavior?
-     Not "is there a market" — but specifically: will the people you're building for
+     Not "is there a market"  -  but specifically: will the people you're building for
      actually switch from what they're doing today?
 
      The relevant question: what are they doing instead right now, and why would they stop? -->

@@ -11,7 +11,7 @@ owner:
 # Stakeholders
 
 <!-- COACH: Stakeholder management fails most often when the team doesn't have a clear
-     picture of what each stakeholder actually cares about — not what they say they care about
+     picture of what each stakeholder actually cares about  -  not what they say they care about
      in all-hands meetings, but what they ask about in 1:1s and what they escalate when it's off.
 
      This file is most useful when it's specific: not "the CEO cares about growth"
@@ -25,7 +25,7 @@ owner:
 <!-- For each stakeholder:
 
      ### [Name / role]
-     **What they actually care about:** [The metric or outcome they ask about most — not the official answer]
+     **What they actually care about:** [The metric or outcome they ask about most  -  not the official answer]
      **How they prefer to be updated:** [Format, cadence, channel]
      **What triggers an escalation from them:** [The thing that causes them to get involved]
      **Notes:** [Anything else that helps the team work with them effectively]
@@ -33,7 +33,7 @@ owner:
      Example:
 
      ### Head of Product
-     **What they actually care about:** Whether the team is moving — velocity signals, not just outcomes.
+     **What they actually care about:** Whether the team is moving  -  velocity signals, not just outcomes.
        Asks about shipped features more than outcome metrics.
      **How they prefer to be updated:** Written weekly update in Notion by Friday EOD.
        Does not want to be pulled into standups.
