@@ -46,6 +46,34 @@ Then open the folder in Claude Code and ask anything.
 
 ---
 
+## What the coach catches
+
+The coach watches your files for drift while you work. It never writes without your confirmation. Every finding cites the specific file, the specific content, and the evidence. Not "this looks stale."
+
+| Pattern | Example |
+|---|---|
+| **Assumption fossilization** | Core assumption logged 94 days ago, never retested, still driving three roadmap items |
+| **Output-as-outcome drift** | `outcomes.md` says "ship the dashboard" instead of "reduce time-to-insight for SMB analysts" |
+| **Customer ghost syndrome** | Enterprise persona last interviewed in February. Three Q2 features built "for enterprise." |
+| **Reality drift** | 8 PRs shipped since `outcomes.md` was last updated. Coach cites the commit messages. |
+| **Build-trap signal** | "Add collaborative editing" moves to Now with no linked assumption and no validation. |
+
+<details>
+<summary>How to trigger the coach</summary>
+
+| What to say | What happens |
+|---|---|
+| `"let's do a team-foundry review"` | Full audit - all files, findings by severity |
+| `"review our outcomes"` | Targeted review of one file |
+| `"tell me about feature X"` | Synthesizes status, rationale, customer evidence, open bets |
+| `"run the weekly review"` | Top 3 issues, draft fixes offered |
+
+The coach runs in three modes. **Inline** is silent by default, surfaces one sentence when a gap is directly relevant to what you're working on. **Explicit** runs on demand for a full audit. **Scheduled** does a weekly check-in with the top 3 findings.
+
+</details>
+
+---
+
 ## How it works
 
 **No cloud. No sync service. No extra accounts.**
@@ -85,46 +113,17 @@ Your repo is the shared space. Git is the sync. team-foundry adds the structure 
 
 ## What you get
 
-**Solo profile (1–3 people):** 8 files, ~1 minute with repo scan / ~15 minutes fresh.
-**Full profile (4–15 people):** 24 files, ~1 minute with repo scan / ~25 minutes fresh.
+**Start with solo: 8 files, ~1 minute setup if your repo already has a README and commit history** (the CLI reads your repo and pre-fills the answers). That's enough to make your AI meaningfully better immediately.
+
+When the team grows or the context gets more complex, you can grow into the full profile. The files are additive - nothing from solo is replaced.
 
 | Profile | Files | Includes |
 |---|---|---|
-| Solo | 8 | Root instruction file, AGENTS.md, getting started guide, coach playbook, north star, outcomes, customers, stack |
+| **Solo** (default) | 8 | Root instruction file, AGENTS.md, getting started guide, coach playbook, north star, outcomes, customers, stack |
 | Full | 24 | Everything above + strategy, roadmap, assumptions, risks, trio, working agreement, AI practices, quality bar, decisions log, design principles, metrics, glossary, stakeholders, hierarchy, hooks, rules |
 | Full (federated) | 30 | Everything above + per-folder routing files for multi-instance setups |
 
 Every file has YAML frontmatter (`purpose`, `read_when`, `last_updated`, `owner`) so the AI knows when to load it and why. Data-heavy files also include `source:` and `last_validated:` so the AI knows whether to trust a number.
-
----
-
-## The coach
-
-After setup, the coach watches your files for drift while you work. It never writes without your confirmation.
-
-| Pattern | Example |
-|---|---|
-| **Assumption fossilization** | Core assumption logged 94 days ago, never retested, still driving three roadmap items |
-| **Output-as-outcome drift** | `outcomes.md` says "ship the dashboard" instead of "reduce time-to-insight for SMB analysts" |
-| **Customer ghost syndrome** | Enterprise persona last interviewed in February. Three Q2 features built "for enterprise." |
-| **Reality drift** | 8 PRs shipped since `outcomes.md` was last updated. Coach cites the commit messages. |
-| **Build-trap signal** | "Add collaborative editing" moves to Now with no linked assumption and no validation. |
-
-Every finding cites the specific file, the specific content, and the evidence. Not "this looks stale."
-
-<details>
-<summary>How to trigger the coach</summary>
-
-| What to say | What happens |
-|---|---|
-| `"let's do a team-foundry review"` | Full audit - all files, findings by severity |
-| `"review our outcomes"` | Targeted review of one file |
-| `"tell me about feature X"` | Synthesizes status, rationale, customer evidence, open bets |
-| `"run the weekly review"` | Top 3 issues, draft fixes offered |
-
-The coach runs in three modes. **Inline** is silent by default, surfaces one sentence when a gap is directly relevant to what you're working on. **Explicit** runs on demand for a full audit. **Scheduled** does a weekly check-in with the top 3 findings.
-
-</details>
 
 ---
 
