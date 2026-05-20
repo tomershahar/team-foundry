@@ -49,7 +49,7 @@ function runCli(cwd: string): Promise<{ code: number | null; stdout: string; std
       () => proc.stdin.write('\r'),               // Q1: select claude
       () => proc.stdin.write('\r'),               // Q2: select solo
       () => proc.stdin.write('\r'),               // Q3: select public
-      () => proc.stdin.write('\x1b[B\x1b[B\x1b[B\x1b[B\x1b[B\x1b[B\x1b[B\r'), // Q4: down ×7 → skip
+      () => proc.stdin.write('\x1b[B\x1b[B\r'),   // Q4: down ×2 → skip (Start fresh)
     ];
     let step = 0;
     const sendNext = () => {
@@ -77,12 +77,13 @@ function runCliPaste(cwd: string): Promise<{ code: number | null; stdout: string
     let stdout = '';
     proc.stdout.on('data', (chunk: Buffer) => { stdout += chunk.toString(); });
     proc.stderr.on('data', () => {});
-    // Q4: down ×6 → paste option (index 6 in 8-option menu)
+    // Q4: down ×1 → supplement, Enter, then down ×1 → repo+paste, Enter
     const inputs: (() => void)[] = [
       () => proc.stdin.write('\r'),               // Q1: claude
       () => proc.stdin.write('\r'),               // Q2: solo
       () => proc.stdin.write('\r'),               // Q3: public
-      () => proc.stdin.write('\x1b[B\x1b[B\x1b[B\x1b[B\x1b[B\x1b[B\r'),  // Q4: down ×6 → paste
+      () => proc.stdin.write('\x1b[B\r'),         // Q4.1: down ×1 → supplement, Enter
+      () => proc.stdin.write('\x1b[B\r'),         // Q4.2: down ×1 → repo+paste, Enter
     ];
     let step = 0;
     const sendNext = () => {
@@ -182,12 +183,13 @@ describe('CLI repo ingestion', () => {
       let stdout = '';
       proc.stdout.on('data', (chunk: Buffer) => { stdout += chunk.toString(); });
       proc.stderr.on('data', () => {});
-      // Q4: down ×3 → repo+paste (index 3)
+      // Q4: down ×1 → supplement, Enter, then down ×1 → repo+paste, Enter
       const inputs: (() => void)[] = [
         () => proc.stdin.write('\r'),               // Q1: claude
         () => proc.stdin.write('\r'),               // Q2: solo
         () => proc.stdin.write('\r'),               // Q3: public
-        () => proc.stdin.write('\x1b[B\x1b[B\x1b[B\r'), // Q4: down ×3 → repo+paste
+        () => proc.stdin.write('\x1b[B\r'),         // Q4.1: down ×1 → supplement, Enter
+        () => proc.stdin.write('\x1b[B\r'),         // Q4.2: down ×1 → repo+paste, Enter
       ];
       let step = 0;
       const sendNext = () => {
@@ -211,7 +213,7 @@ describe('CLI paste ingestion', () => {
   beforeEach(async () => { tmpDir = await makeTempDir(); });
   afterEach(async () => { await cleanup(tmpDir); });
 
-  it('creates .team-foundry/paste-content.md when paste is selected', async () => {
+  it('creates .team-foundry/paste-content.md when repo+paste is selected', async () => {
     await runCliPaste(tmpDir);
     const exists = await fs
       .access(path.join(tmpDir, '.team-foundry', 'paste-content.md'))

@@ -47,9 +47,6 @@ export async function runPrompts(): Promise<PromptResult> {
   });
   cancelIfNeeded(profile);
 
-  const profileTyped = profile as 'solo' | 'full';
-  const totalNoFed = questionCount(profileTyped, false, undefined);
-
   const repoVisibility = await select({
     message: 'Is this repo public, internal-only, or private?',
     options: [
@@ -73,28 +70,33 @@ export async function runPrompts(): Promise<PromptResult> {
     federated = federatedAnswer === 'federated';
   }
 
-  const federatedResolved = federated ?? false;
-  const ingestionQ = profileTyped === 'solo' ? 4 : 5;
-
-  const ingestion = await select({
-    message:
-      'Do you have existing docs to ingest?\n  (Strategy docs, old roadmaps, customer research  -  the interview uses them to pre-populate answers)',
+  const ingestionChoice = await select({
+    message: 'Where should the AI look for existing team context?',
     options: [
-      { value: 'repo', label: 'Repo signals only  (README, package.json, git history, GitHub PRs/issues)' },
-      { value: 'repo+local', label: 'Repo + local docs folder  (repo signals + point me at a folder)' },
-      { value: 'repo+mcp', label: 'Repo + MCP source  (repo signals + Notion, Confluence, Google Drive)' },
-      { value: 'repo+paste', label: 'Repo + paste content  (repo signals + paste docs into paste-content.md)' },
-      { value: 'local', label: 'Local docs folder only  (no repo scan)' },
-      { value: 'mcp', label: 'MCP source only  (no repo scan)' },
-      { value: 'paste', label: 'Paste content only  (no repo scan)' },
-      { value: 'skip', label: 'Skip  (start fresh)' },
+      { value: 'repo', label: 'Standard Scan (README, package.json, and Git history) [Recommended]' },
+      { value: 'supplement', label: 'Supplement with external docs... (Local folder, Notion, Confluence, etc.)' },
+      { value: 'skip', label: 'Start fresh (Blank templates)' },
     ],
   });
-  cancelIfNeeded(ingestion);
+  cancelIfNeeded(ingestionChoice);
+
+  let ingestion = ingestionChoice as string;
+
+  if (ingestion === 'supplement') {
+    const supplementChoice = await select({
+      message: 'How would you like to provide these external docs?',
+      options: [
+        { value: 'repo+local', label: 'Point to a local folder (e.g. ./docs)' },
+        { value: 'repo+paste', label: 'Paste into a single file (.team-foundry/paste-content.md)' },
+        { value: 'repo+mcp', label: 'Connect via MCP (Notion, Confluence, Google Drive)' },
+      ],
+    });
+    cancelIfNeeded(supplementChoice);
+    ingestion = supplementChoice as string;
+  }
 
   let ingestionPath: string | undefined;
   if (ingestion === 'local' || ingestion === 'repo+local') {
-    const total = questionCount(profileTyped, federatedResolved, ingestion as string);
     const rawPath = await text({
       message: 'Path to the folder containing your docs?',
       placeholder: './docs  or  /Users/you/exports',

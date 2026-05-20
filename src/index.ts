@@ -235,7 +235,12 @@ async function main(): Promise<void> {
       ingestionNote +
       `\nSee GETTING_STARTED.md for more detail.\n\n` +
       `Reminder: team-foundry works best in a shared repo  -  one the whole\n` +
-      `team commits to, so everyone's AI tool gets the same context.`,
+      `team commits to, so everyone's AI tool gets the same context.\n\n` +
+      `────────────────────────────────────────────────────────────\n` +
+      `🌟 Enjoying team-foundry?\n` +
+      `   Help us grow by leaving a star or feedback on GitHub!\n` +
+      `   👉 https://github.com/tomershahar/team-foundry\n` +
+      `────────────────────────────────────────────────────────────`
   );
 }
 

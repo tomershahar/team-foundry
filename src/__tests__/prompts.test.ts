@@ -205,6 +205,52 @@ describe('runPrompts()', () => {
 
     expect(select).toHaveBeenCalledTimes(5);
   });
+
+  it('returns repo+local via supplement progressive menu and prompts for path', async () => {
+    vi.mocked(select)
+      .mockResolvedValueOnce('claude')
+      .mockResolvedValueOnce('solo')
+      .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('supplement')
+      .mockResolvedValueOnce('repo+local');
+    vi.mocked(text).mockResolvedValueOnce('./progressive-docs');
+
+    const result = await runPrompts();
+    expect(result.ingestion).toBe('repo+local');
+    expect(result.ingestionPath).toBe('./progressive-docs');
+    expect(select).toHaveBeenCalledTimes(5);
+    expect(text).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns repo+mcp via supplement progressive menu', async () => {
+    vi.mocked(select)
+      .mockResolvedValueOnce('claude')
+      .mockResolvedValueOnce('solo')
+      .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('supplement')
+      .mockResolvedValueOnce('repo+mcp');
+
+    const result = await runPrompts();
+    expect(result.ingestion).toBe('repo+mcp');
+    expect(result.ingestionPath).toBeUndefined();
+    expect(select).toHaveBeenCalledTimes(5);
+    expect(text).not.toHaveBeenCalled();
+  });
+
+  it('returns repo+paste via supplement progressive menu', async () => {
+    vi.mocked(select)
+      .mockResolvedValueOnce('claude')
+      .mockResolvedValueOnce('solo')
+      .mockResolvedValueOnce('internal')
+      .mockResolvedValueOnce('supplement')
+      .mockResolvedValueOnce('repo+paste');
+
+    const result = await runPrompts();
+    expect(result.ingestion).toBe('repo+paste');
+    expect(result.ingestionPath).toBeUndefined();
+    expect(select).toHaveBeenCalledTimes(5);
+    expect(text).not.toHaveBeenCalled();
+  });
 });
 
 describe('questionCount()', () => {

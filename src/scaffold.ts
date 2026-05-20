@@ -130,7 +130,54 @@ function rootEntries(tool: ScaffoldOptions['tool']): FileEntry[] {
 export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
   const { targetDir, profile, tool, repoVisibility, date, ingestionPath, ingestion, federated } = options;
 
-  const ctx: TemplateContext = { profile, tool, repoVisibility, date, ingestionPath, ingestion };
+  let extractedStack: TemplateContext['extractedStack'] = undefined;
+  
+  const pathsToTry = [
+    path.join(process.cwd(), 'package.json'),
+    path.join(targetDir, 'package.json')
+  ];
+
+  let pkgPath: string | null = null;
+  for (const p of pathsToTry) {
+    try {
+      await fs.access(p);
+      pkgPath = p;
+      break;
+    } catch {
+      // ignore
+    }
+  }
+
+  if (pkgPath) {
+    try {
+      const pkgStr = await fs.readFile(pkgPath, 'utf-8');
+      const pkg = JSON.parse(pkgStr);
+      const deps = { ...pkg.dependencies, ...pkg.devDependencies };
+      extractedStack = {
+        name: pkg.name,
+        dependencies: pkg.dependencies,
+        devDependencies: pkg.devDependencies,
+        hasTypeScript: 'typescript' in deps,
+        hasVitest: 'vitest' in deps,
+        hasJest: 'jest' in deps,
+        hasEslint: 'eslint' in deps,
+        hasPrettier: 'prettier' in deps,
+      };
+    } catch {
+      // ignore invalid package.json
+    }
+  }
+
+  const ctx: TemplateContext = {
+    profile,
+    tool,
+    repoVisibility,
+    date,
+    ingestionPath,
+    ingestion,
+    federated,
+    extractedStack
+  };
 
   const includesSkills = tool === 'claude' || tool === 'both';
 

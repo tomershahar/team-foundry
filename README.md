@@ -182,8 +182,14 @@ Each cycle tightens the loop. The coach makes step 3 to 4 nearly automatic.
 </details>
 
 <details>
-<summary>What's new in v3</summary>
+<summary>What's new in v3.2 & v3</summary>
 
+### v3.2 (UX & DX Onboarding Focus)
+- **Zero-Config Auto-Extraction**: The CLI dynamically scans your `package.json` to auto-detect your project's technology stack (Runtime, Frameworks like Next.js/React/Express, Tooling like Vitest/Jest/ESLint/Prettier/Vite) and auto-populates `engineering/stack.md` and root instructions with no extra effort.
+- **Progressive Ingestion Flow**: Overwhelming 8-option prompt is compressed into a clean, progressive menu: Standard Scan, Supplement with external docs, or Start fresh. Less cognitive load, faster setups.
+- **Visual Gratification & CTA**: Stunning final console outro with clear project location summary and GitHub Star box.
+
+### v3.0 (Context Integrity & Pre-built Skills)
 - **Sourced facts** - every claim in a data-heavy file has a `source:` and `last_validated:` field. The AI knows when to trust a number and when to ask where it came from.
 - **Validated vs hypothesized** - outcomes, customers, and roadmap items are split into what's backed by evidence and what's a bet. The coach flags when a hypothesis gets treated as a fact.
 - **Instruction architecture** - full profile gets `hierarchy.md` (which source wins when context conflicts), `instructions/hooks.md` (enforced pre-action behaviors), and `instructions/rules.md` (always-loaded coaching rules). The root file stays minimal; depth loads on demand.

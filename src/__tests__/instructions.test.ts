@@ -10,7 +10,7 @@ const baseCtx: TemplateContext = {
   date: '2026-04-29',
 };
 
-const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
+
 
 describe('v3 Task 5  -  instructions/hooks.md template', () => {
   it('hooksTemplate is a function that returns a string', () => {

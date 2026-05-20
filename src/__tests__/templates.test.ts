@@ -2019,3 +2019,55 @@ describe('v3 skills  -  Tasks 17-22', () => {
     expect(featureSkillTemplate(ctx)).toContain("Don't invent context");
   });
 });
+
+describe('v3.2  -  Auto-extraction and template populating', () => {
+  const extractedStack = {
+    name: 'test-project',
+    dependencies: { react: '^18.0.0', next: '^14.0.0', express: '^4.18.0' },
+    devDependencies: { typescript: '^5.0.0', vitest: '^1.0.0', eslint: '^8.0.0', prettier: '^3.0.0', tsup: '^8.0.0' },
+    hasTypeScript: true,
+    hasVitest: true,
+    hasJest: false,
+    hasEslint: true,
+    hasPrettier: true,
+  };
+  const ctxWithStack: TemplateContext = {
+    ...baseCtx,
+    extractedStack,
+  };
+
+  it('stackTemplate dynamically lists detected runtime, frameworks, and tooling', () => {
+    const output = stackTemplate(ctxWithStack);
+    expect(output).toContain('Auto-detected technologies:');
+    expect(output).toContain('- **Runtime:** Node.js / TypeScript');
+    expect(output).toContain('- **Frameworks:** Next.js, React, Express');
+    expect(output).toContain('- **Tooling:** Vitest, ESLint, Prettier, tsup');
+    expect(output).not.toContain('No stack documented yet');
+  });
+
+  it('stackTemplate falls back to default empty template when extractedStack is absent', () => {
+    const output = stackTemplate(baseCtx);
+    expect(output).toContain('No stack documented yet');
+    expect(output).toContain('Languages, frameworks, key libraries');
+  });
+
+  it('rootClaudeTemplate prepopulates project name', () => {
+    const output = rootClaudeTemplate(ctxWithStack);
+    expect(output).toContain('* **Project:** test-project');
+  });
+
+  it('rootClaudeTemplate falls back when project name is absent', () => {
+    const output = rootClaudeTemplate(baseCtx);
+    expect(output).toContain('<!-- Filled in during the onboarding interview. -->');
+  });
+
+  it('rootGeminiTemplate prepopulates project name', () => {
+    const output = rootGeminiTemplate(ctxWithStack);
+    expect(output).toContain('* **Project:** test-project');
+  });
+
+  it('rootCursorTemplate prepopulates project name', () => {
+    const output = rootCursorTemplate(ctxWithStack);
+    expect(output).toContain('* **Project:** test-project');
+  });
+});

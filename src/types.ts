@@ -16,6 +16,17 @@ export interface TemplateContext {
   ingestion?: 'local' | 'mcp' | 'paste' | 'skip' | 'repo' | 'repo+local' | 'repo+mcp' | 'repo+paste';
   /** Whether to generate per-folder CLAUDE.md files (full profile only; ignored for solo) */
   federated?: boolean;
+  /** Auto-extracted stack details from package.json */
+  extractedStack?: {
+    name?: string;
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+    hasTypeScript?: boolean;
+    hasVitest?: boolean;
+    hasJest?: boolean;
+    hasEslint?: boolean;
+    hasPrettier?: boolean;
+  };
 }
 
 /**

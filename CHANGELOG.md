@@ -1,5 +1,25 @@
 # Changelog
 
+## [3.2.0]  -  2026-05-20
+
+### What's new in v3.2 (UX & DX Focus)
+
+**Zero-Config Auto-Extraction**
+- The CLI dynamically scans your root `package.json` to auto-detect your project's technology stack (Runtime, Frameworks like Next.js/React/Express, Tooling like Vitest/Jest/ESLint/Prettier/Vite).
+- Pre-populates the generated `engineering/stack.md` with detected tech metadata, eliminating empty templates and boilerplates.
+- Automatically populates the project name under the `## Who we are` section across root instructions (`CLAUDE.md`, `GEMINI.md`, and `.cursor/rules/team-foundry.mdc`).
+- Extraction gracefully attempts `process.cwd()` (invocation path) and falls back to `targetDir` (destination path) to ensure flawless subdirectory scaffolding.
+
+**Progressive Ingestion Flow**
+- Replaced the overwhelming 8-option ingestion menu with a clean, progressive 3-option select:
+  1. **Standard Scan** (Reads README, package.json, and Git history)
+  2. **Supplement with external docs** (triggers a sub-menu to choose: Local Folder, Paste Content, or MCP Source)
+  3. **Start fresh** (Blank templates)
+- Reduces initial choice paralysis and onboarding friction significantly, while maintaining full backward-compatibility under the hood.
+
+**Beautiful Outro with GitHub Star CTA**
+- Added an aesthetically designed console box inside the onboarding `outro` flow to encourage community engagement and GitHub stars.
+
 ## [3.0.0]  -  2026-04-30
 
 ### What's new in v3
