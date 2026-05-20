@@ -16,7 +16,7 @@ export function stackTemplate(ctx: TemplateContext): string {
     if ('express' in deps) frameworks.push('Express');
     if ('koa' in deps) frameworks.push('Koa');
     if ('fastify' in deps) frameworks.push('Fastify');
-    if ('nest' in deps) frameworks.push('NestJS');
+    if ('@nestjs/core' in deps) frameworks.push('NestJS');
 
     const tools: string[] = [];
     if (ext.hasVitest) tools.push('Vitest');

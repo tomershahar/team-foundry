@@ -264,7 +264,6 @@ describe('questionCount()', () => {
   });
 
   it('returns 5 for solo, local ingestion', () => {
-    expect(questionCount('solo', undefined, 'local')).toBe(5);
     expect(questionCount('solo', undefined, 'repo+local')).toBe(5);
   });
 
@@ -274,7 +273,6 @@ describe('questionCount()', () => {
   });
 
   it('returns 6 for full-flat, local ingestion', () => {
-    expect(questionCount('full', false, 'local')).toBe(6);
     expect(questionCount('full', false, 'repo+local')).toBe(6);
   });
 
@@ -284,7 +282,6 @@ describe('questionCount()', () => {
   });
 
   it('returns 7 for full-federated, local ingestion', () => {
-    expect(questionCount('full', true, 'local')).toBe(7);
     expect(questionCount('full', true, 'repo+local')).toBe(7);
   });
 });

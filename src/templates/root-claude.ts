@@ -24,7 +24,7 @@ Read this file first. It tells you where to find everything and how to activate 
 
 ## Who we are
 
-${ctx.extractedStack?.name ? `* **Project:** ${ctx.extractedStack.name}\n` : '<!-- Filled in during the onboarding interview. -->'}
+${ctx.extractedStack?.name ? `* **Project:** ${ctx.extractedStack.name}` : '<!-- Filled in during the onboarding interview. -->'}
 
 ## Routing map
 

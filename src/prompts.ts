@@ -3,14 +3,19 @@ import type { ScaffoldOptions } from './types.js';
 
 type PromptResult = Omit<ScaffoldOptions, 'targetDir' | 'date'>;
 
-/** Returns the total number of questions for a given path through the prompt sequence. */
+/**
+ * Returns the total number of questions for a given path through the prompt sequence.
+ * Note: the UI no longer surfaces standalone 'local'/'mcp'/'paste' ingestion values
+ * (they're only reachable via the supplement sub-menu as 'repo+local' etc.), so
+ * hasLocalPath only triggers for 'repo+local' in practice.
+ */
 export function questionCount(
   profile: 'solo' | 'full' | undefined,
   federated: boolean | undefined,
   ingestion: string | undefined,
 ): number {
   if (profile === undefined) return 5; // estimate: profile unknown
-  const hasLocalPath = ingestion === 'local' || ingestion === 'repo+local';
+  const hasLocalPath = ingestion === 'repo+local';
   if (profile === 'solo') return hasLocalPath ? 5 : 4;
   // full profile
   const base = federated ? 6 : 5;
@@ -80,7 +85,7 @@ export async function runPrompts(): Promise<PromptResult> {
   });
   cancelIfNeeded(ingestionChoice);
 
-  let ingestion = ingestionChoice as string;
+  let ingestion = ingestionChoice as ScaffoldOptions['ingestion'] | 'supplement';
 
   if (ingestion === 'supplement') {
     const supplementChoice = await select({
@@ -92,7 +97,7 @@ export async function runPrompts(): Promise<PromptResult> {
       ],
     });
     cancelIfNeeded(supplementChoice);
-    ingestion = supplementChoice as string;
+    ingestion = supplementChoice as ScaffoldOptions['ingestion'];
   }
 
   let ingestionPath: string | undefined;
