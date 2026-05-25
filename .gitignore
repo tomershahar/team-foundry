@@ -6,11 +6,20 @@ dist/
 coverage/
 uat-mock-docs/
 
-# Internal working documents (superpowers plans, scratch notes)
+# Internal working documents (superpowers plans, scratch notes, PRDs)
 docs/superpowers/
+docs/internal/
+docs/ideas/
+docs/slack-integration-spec.md
+docs/.DS_Store
 # Public docs are tracked
 !docs/
-!docs/**
+!docs/how-it-works.md
+!docs/coach.md
+!docs/skills.md
+!docs/profiles.md
+!docs/migrate.md
+!docs/getting-buy-in.md
 tasks/
 new_features_idea.md
 SPEC*.md
