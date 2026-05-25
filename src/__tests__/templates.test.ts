@@ -45,7 +45,6 @@ const baseCtx: TemplateContext = {
 const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
 
 const allTemplates = [
-  ['root-claude', rootClaudeTemplate],
   ['root-gemini', rootGeminiTemplate],
   ['root-cursor', rootCursorTemplate],
   ['root-agents', rootAgentsTemplate],
@@ -130,8 +129,8 @@ describe('template stubs', () => {
     expect(output).toContain('2026-04-17');
   });
 
-  it('root-claude uses CLAUDE.md heading', () => {
-    expect(rootClaudeTemplate(baseCtx)).toContain('# CLAUDE.md');
+  it('root-claude starts with @AGENTS.md directive', () => {
+    expect(rootClaudeTemplate(baseCtx).trimStart()).toMatch(/^@AGENTS\.md/);
   });
 
   it('root-gemini uses GEMINI.md heading', () => {
@@ -211,11 +210,10 @@ describe('Ingestion path', () => {
 });
 
 describe('Iteration 3  -  root routing and coach', () => {
-  it('root-claude contains routing map table', () => {
+  it('root-claude does NOT contain routing map table (moved to AGENTS.md)', () => {
     const output = rootClaudeTemplate(baseCtx);
-    expect(output).toContain('## Routing map');
-    expect(output).toContain('team-foundry/product/outcomes.md');
-    expect(output).toContain('team-foundry/engineering/quality-bar.md');
+    expect(output).not.toContain('team-foundry/product/outcomes.md');
+    expect(output).not.toContain('team-foundry/engineering/quality-bar.md');
   });
 
   it('root-gemini contains routing map table', () => {
@@ -224,12 +222,10 @@ describe('Iteration 3  -  root routing and coach', () => {
     expect(output).toContain('team-foundry/product/outcomes.md');
   });
 
-  it('root-claude contains coach pointer with load instruction', () => {
+  it('root-claude does NOT contain coach trigger table (moved to AGENTS.md)', () => {
     const output = rootClaudeTemplate(baseCtx);
-    expect(output).toContain('.team-foundry/coach.md');
-    expect(output).toContain('Explicit mode');
-    expect(output).toContain('Scheduled mode');
-    expect(output).toContain('Inline mode');
+    expect(output).not.toContain('"let\'s do a team-foundry review"');
+    expect(output).not.toContain('Explicit mode');
   });
 
   it('root-gemini contains coach pointer with load instruction', () => {
@@ -239,10 +235,10 @@ describe('Iteration 3  -  root routing and coach', () => {
   });
 
   it('root files instruct AI to load coach.md before activating', () => {
-    for (const output of [rootClaudeTemplate(baseCtx), rootGeminiTemplate(baseCtx)]) {
-      expect(output).toContain('.team-foundry/coach.md');
-      expect(output).toContain('before activating any mode');
-    }
+    // root-claude is now a pointer; only root-gemini retains the coach instructions
+    const output = rootGeminiTemplate(baseCtx);
+    expect(output).toContain('.team-foundry/coach.md');
+    expect(output).toContain('before activating any mode');
   });
 
   it('coach contains three activation modes', () => {
@@ -423,20 +419,19 @@ describe('Iteration 4  -  onboarding interview', () => {
     expect(output).not.toContain('**Q10');
   });
 
-  it('root-claude trigger phrases include coach mode', () => {
-    expect(rootClaudeTemplate(baseCtx)).toContain('coach mode');
+  it('root-claude does NOT contain coach trigger phrases (moved to AGENTS.md)', () => {
+    expect(rootClaudeTemplate(baseCtx)).not.toContain('coach mode');
   });
 
   it('root-gemini trigger phrases include coach mode', () => {
     expect(rootGeminiTemplate(baseCtx)).toContain('coach mode');
   });
 
-  it('root files have user-facing trigger phrase table', () => {
-    for (const output of [rootClaudeTemplate(baseCtx), rootGeminiTemplate(baseCtx)]) {
-      expect(output).toContain("let's do a team-foundry review");
-      expect(output).toContain("what's missing from team-foundry");
-      expect(output).toContain('run the weekly team-foundry review');
-    }
+  it('root-gemini has user-facing trigger phrase table', () => {
+    const output = rootGeminiTemplate(baseCtx);
+    expect(output).toContain("let's do a team-foundry review");
+    expect(output).toContain("what's missing from team-foundry");
+    expect(output).toContain('run the weekly team-foundry review');
   });
 
   it('getting-started has user-facing trigger phrase table', () => {
@@ -2105,14 +2100,10 @@ describe('v3.2  -  Auto-extraction and template populating', () => {
     expect(output).toContain('Languages, frameworks, key libraries');
   });
 
-  it('rootClaudeTemplate prepopulates project name', () => {
+  it('rootClaudeTemplate is a pointer — does not embed project name', () => {
     const output = rootClaudeTemplate(ctxWithStack);
-    expect(output).toContain('* **Project:** test-project');
-  });
-
-  it('rootClaudeTemplate falls back when project name is absent', () => {
-    const output = rootClaudeTemplate(baseCtx);
-    expect(output).toContain('<!-- Filled in during the onboarding interview. -->');
+    // pointer file delegates to AGENTS.md; project name lives there
+    expect(output.trimStart()).toMatch(/^@AGENTS\.md/);
   });
 
   it('rootGeminiTemplate prepopulates project name', () => {
@@ -2123,5 +2114,42 @@ describe('v3.2  -  Auto-extraction and template populating', () => {
   it('rootCursorTemplate prepopulates project name', () => {
     const output = rootCursorTemplate(ctxWithStack);
     expect(output).toContain('* **Project:** test-project');
+  });
+});
+
+describe('rootClaudeTemplate() — pointer', () => {
+  const baseCtx: TemplateContext = {
+    profile: 'full',
+    tool: 'claude',
+    repoVisibility: 'internal',
+    date: '2026-05-25',
+    ingestion: 'skip',
+  };
+
+  it('starts with @AGENTS.md directive', () => {
+    const out = rootClaudeTemplate(baseCtx);
+    expect(out.trimStart()).toMatch(/^@AGENTS\.md/);
+  });
+
+  it('contains the [!IMPORTANT] callout', () => {
+    const out = rootClaudeTemplate(baseCtx);
+    expect(out).toContain('> [!IMPORTANT]');
+    expect(out).toContain('AGENTS.md');
+  });
+
+  it('contains the skill table', () => {
+    const out = rootClaudeTemplate(baseCtx);
+    expect(out).toContain('/team-foundry-intro');
+    expect(out).toContain('/team-foundry-review');
+  });
+
+  it('does NOT contain the routing map table', () => {
+    const out = rootClaudeTemplate(baseCtx);
+    expect(out).not.toContain('team-foundry/product/outcomes.md');
+  });
+
+  it('does NOT contain the coach trigger table', () => {
+    const out = rootClaudeTemplate(baseCtx);
+    expect(out).not.toContain('"let\'s do a team-foundry review"');
   });
 });

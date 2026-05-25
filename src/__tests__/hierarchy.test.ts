@@ -79,8 +79,8 @@ describe('v3 Task 3  -  hierarchy.md template', () => {
 });
 
 describe('v3 Task 4  -  hierarchy.md pointer in root files and coach', () => {
-  it('full profile CLAUDE.md references hierarchy.md', () => {
-    expect(rootClaudeTemplate(baseCtx)).toContain('hierarchy.md');
+  it('full profile CLAUDE.md is a pointer to AGENTS.md (hierarchy.md reference lives in AGENTS.md)', () => {
+    expect(rootClaudeTemplate(baseCtx).trimStart()).toMatch(/^@AGENTS\.md/);
   });
 
   it('full profile GEMINI.md references hierarchy.md', () => {
