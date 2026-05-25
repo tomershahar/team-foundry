@@ -6,8 +6,11 @@ dist/
 coverage/
 uat-mock-docs/
 
-# Internal working documents
-docs/
+# Internal working documents (superpowers plans, scratch notes)
+docs/superpowers/
+# Public docs are tracked
+!docs/
+!docs/**
 tasks/
 new_features_idea.md
 SPEC*.md

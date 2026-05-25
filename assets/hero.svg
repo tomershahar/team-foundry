@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+
+  <!-- Background -->
+  <rect width="720" height="240" fill="#ffffff"/>
+
+  <!-- Center: shared file -->
+  <rect x="290" y="80" width="140" height="80" rx="8" fill="#0f172a"/>
+  <text x="360" y="108" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">AGENTS.md</text>
+  <text x="360" y="124" text-anchor="middle" fill="#94a3b8" font-size="9">shared context</text>
+  <text x="360" y="139" text-anchor="middle" fill="#94a3b8" font-size="9">every tool reads this</text>
+
+  <!-- Left person: PM / Claude Code -->
+  <circle cx="100" cy="80" r="22" fill="#f1f5f9" stroke="#0f172a" stroke-width="1.5"/>
+  <text x="100" y="76" text-anchor="middle" fill="#0f172a" font-size="18">👤</text>
+  <text x="100" y="118" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="600">PM</text>
+  <rect x="58" y="128" width="84" height="22" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="100" y="143" text-anchor="middle" fill="#475569" font-size="9">Claude Code</text>
+
+  <!-- Right person: Engineer / Cursor -->
+  <circle cx="620" cy="80" r="22" fill="#f1f5f9" stroke="#0f172a" stroke-width="1.5"/>
+  <text x="620" y="76" text-anchor="middle" fill="#0f172a" font-size="18">👤</text>
+  <text x="620" y="118" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="600">Engineer</text>
+  <rect x="578" y="128" width="84" height="22" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="620" y="143" text-anchor="middle" fill="#475569" font-size="9">Cursor</text>
+
+  <!-- Bottom person: Designer / Gemini -->
+  <circle cx="360" cy="195" r="22" fill="#f1f5f9" stroke="#0f172a" stroke-width="1.5"/>
+  <text x="360" y="191" text-anchor="middle" fill="#0f172a" font-size="18">👤</text>
+  <text x="360" y="233" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="600">Designer · Gemini CLI</text>
+
+  <!-- Connector lines -->
+  <!-- PM to center -->
+  <line x1="122" y1="95" x2="288" y2="115" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <!-- Engineer to center -->
+  <line x1="598" y1="95" x2="432" y2="115" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <!-- Designer to center -->
+  <line x1="360" y1="173" x2="360" y2="162" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+  <!-- git pull label on PM line -->
+  <text x="195" y="98" text-anchor="middle" fill="#94a3b8" font-size="8">git pull</text>
+  <!-- git pull label on Engineer line -->
+  <text x="525" y="98" text-anchor="middle" fill="#94a3b8" font-size="8">git pull</text>
+
+</svg>
