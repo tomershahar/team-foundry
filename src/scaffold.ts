@@ -46,6 +46,16 @@ import {
   rulesTemplate,
 } from './templates/index.js';
 
+const MERGE_MARKER_START = '<!-- BEGIN TEAM-FOUNDRY SECTION -->';
+const MERGE_MARKER_END = '<!-- END TEAM-FOUNDRY SECTION -->';
+
+const ROOT_INSTRUCTION_PATHS = new Set([
+  'AGENTS.md',
+  'CLAUDE.md',
+  'GEMINI.md',
+  '.cursor/rules/team-foundry.mdc',
+]);
+
 interface FileEntry {
   /** Relative path within targetDir (e.g. "team-foundry/product/outcomes.md") */
   relativePath: string;
@@ -121,14 +131,68 @@ function rootEntries(tool: ScaffoldOptions['tool']): FileEntry[] {
   if (tool === 'cursor') {
     return [{ relativePath: '.cursor/rules/team-foundry.mdc', content: rootCursorTemplate }];
   }
+  if (tool === 'all') {
+    return [
+      { relativePath: 'CLAUDE.md', content: rootClaudeTemplate },
+      { relativePath: 'GEMINI.md', content: rootGeminiTemplate },
+      { relativePath: '.cursor/rules/team-foundry.mdc', content: rootCursorTemplate },
+    ];
+  }
   return [
     { relativePath: 'CLAUDE.md', content: rootClaudeTemplate },
     { relativePath: 'GEMINI.md', content: rootGeminiTemplate },
   ];
 }
 
+async function applyMergeDecision(
+  fullPath: string,
+  relativePath: string,
+  newContent: string,
+  decision: 'merge' | 'replace' | 'skip',
+  targetDir: string,
+): Promise<boolean> {
+  if (decision === 'skip') return false;
+
+  if (decision === 'replace') {
+    const filename = path.basename(relativePath);
+    const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    const backupsDir = path.join(targetDir, '.team-foundry', 'backups');
+    await fs.mkdir(backupsDir, { recursive: true });
+    let backupPath = path.join(backupsDir, `${filename}.${ts}.backup`);
+    let suffix = 2;
+    while (true) {
+      try {
+        await fs.access(backupPath);
+        backupPath = path.join(backupsDir, `${filename}.${ts}-${suffix++}.backup`);
+      } catch {
+        break;
+      }
+    }
+    const existing = await fs.readFile(fullPath, 'utf-8');
+    await fs.writeFile(backupPath, existing, 'utf-8');
+    await fs.writeFile(fullPath, newContent, 'utf-8');
+    return true;
+  }
+
+  // 'merge'
+  const existing = await fs.readFile(fullPath, 'utf-8');
+  const wrappedContent = `${MERGE_MARKER_START}\n${newContent}\n${MERGE_MARKER_END}`;
+  let merged: string;
+
+  if (existing.includes(MERGE_MARKER_START)) {
+    const startIdx = existing.indexOf(MERGE_MARKER_START);
+    const endIdx = existing.indexOf(MERGE_MARKER_END) + MERGE_MARKER_END.length;
+    merged = existing.slice(0, startIdx) + wrappedContent + existing.slice(endIdx);
+  } else {
+    merged = existing + '\n\n' + wrappedContent;
+  }
+
+  await fs.writeFile(fullPath, merged, 'utf-8');
+  return true;
+}
+
 export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
-  const { targetDir, profile, tool, repoVisibility, date, ingestionPath, ingestion, federated } = options;
+  const { targetDir, profile, tool, repoVisibility, date, ingestionPath, ingestion, federated, mergeDecisions } = options;
 
   let extractedStack: TemplateContext['extractedStack'] = undefined;
   
@@ -181,7 +245,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
     extractedStack
   };
 
-  const includesSkills = tool === 'claude' || tool === 'both';
+  const includesSkills = tool === 'claude' || tool === 'both' || tool === 'all';
 
   const entries: FileEntry[] = [
     ...ALWAYS_ROOT_ENTRIES,
@@ -197,17 +261,35 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
   for (const entry of entries) {
     const fullPath = path.join(targetDir, entry.relativePath);
     const dir = path.dirname(fullPath);
-
     await fs.mkdir(dir, { recursive: true });
 
-    // Skip if already exists  -  never overwrite without user confirmation
+    // Root instruction files: apply merge decision if file exists and mergeDecisions is provided
+    if (ROOT_INSTRUCTION_PATHS.has(entry.relativePath) && mergeDecisions !== undefined) {
+      let fileExists = false;
+      try {
+        await fs.access(fullPath);
+        fileExists = true;
+      } catch { /* not found */ }
+
+      if (fileExists) {
+        const decision = mergeDecisions[entry.relativePath] ?? 'merge';
+        const didWrite = await applyMergeDecision(
+          fullPath,
+          entry.relativePath,
+          entry.content(ctx),
+          decision,
+          targetDir,
+        );
+        if (didWrite) written.push(entry.relativePath);
+        continue;
+      }
+    }
+
+    // Default: skip if already exists
     try {
       await fs.access(fullPath);
-      // File exists  -  skip
-      continue;
-    } catch {
-      // File does not exist  -  write it
-    }
+      continue; // file exists — skip
+    } catch { /* not found — write it */ }
 
     await fs.writeFile(fullPath, entry.content(ctx), 'utf-8');
     written.push(entry.relativePath);
@@ -219,9 +301,9 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
 /** Returns the git add + commit command appropriate for the chosen tool. */
 export function gitAddCommand(tool: ScaffoldOptions['tool']): string {
   const toolFiles: string[] = [];
-  if (tool === 'claude' || tool === 'both') toolFiles.push('CLAUDE.md', '.claude/');
-  if (tool === 'gemini' || tool === 'both') toolFiles.push('GEMINI.md');
-  if (tool === 'cursor') toolFiles.push('.cursor/');
+  if (tool === 'claude' || tool === 'both' || tool === 'all') toolFiles.push('CLAUDE.md', '.claude/');
+  if (tool === 'gemini' || tool === 'both' || tool === 'all') toolFiles.push('GEMINI.md');
+  if (tool === 'cursor' || tool === 'all') toolFiles.push('.cursor/');
 
   const paths = [
     'team-foundry/',
@@ -247,13 +329,15 @@ export function expectedPaths(
         ? ['CLAUDE.md']
         : tool === 'cursor'
           ? ['.cursor/rules/team-foundry.mdc']
-          : ['GEMINI.md'];
+          : tool === 'all'
+            ? ['CLAUDE.md', 'GEMINI.md', '.cursor/rules/team-foundry.mdc']
+            : ['GEMINI.md'];
 
   const alwaysRoot = ALWAYS_ROOT_ENTRIES.map((e) => e.relativePath);
   const solo = SOLO_ENTRIES.map((e) => e.relativePath);
   const full = profile === 'full' ? FULL_ONLY_ENTRIES.map((e) => e.relativePath) : [];
   const fed = profile === 'full' && federated ? FEDERATED_ENTRIES.map((e) => e.relativePath) : [];
-  const skills = (tool === 'claude' || tool === 'both') ? CLAUDE_SKILLS_ENTRIES.map((e) => e.relativePath) : [];
+  const skills = (tool === 'claude' || tool === 'both' || tool === 'all') ? CLAUDE_SKILLS_ENTRIES.map((e) => e.relativePath) : [];
 
   return [...alwaysRoot, ...roots, ...solo, ...full, ...fed, ...skills];
 }

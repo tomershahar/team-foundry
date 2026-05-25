@@ -452,4 +452,138 @@ describe('gitAddCommand()', () => {
   it('ends with a git commit command', () => {
     expect(gitAddCommand('claude')).toContain('git commit');
   });
+
+  it('gitAddCommand includes all tool files for tool=all', () => {
+    const cmd = gitAddCommand('all');
+    expect(cmd).toContain('CLAUDE.md');
+    expect(cmd).toContain('GEMINI.md');
+    expect(cmd).toContain('.cursor/');
+    expect(cmd).toContain('.claude/');
+  });
+});
+
+describe('scaffold() — tool=all', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => { tmpDir = await makeTempDir(); });
+  afterEach(async () => { await cleanup(tmpDir); });
+
+  it('tool=all writes CLAUDE.md, GEMINI.md, and .cursor/rules/team-foundry.mdc', async () => {
+    await scaffold({ ...baseOptions, tool: 'all', targetDir: tmpDir });
+    for (const relPath of ['CLAUDE.md', 'GEMINI.md', '.cursor/rules/team-foundry.mdc']) {
+      const exists = await fs.access(path.join(tmpDir, relPath)).then(() => true).catch(() => false);
+      expect(exists, `Expected ${relPath} to exist for tool=all`).toBe(true);
+    }
+  });
+
+  it('tool=all writes Claude Code skills', async () => {
+    await scaffold({ ...baseOptions, tool: 'all', targetDir: tmpDir });
+    const exists = await fs.access(path.join(tmpDir, '.claude/skills/team-foundry-intro.md'))
+      .then(() => true).catch(() => false);
+    expect(exists).toBe(true);
+  });
+
+  it('expectedPaths for tool=all includes all pointer files and skills', () => {
+    const paths = expectedPaths('full', 'all');
+    expect(paths).toContain('CLAUDE.md');
+    expect(paths).toContain('GEMINI.md');
+    expect(paths).toContain('.cursor/rules/team-foundry.mdc');
+    expect(paths).toContain('.claude/skills/team-foundry-intro.md');
+  });
+});
+
+describe('scaffold() — mergeDecisions', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => { tmpDir = await makeTempDir(); });
+  afterEach(async () => { await cleanup(tmpDir); });
+
+  it('merge: preserves existing content above markers and appends team-foundry block', async () => {
+    const claudePath = path.join(tmpDir, 'CLAUDE.md');
+    await fs.writeFile(claudePath, '# My existing CLAUDE.md\n\nSome custom rules here.', 'utf-8');
+
+    await scaffold({
+      ...baseOptions,
+      targetDir: tmpDir,
+      mergeDecisions: { 'CLAUDE.md': 'merge' },
+    });
+
+    const content = await fs.readFile(claudePath, 'utf-8');
+    expect(content).toContain('# My existing CLAUDE.md');
+    expect(content).toContain('Some custom rules here.');
+    expect(content).toContain('<!-- BEGIN TEAM-FOUNDRY SECTION -->');
+    expect(content).toContain('<!-- END TEAM-FOUNDRY SECTION -->');
+    expect(content).toContain('@AGENTS.md');
+  });
+
+  it('merge: second merge replaces the team-foundry block, not appends', async () => {
+    const claudePath = path.join(tmpDir, 'CLAUDE.md');
+    const existing = `# My CLAUDE.md\n\n<!-- BEGIN TEAM-FOUNDRY SECTION -->\nold content\n<!-- END TEAM-FOUNDRY SECTION -->`;
+    await fs.writeFile(claudePath, existing, 'utf-8');
+
+    await scaffold({
+      ...baseOptions,
+      targetDir: tmpDir,
+      mergeDecisions: { 'CLAUDE.md': 'merge' },
+    });
+
+    const content = await fs.readFile(claudePath, 'utf-8');
+    expect(content).not.toContain('old content');
+    expect(content).toContain('@AGENTS.md');
+    expect(content.split('<!-- BEGIN TEAM-FOUNDRY SECTION -->').length).toBe(2);
+  });
+
+  it('replace: backs up existing file to .team-foundry/backups/ and writes fresh', async () => {
+    const claudePath = path.join(tmpDir, 'CLAUDE.md');
+    await fs.writeFile(claudePath, 'original content', 'utf-8');
+
+    await scaffold({
+      ...baseOptions,
+      targetDir: tmpDir,
+      mergeDecisions: { 'CLAUDE.md': 'replace' },
+    });
+
+    const content = await fs.readFile(claudePath, 'utf-8');
+    expect(content).not.toBe('original content');
+    expect(content).toContain('@AGENTS.md');
+
+    const backupsDir = path.join(tmpDir, '.team-foundry', 'backups');
+    const backups = await fs.readdir(backupsDir);
+    expect(backups.some((f) => f.startsWith('CLAUDE.md') && f.endsWith('.backup'))).toBe(true);
+
+    const backupContent = await fs.readFile(path.join(backupsDir, backups[0]), 'utf-8');
+    expect(backupContent).toBe('original content');
+  });
+
+  it('skip: leaves existing file untouched, writes all other files', async () => {
+    const claudePath = path.join(tmpDir, 'CLAUDE.md');
+    await fs.writeFile(claudePath, 'do not touch', 'utf-8');
+
+    await scaffold({
+      ...baseOptions,
+      targetDir: tmpDir,
+      mergeDecisions: { 'CLAUDE.md': 'skip' },
+    });
+
+    const content = await fs.readFile(claudePath, 'utf-8');
+    expect(content).toBe('do not touch');
+
+    const agentsExists = await fs.access(path.join(tmpDir, 'AGENTS.md')).then(() => true).catch(() => false);
+    expect(agentsExists).toBe(true);
+  });
+
+  it('missing mergeDecisions key defaults to merge', async () => {
+    const claudePath = path.join(tmpDir, 'CLAUDE.md');
+    await fs.writeFile(claudePath, '# Existing', 'utf-8');
+
+    await scaffold({
+      ...baseOptions,
+      targetDir: tmpDir,
+      mergeDecisions: {},
+    });
+
+    const content = await fs.readFile(claudePath, 'utf-8');
+    expect(content).toContain('# Existing');
+    expect(content).toContain('<!-- BEGIN TEAM-FOUNDRY SECTION -->');
+  });
 });
