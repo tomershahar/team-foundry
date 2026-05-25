@@ -6,6 +6,8 @@ import { scaffold, gitAddCommand } from './scaffold.js';
 import { writeGitignore } from './gitignore.js';
 import { runStatus } from './status.js';
 import { runMigrate } from './migrate.js';
+import { detectExistingFiles } from './detect.js';
+import { runMergePrompts } from './prompts.js';
 
 function groupByFolder(paths: string[]): Record<string, string[]> {
   const groups: Record<string, string[]> = {};
@@ -23,6 +25,7 @@ const TOOL_LABEL: Record<string, string> = {
   gemini: 'Gemini CLI',
   cursor: 'Cursor',
   both: 'Claude Code or Gemini CLI',
+  all: 'Claude Code, Gemini CLI, or Cursor',
 };
 
 const PASTE_PLACEHOLDER = `# Paste your existing docs here
@@ -130,7 +133,13 @@ async function main(): Promise<void> {
   const answers = await runPrompts();
   const date = new Date().toISOString().split('T')[0];
 
-  const writtenPaths = await scaffold({ ...answers, targetDir, date });
+  // Detect existing root instruction files and collect per-file merge decisions
+  const detectedFiles = await detectExistingFiles(targetDir);
+  const mergeDecisions = detectedFiles.length > 0
+    ? await runMergePrompts(detectedFiles)
+    : {};
+
+  const writtenPaths = await scaffold({ ...answers, targetDir, date, mergeDecisions });
   await writeGitignore(targetDir);
 
   if (answers.ingestion === 'paste' || answers.ingestion === 'repo+paste') {
