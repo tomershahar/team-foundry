@@ -181,8 +181,13 @@ async function applyMergeDecision(
 
   if (existing.includes(MERGE_MARKER_START)) {
     const startIdx = existing.indexOf(MERGE_MARKER_START);
-    const endIdx = existing.indexOf(MERGE_MARKER_END) + MERGE_MARKER_END.length;
-    merged = existing.slice(0, startIdx) + wrappedContent + existing.slice(endIdx);
+    const endMarkerIdx = existing.indexOf(MERGE_MARKER_END);
+    if (endMarkerIdx === -1) {
+      // Marker block is incomplete — treat as no block and append
+      merged = existing + '\n\n' + wrappedContent;
+    } else {
+      merged = existing.slice(0, startIdx) + wrappedContent + existing.slice(endMarkerIdx + MERGE_MARKER_END.length);
+    }
   } else {
     merged = existing + '\n\n' + wrappedContent;
   }

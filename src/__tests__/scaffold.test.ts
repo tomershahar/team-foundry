@@ -586,4 +586,55 @@ describe('scaffold() — mergeDecisions', () => {
     expect(content).toContain('# Existing');
     expect(content).toContain('<!-- BEGIN TEAM-FOUNDRY SECTION -->');
   });
+
+  it('merge: falls back to append when END marker is missing (asymmetric block)', async () => {
+    const claudePath = path.join(tmpDir, 'CLAUDE.md');
+    // START marker present but END marker missing — simulates manual edit corruption
+    await fs.writeFile(claudePath, `# My CLAUDE.md\n\n<!-- BEGIN TEAM-FOUNDRY SECTION -->\ntruncated content`, 'utf-8');
+
+    await scaffold({
+      ...baseOptions,
+      targetDir: tmpDir,
+      mergeDecisions: { 'CLAUDE.md': 'merge' },
+    });
+
+    const content = await fs.readFile(claudePath, 'utf-8');
+    // Should append, not corrupt
+    expect(content).toContain('# My CLAUDE.md');
+    expect(content).toContain('@AGENTS.md');
+    // Should have exactly one END marker
+    expect(content.includes('<!-- END TEAM-FOUNDRY SECTION -->')).toBe(true);
+  });
+
+  it('tool=all: all three pointer files get merge treatment when they pre-exist', async () => {
+    // Pre-seed all three pointer files
+    await fs.writeFile(path.join(tmpDir, 'CLAUDE.md'), '# Existing Claude', 'utf-8');
+    await fs.writeFile(path.join(tmpDir, 'GEMINI.md'), '# Existing Gemini', 'utf-8');
+    const cursorDir = path.join(tmpDir, '.cursor', 'rules');
+    await fs.mkdir(cursorDir, { recursive: true });
+    await fs.writeFile(path.join(cursorDir, 'team-foundry.mdc'), '# Existing Cursor', 'utf-8');
+
+    await scaffold({
+      ...baseOptions,
+      tool: 'all',
+      targetDir: tmpDir,
+      mergeDecisions: {
+        'CLAUDE.md': 'merge',
+        'GEMINI.md': 'merge',
+        '.cursor/rules/team-foundry.mdc': 'merge',
+      },
+    });
+
+    // All three should contain the merge markers
+    const claudeContent = await fs.readFile(path.join(tmpDir, 'CLAUDE.md'), 'utf-8');
+    const geminiContent = await fs.readFile(path.join(tmpDir, 'GEMINI.md'), 'utf-8');
+    const cursorContent = await fs.readFile(path.join(cursorDir, 'team-foundry.mdc'), 'utf-8');
+
+    expect(claudeContent).toContain('# Existing Claude');
+    expect(claudeContent).toContain('<!-- BEGIN TEAM-FOUNDRY SECTION -->');
+    expect(geminiContent).toContain('# Existing Gemini');
+    expect(geminiContent).toContain('<!-- BEGIN TEAM-FOUNDRY SECTION -->');
+    expect(cursorContent).toContain('# Existing Cursor');
+    expect(cursorContent).toContain('<!-- BEGIN TEAM-FOUNDRY SECTION -->');
+  });
 });
