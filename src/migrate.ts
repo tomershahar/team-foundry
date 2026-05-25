@@ -1,10 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { confirm, log, outro } from '@clack/prompts';
-import { hierarchyTemplate, hooksTemplate, rulesTemplate } from './templates/index.js';
+import { hierarchyTemplate, hooksTemplate, rulesTemplate, rootClaudeTemplate, rootGeminiTemplate, rootCursorTemplate, rootAgentsTemplate } from './templates/index.js';
 import type { TemplateContext } from './types.js';
 
-export type MigrateState = 'none' | 'v2' | 'v3';
+export type MigrateState = 'none' | 'v2' | 'v3' | 'v3.3';
 
 /** Infers which AI tool was used to scaffold by checking for known root files. */
 export async function detectTool(targetDir: string): Promise<TemplateContext['tool']> {
@@ -88,7 +88,90 @@ const DATA_HEAVY_FILES = [
   'team-foundry/product/now-next-later.md',
 ];
 
+/**
+ * Upgrades a v3.x repo to the v3.3 pointer architecture:
+ * - Backs up and replaces CLAUDE.md, GEMINI.md, .cursor/rules/team-foundry.mdc with pointer templates.
+ * - If AGENTS.md is thin (< 40 lines), backs up and replaces with the new primary template.
+ * Does not prompt — caller is responsible for confirming before calling.
+ */
+export async function migrateToV33(targetDir: string): Promise<void> {
+  const date = new Date().toISOString().split('T')[0];
+  const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  const backupsDir = path.join(targetDir, '.team-foundry', 'backups');
+  await fs.mkdir(backupsDir, { recursive: true });
+
+  const tool = await detectTool(targetDir);
+
+  // Minimal context for template rendering — 'full' is safe default for migration
+  const ctx: TemplateContext = {
+    profile: 'full',
+    tool,
+    repoVisibility: 'internal',
+    date,
+    federated: false,
+    ingestion: 'skip',
+  };
+
+  // Pointer files to back up and replace
+  const pointerCandidates: Array<{ relPath: string; template: (c: TemplateContext) => string }> = [
+    { relPath: 'CLAUDE.md', template: rootClaudeTemplate },
+    { relPath: 'GEMINI.md', template: rootGeminiTemplate },
+    { relPath: '.cursor/rules/team-foundry.mdc', template: rootCursorTemplate },
+  ];
+
+  for (const { relPath, template } of pointerCandidates) {
+    const fullPath = path.join(targetDir, relPath);
+    try {
+      const existing = await fs.readFile(fullPath, 'utf-8');
+      const backupPath = path.join(backupsDir, `${path.basename(relPath)}.${ts}.backup`);
+      await fs.writeFile(backupPath, existing, 'utf-8');
+      await fs.writeFile(fullPath, template(ctx), 'utf-8');
+      log.info(`  ✓  Upgraded ${relPath}  →  backup saved to .team-foundry/backups/`);
+    } catch {
+      // file doesn't exist — skip silently
+    }
+  }
+
+  // Upgrade AGENTS.md if it's thin (heuristic for v3.2 pointer: < 40 lines)
+  const agentsPath = path.join(targetDir, 'AGENTS.md');
+  try {
+    const existing = await fs.readFile(agentsPath, 'utf-8');
+    if (existing.split('\n').length < 40) {
+      const backupPath = path.join(backupsDir, `AGENTS.md.${ts}.backup`);
+      await fs.writeFile(backupPath, existing, 'utf-8');
+      await fs.writeFile(agentsPath, rootAgentsTemplate(ctx), 'utf-8');
+      log.info(`  ✓  Upgraded AGENTS.md to primary format  →  backup saved to .team-foundry/backups/`);
+    } else {
+      log.info(`  ○  AGENTS.md looks like primary already (≥ 40 lines) — skipped`);
+    }
+  } catch {
+    // no AGENTS.md — skip
+  }
+}
+
 export async function runMigrate(targetDir: string): Promise<void> {
+  // v3.3 migration: pointer architecture
+  if (process.argv.includes('--to') && process.argv[process.argv.indexOf('--to') + 1] === 'v3.3') {
+    const state = await detectMigrateState(targetDir);
+    if (state === 'none') {
+      log.error('No team-foundry found. Run npx create-team-foundry to set up first.');
+      process.exit(1);
+    }
+    log.info(
+      'Upgrading to v3.3 pointer architecture.\n\n' +
+      'Changes:\n' +
+      '  • CLAUDE.md, GEMINI.md, .cursor rules → thin pointer files\n' +
+      '  • AGENTS.md → primary context file (if currently thin)\n\n' +
+      'All replaced files are backed up to .team-foundry/backups/ first.',
+    );
+    const ok = await confirm({ message: 'Proceed?' });
+    if (!ok) { outro('Migration cancelled.'); return; }
+
+    await migrateToV33(targetDir);
+    outro('v3.3 migration complete. Review the changes and commit when ready.');
+    return;
+  }
+
   const state = await detectMigrateState(targetDir);
 
   if (state === 'none') {

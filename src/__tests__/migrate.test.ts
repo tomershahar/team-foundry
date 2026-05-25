@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import { detectMigrateState, detectTool, writeIfAbsent, appendFrontmatterFields, runMigrate } from '../migrate.js';
+import { detectMigrateState, detectTool, writeIfAbsent, appendFrontmatterFields, runMigrate, migrateToV33 } from '../migrate.js';
 
 vi.mock('@clack/prompts', () => ({
   confirm: vi.fn(),
@@ -268,5 +268,83 @@ describe('v3  -  migrate: runMigrate orchestration', () => {
     await runMigrate(tmpDir);
     const content = await fs.readFile(path.join(tmpDir, '.team-foundry', 'hierarchy.md'), 'utf-8');
     expect(content).toBe(existingHierarchy);
+  });
+});
+
+describe('migrateToV33()', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => {
+    tmpDir = await makeTempDir();
+    // Seed a minimal v3 team-foundry repo
+    await fs.mkdir(path.join(tmpDir, '.team-foundry'), { recursive: true });
+    await fs.writeFile(path.join(tmpDir, '.team-foundry', 'hierarchy.md'), 'hierarchy', 'utf-8');
+    await fs.mkdir(path.join(tmpDir, 'team-foundry'), { recursive: true });
+  });
+  afterEach(async () => { await cleanup(tmpDir); });
+
+  it('backs up CLAUDE.md to .team-foundry/backups/ before replacing', async () => {
+    await fs.writeFile(path.join(tmpDir, 'CLAUDE.md'), 'old full content', 'utf-8');
+
+    await migrateToV33(tmpDir);
+
+    const backupsDir = path.join(tmpDir, '.team-foundry', 'backups');
+    const backups = await fs.readdir(backupsDir);
+    expect(backups.some((f) => f.startsWith('CLAUDE.md') && f.endsWith('.backup'))).toBe(true);
+  });
+
+  it('writes new pointer CLAUDE.md with @AGENTS.md directive', async () => {
+    await fs.writeFile(path.join(tmpDir, 'CLAUDE.md'), 'old full content', 'utf-8');
+
+    await migrateToV33(tmpDir);
+
+    const content = await fs.readFile(path.join(tmpDir, 'CLAUDE.md'), 'utf-8');
+    expect(content).toContain('@AGENTS.md');
+    expect(content).not.toBe('old full content');
+  });
+
+  it('upgrades thin AGENTS.md (< 40 lines) to primary format', async () => {
+    const thin = 'thin agents content\n'.repeat(5); // 5 lines — under threshold
+    await fs.writeFile(path.join(tmpDir, 'AGENTS.md'), thin, 'utf-8');
+
+    await migrateToV33(tmpDir);
+
+    const content = await fs.readFile(path.join(tmpDir, 'AGENTS.md'), 'utf-8');
+    expect(content).toContain('Where to find context'); // routing map heading
+    expect(content.split('\n').length).toBeGreaterThan(40);
+  });
+
+  it('does NOT replace AGENTS.md that already looks like primary (>= 40 lines)', async () => {
+    const large = 'line\n'.repeat(50); // 50 lines
+    await fs.writeFile(path.join(tmpDir, 'AGENTS.md'), large, 'utf-8');
+
+    await migrateToV33(tmpDir);
+
+    const content = await fs.readFile(path.join(tmpDir, 'AGENTS.md'), 'utf-8');
+    expect(content).toBe(large);
+  });
+
+  it('skips GEMINI.md if not present (no error)', async () => {
+    // Only CLAUDE.md present
+    await fs.writeFile(path.join(tmpDir, 'CLAUDE.md'), 'old', 'utf-8');
+
+    await expect(migrateToV33(tmpDir)).resolves.not.toThrow();
+
+    const geminiExists = await fs.access(path.join(tmpDir, 'GEMINI.md')).then(() => true).catch(() => false);
+    expect(geminiExists).toBe(false);
+  });
+
+  it('backs up and replaces GEMINI.md if present', async () => {
+    await fs.writeFile(path.join(tmpDir, 'GEMINI.md'), 'old gemini', 'utf-8');
+
+    await migrateToV33(tmpDir);
+
+    const content = await fs.readFile(path.join(tmpDir, 'GEMINI.md'), 'utf-8');
+    expect(content).toContain('AGENTS.md');
+    expect(content).not.toBe('old gemini');
+
+    const backupsDir = path.join(tmpDir, '.team-foundry', 'backups');
+    const backups = await fs.readdir(backupsDir);
+    expect(backups.some((f) => f.startsWith('GEMINI.md'))).toBe(true);
   });
 });
