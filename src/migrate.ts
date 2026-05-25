@@ -127,7 +127,8 @@ export async function migrateToV33(targetDir: string): Promise<void> {
       await fs.writeFile(backupPath, existing, 'utf-8');
       await fs.writeFile(fullPath, template(ctx), 'utf-8');
       log.info(`  ✓  Upgraded ${relPath}  →  backup saved to .team-foundry/backups/`);
-    } catch {
+    } catch (err: unknown) {
+      if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
       // file doesn't exist — skip silently
     }
   }
@@ -144,7 +145,8 @@ export async function migrateToV33(targetDir: string): Promise<void> {
     } else {
       log.info(`  ○  AGENTS.md looks like primary already (≥ 40 lines) — skipped`);
     }
-  } catch {
+  } catch (err: unknown) {
+    if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
     // no AGENTS.md — skip
   }
 }
