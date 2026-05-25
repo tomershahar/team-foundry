@@ -15,6 +15,36 @@ interface FileStatus {
   health: 'ok' | 'stale' | 'missing' | 'empty';
 }
 
+export interface PointerFileStatus {
+  relativePath: string;
+  exists: boolean;
+  /** true if file exists but does not contain the string 'AGENTS.md' */
+  drifted: boolean;
+}
+
+const POINTER_FILE_PATHS = [
+  'CLAUDE.md',
+  'GEMINI.md',
+  '.cursor/rules/team-foundry.mdc',
+];
+
+export async function checkPointerFiles(targetDir: string): Promise<PointerFileStatus[]> {
+  const results: PointerFileStatus[] = [];
+  for (const relPath of POINTER_FILE_PATHS) {
+    try {
+      const content = await fs.readFile(path.join(targetDir, relPath), 'utf-8');
+      results.push({
+        relativePath: relPath,
+        exists: true,
+        drifted: !content.includes('AGENTS.md'),
+      });
+    } catch {
+      results.push({ relativePath: relPath, exists: false, drifted: false });
+    }
+  }
+  return results;
+}
+
 // Matches SOLO_ENTRIES in scaffold.ts (excluding root + coach which have no owner field)
 const SOLO_FILES = [
   'team-foundry/product/north-star.md',
@@ -258,4 +288,28 @@ export async function runStatus(targetDir: string): Promise<void> {
   if (noOwner.length > 0) {
     console.log(`  ${noOwner.length} file(s) have no owner set. Add \`owner: <name>\` to their frontmatter.\n`);
   }
+
+  // Pointer files section
+  const pointerStatuses = await checkPointerFiles(targetDir);
+  const pointerLines = [
+    '',
+    'Pointer files (each should reference AGENTS.md):',
+    '',
+  ];
+  for (const p of pointerStatuses) {
+    let symbol: string;
+    let label: string;
+    if (!p.exists) {
+      symbol = '○';
+      label = 'not present';
+    } else if (p.drifted) {
+      symbol = '⚠';
+      label = 'drifted / out of sync — AGENTS.md reference missing';
+    } else {
+      symbol = '✓';
+      label = 'ok';
+    }
+    pointerLines.push(`  ${symbol}  ${p.relativePath.padEnd(40)} ${label}`);
+  }
+  console.log(pointerLines.join('\n'));
 }

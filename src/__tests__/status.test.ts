@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import { runStatus, analyzeFile, parseFrontmatter, daysSince } from '../status.js';
+import { runStatus, analyzeFile, parseFrontmatter, daysSince, checkPointerFiles } from '../status.js';
 
 async function makeTempDir(): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), 'tf-status-test-'));
@@ -247,5 +247,53 @@ no assumption linked here
 
     expect(lines.some(l => l.includes('Link Integrity'))).toBe(true);
     expect(lines.some(l => l.includes('Orphan feature'))).toBe(true);
+  });
+});
+
+describe('checkPointerFiles()', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => { tmpDir = await makeTempDir(); });
+  afterEach(async () => { await cleanup(tmpDir); });
+
+  it('returns all three pointer files as missing when none exist', async () => {
+    const results = await checkPointerFiles(tmpDir);
+    expect(results).toHaveLength(3);
+    expect(results.every((r) => !r.exists)).toBe(true);
+    expect(results.every((r) => !r.drifted)).toBe(true);
+  });
+
+  it('marks existing file with AGENTS.md reference as ok (not drifted)', async () => {
+    await fs.writeFile(path.join(tmpDir, 'CLAUDE.md'), '@AGENTS.md\nsome content', 'utf-8');
+    const results = await checkPointerFiles(tmpDir);
+    const claude = results.find((r) => r.relativePath === 'CLAUDE.md')!;
+    expect(claude.exists).toBe(true);
+    expect(claude.drifted).toBe(false);
+  });
+
+  it('marks existing file without AGENTS.md reference as drifted', async () => {
+    await fs.writeFile(path.join(tmpDir, 'CLAUDE.md'), '# Old CLAUDE.md\nno reference here', 'utf-8');
+    const results = await checkPointerFiles(tmpDir);
+    const claude = results.find((r) => r.relativePath === 'CLAUDE.md')!;
+    expect(claude.exists).toBe(true);
+    expect(claude.drifted).toBe(true);
+  });
+
+  it('checks GEMINI.md for AGENTS.md reference', async () => {
+    await fs.writeFile(path.join(tmpDir, 'GEMINI.md'), 'read AGENTS.md', 'utf-8');
+    const results = await checkPointerFiles(tmpDir);
+    const gemini = results.find((r) => r.relativePath === 'GEMINI.md')!;
+    expect(gemini.exists).toBe(true);
+    expect(gemini.drifted).toBe(false);
+  });
+
+  it('checks .cursor/rules/team-foundry.mdc for AGENTS.md reference', async () => {
+    const dir = path.join(tmpDir, '.cursor', 'rules');
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(path.join(dir, 'team-foundry.mdc'), 'read AGENTS.md always', 'utf-8');
+    const results = await checkPointerFiles(tmpDir);
+    const cursor = results.find((r) => r.relativePath === '.cursor/rules/team-foundry.mdc')!;
+    expect(cursor.exists).toBe(true);
+    expect(cursor.drifted).toBe(false);
   });
 });
