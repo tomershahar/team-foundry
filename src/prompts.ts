@@ -135,6 +135,7 @@ export async function runPrompts(): Promise<PromptResult> {
 export async function runMergePrompts(
   detected: DetectedFile[],
 ): Promise<Record<string, 'merge' | 'replace' | 'skip'>> {
+  if (detected.length === 0) return {};
   const decisions: Record<string, 'merge' | 'replace' | 'skip'> = {};
 
   for (const file of detected) {

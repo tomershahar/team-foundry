@@ -288,6 +288,10 @@ describe('questionCount()', () => {
 });
 
 describe('runMergePrompts export', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('is exported as a function', () => {
     expect(typeof runMergePrompts).toBe('function');
   });
@@ -299,5 +303,24 @@ describe('runMergePrompts export', () => {
     return result.then((decisions) => {
       expect(decisions).toEqual({});
     });
+  });
+
+  it('returns decisions for each detected file when multiple files provided', async () => {
+    // Mock select to return 'merge' for first call and 'skip' for second call
+    let callCount = 0;
+    vi.mocked(select).mockImplementation(async () => {
+      callCount++;
+      return callCount === 1 ? 'merge' : 'skip';
+    });
+
+    const detected: DetectedFile[] = [
+      { relativePath: 'CLAUDE.md', lineCount: 10 },
+      { relativePath: 'GEMINI.md', lineCount: 5 },
+    ];
+
+    const result = await runMergePrompts(detected);
+
+    expect(result['CLAUDE.md']).toBe('merge');
+    expect(result['GEMINI.md']).toBe('skip');
   });
 });
