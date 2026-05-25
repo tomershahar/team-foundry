@@ -10,7 +10,8 @@ vi.mock('@clack/prompts', () => ({
 }));
 
 import { intro, select, text } from '@clack/prompts';
-import { runPrompts, questionCount } from '../prompts.js';
+import { runPrompts, questionCount, runMergePrompts } from '../prompts.js';
+import type { DetectedFile } from '../detect.js';
 
 describe('runPrompts()', () => {
   beforeEach(() => {
@@ -283,5 +284,20 @@ describe('questionCount()', () => {
 
   it('returns 7 for full-federated, local ingestion', () => {
     expect(questionCount('full', true, 'repo+local')).toBe(7);
+  });
+});
+
+describe('runMergePrompts export', () => {
+  it('is exported as a function', () => {
+    expect(typeof runMergePrompts).toBe('function');
+  });
+
+  it('returns a Promise', () => {
+    // Call with empty array — no prompts will be shown, returns immediately
+    const result = runMergePrompts([]);
+    expect(result).toBeInstanceOf(Promise);
+    return result.then((decisions) => {
+      expect(decisions).toEqual({});
+    });
   });
 });

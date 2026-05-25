@@ -1,5 +1,6 @@
 import { intro, select, text, outro, isCancel } from '@clack/prompts';
 import type { ScaffoldOptions } from './types.js';
+import type { DetectedFile } from './detect.js';
 
 type PromptResult = Omit<ScaffoldOptions, 'targetDir' | 'date'>;
 
@@ -35,6 +36,10 @@ export async function runPrompts(): Promise<PromptResult> {
   const tool = await select({
     message: 'Which AI tool does your team use?',
     options: [
+      {
+        value: 'all',
+        label: 'All tools (Recommended — generates pointers for Claude Code, Gemini CLI, Cursor, and AGENTS.md)',
+      },
       { value: 'claude', label: 'Claude Code' },
       { value: 'gemini', label: 'Gemini CLI' },
       { value: 'cursor', label: 'Cursor' },
@@ -121,4 +126,38 @@ export async function runPrompts(): Promise<PromptResult> {
     ingestionPath,
     federated,
   };
+}
+
+/**
+ * For each detected existing root instruction file, asks the user whether to
+ * merge, replace, or skip. Returns a decisions map keyed by relative path.
+ */
+export async function runMergePrompts(
+  detected: DetectedFile[],
+): Promise<Record<string, 'merge' | 'replace' | 'skip'>> {
+  const decisions: Record<string, 'merge' | 'replace' | 'skip'> = {};
+
+  for (const file of detected) {
+    const choice = await select({
+      message: `Found existing ${file.relativePath} (${file.lineCount} lines). What should team-foundry do?`,
+      options: [
+        {
+          value: 'merge',
+          label: 'Merge — append team-foundry section, preserve existing content (recommended)',
+        },
+        {
+          value: 'replace',
+          label: 'Replace — back up to .team-foundry/backups/, write fresh',
+        },
+        {
+          value: 'skip',
+          label: 'Skip — leave it alone, scaffold everything else',
+        },
+      ],
+    });
+    cancelIfNeeded(choice);
+    decisions[file.relativePath] = choice as 'merge' | 'replace' | 'skip';
+  }
+
+  return decisions;
 }
