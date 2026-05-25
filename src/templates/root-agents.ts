@@ -3,7 +3,7 @@ import type { TemplateContext } from '../types.js';
 export function rootAgentsTemplate(ctx: TemplateContext): string {
   const isSolo = ctx.profile === 'solo';
   return `---
-purpose: Entry point for AI agents  -  routes to team-foundry context files
+purpose: Entry point for AI agents — routes to team-foundry context files and contains the full coach section
 read_when: always
 last_updated: ${ctx.date}
 owner:
@@ -11,7 +11,7 @@ owner:
 
 # Agents
 
-This repo uses **team-foundry**  -  structured files that give AI tools real team context.
+This repo uses **team-foundry** — structured files that give AI tools real team context.
 Use this file to orient yourself and find the right files before answering.
 
 ## Project overview
@@ -50,22 +50,38 @@ See \`team-foundry/engineering/quality-bar.md\` for the quality bar, bug triage 
 
 ## Areas of caution
 
-- **Silent edits**  -  the team-foundry coach never writes files without the user's explicit confirmation. Do not write to \`team-foundry/\` files without confirmation.
-- **Private folder**  -  \`team-foundry/private/\` is gitignored. Do not read from or write to it.${isSolo ? '' : `
-- **ADR commitments**  -  architecture decisions in \`team-foundry/engineering/decisions/\` represent committed choices. Treat them as constraints unless the user explicitly opens a discussion.`}
-
-## Claude Code skills
-
-If you are running as Claude Code, pre-built skills are available in \`.claude/skills/\`:
-\`/team-foundry-intro\`, \`/team-foundry-status\`, \`/team-foundry-review\`,
-\`/team-foundry-capture\`, \`/team-foundry-decision\`, \`/team-foundry-feature\`.
-See CLAUDE.md for the full skill table.
+- **Silent edits** — the team-foundry coach never writes files without the user's explicit confirmation. Do not write to \`team-foundry/\` files without confirmation.
+- **Private folder** — \`team-foundry/private/\` is gitignored. Do not read from or write to it.${isSolo ? '' : `
+- **ADR commitments** — architecture decisions in \`team-foundry/engineering/decisions/\` represent committed choices. Treat them as constraints unless the user explicitly opens a discussion.`}
 
 ## Working with the team-foundry coach
 
-The coach runs in three modes  -  inline (always on, surfaces one-sentence nudges), explicit (triggered by "coach mode" or "let's do a team-foundry review"), and scheduled (weekly check-in, top 3 findings). See CLAUDE.md or GEMINI.md for the full trigger phrase table and loading instructions.
+The coach runs in three modes — inline (always on, surfaces one-sentence nudges), explicit (triggered by a phrase below), and scheduled (weekly check-in, top 3 findings).
+
+| Trigger phrase | What happens |
+|---|---|
+| \`coach mode\` | Activates explicit mode — full audit of all team-foundry files |
+| \`let's do a team-foundry review\` | Same as above |
+| \`team-foundry audit\` | Same as above |
+| \`what's missing from team-foundry\` | Quick gap scan, top 3 findings |
+| \`run the weekly team-foundry review\` | Scheduled mode — surfaces top 3 findings |
+
+<!-- AI instruction: before activating any mode, read \`.team-foundry/coach.md\` for the full coach playbook. Do not activate coach behaviors from memory alone. -->
 
 **Draft-then-confirm rule:** the coach always shows a proposed file change and waits for confirmation before writing. Silence is not confirmation.
+
+## Claude Code Skills
+
+<!-- Claude Code only — for equivalent workflows in Cursor and Codex, see \`docs/skill-parity.md\` -->
+
+| Skill | What it does |
+|---|---|
+| \`/team-foundry-intro\` | Orient to the team — reads all context files, produces a summary |
+| \`/team-foundry-status\` | Status read — what's on track, at risk, or blocked this cycle |
+| \`/team-foundry-review\` | Full audit — all files checked, findings by severity |
+| \`/team-foundry-capture\` | Capture what was learned in this session into the right file |
+| \`/team-foundry-decision\` | Draft an ADR from the current conversation |
+| \`/team-foundry-feature\` | Synthesize everything team-foundry knows about a specific feature |
 ${isSolo ? '' : `
 ## Glossary
 

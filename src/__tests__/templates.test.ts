@@ -158,7 +158,7 @@ describe('template stubs', () => {
 
   it('root-agents mentions Claude Code skills', () => {
     const output = rootAgentsTemplate(baseCtx);
-    expect(output).toContain('.claude/skills/');
+    expect(output).toContain('## Claude Code Skills');
     expect(output).toContain('/team-foundry-intro');
   });
 
@@ -1584,10 +1584,9 @@ describe('AGENTS.md generation', () => {
     expect(rootCursorTemplate(baseCtx)).toContain('AGENTS.md');
   });
 
-  it('AGENTS.md coach section points to CLAUDE.md/GEMINI.md instead of duplicating trigger phrases', () => {
+  it('AGENTS.md coach section contains trigger phrase table directly', () => {
     const output = rootAgentsTemplate(baseCtx);
-    expect(output).toContain('CLAUDE.md');
-    expect(output).toContain('GEMINI.md');
+    expect(output).toContain('team-foundry review');
   });
 
   it('AGENTS.md solo profile does NOT contain ADR commitments caution bullet', () => {
@@ -2017,6 +2016,54 @@ describe('v3 skills  -  Tasks 17-22', () => {
 
   it('feature skill instructs AI to surface gaps rather than invent context', () => {
     expect(featureSkillTemplate(ctx)).toContain("Don't invent context");
+  });
+});
+
+describe('rootAgentsTemplate()', () => {
+  const baseCtx: TemplateContext = {
+    profile: 'full',
+    tool: 'claude',
+    repoVisibility: 'internal',
+    date: '2026-05-25',
+    ingestion: 'skip',
+  };
+
+  it('contains the routing map table', () => {
+    const out = rootAgentsTemplate(baseCtx);
+    expect(out).toContain('team-foundry/product/outcomes.md');
+    expect(out).toContain('team-foundry/engineering/stack.md');
+  });
+
+  it('contains the coach section', () => {
+    const out = rootAgentsTemplate(baseCtx);
+    expect(out).toContain('team-foundry review');
+    expect(out).toContain('Draft-then-confirm rule');
+  });
+
+  it('has Claude Code Skills section (not plain Skills)', () => {
+    const out = rootAgentsTemplate(baseCtx);
+    expect(out).toContain('## Claude Code Skills');
+    expect(out).not.toContain('\n## Skills\n');
+  });
+
+  it('notes skill-parity.md for non-Claude users', () => {
+    const out = rootAgentsTemplate(baseCtx);
+    expect(out).toContain('docs/skill-parity.md');
+  });
+
+  it('does NOT tell user to see CLAUDE.md for the skill table', () => {
+    const out = rootAgentsTemplate(baseCtx);
+    expect(out).not.toContain('See CLAUDE.md for the full skill table');
+  });
+
+  it('solo profile omits full-only routing rows', () => {
+    const out = rootAgentsTemplate({ ...baseCtx, profile: 'solo' });
+    expect(out).not.toContain('team-foundry/product/assumptions.md');
+  });
+
+  it('full profile includes all routing rows', () => {
+    const out = rootAgentsTemplate({ ...baseCtx, profile: 'full' });
+    expect(out).toContain('team-foundry/product/assumptions.md');
   });
 });
 
