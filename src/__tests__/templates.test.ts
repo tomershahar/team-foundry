@@ -1524,6 +1524,13 @@ describe('Iteration 9b  -  scaffold strategy.md wiring', () => {
   });
 });
 
+describe('rootAgentsTemplate()', () => {
+  it('coach section includes onboarding trigger phrase', () => {
+    const out = rootAgentsTemplate(baseCtx);
+    expect(out).toContain("Let's set up our team-foundry");
+  });
+});
+
 describe('AGENTS.md generation', () => {
   it('AGENTS.md output contains purpose: frontmatter', () => {
     const output = rootAgentsTemplate(baseCtx);

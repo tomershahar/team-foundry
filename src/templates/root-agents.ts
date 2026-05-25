@@ -60,6 +60,7 @@ The coach runs in three modes — inline (always on, surfaces one-sentence nudge
 
 | Trigger phrase | What happens |
 |---|---|
+| \`Let's set up our team-foundry\` | Runs the onboarding interview (first time only) |
 | \`coach mode\` | Activates explicit mode — full audit of all team-foundry files |
 | \`let's do a team-foundry review\` | Same as above |
 | \`team-foundry audit\` | Same as above |
@@ -70,9 +71,13 @@ The coach runs in three modes — inline (always on, surfaces one-sentence nudge
 
 **Draft-then-confirm rule:** the coach always shows a proposed file change and waits for confirmation before writing. Silence is not confirmation.
 
+<!-- Skills are shown for both solo and full profiles — slash commands work regardless of team size -->
+
 ## Claude Code Skills
 
 <!-- Claude Code only — for equivalent workflows in Cursor and Codex, see \`docs/skill-parity.md\` -->
+
+Pre-built skills are in \`.claude/skills/\`. Invoke with a slash command:
 
 | Skill | What it does |
 |---|---|
