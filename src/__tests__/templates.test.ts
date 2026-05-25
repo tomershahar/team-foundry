@@ -2152,4 +2152,8 @@ describe('rootClaudeTemplate() — pointer', () => {
     const out = rootClaudeTemplate(baseCtx);
     expect(out).not.toContain('"let\'s do a team-foundry review"');
   });
+
+  it('does NOT have YAML frontmatter (pointer files are frontmatter-free)', () => {
+    expect(rootClaudeTemplate(baseCtx)).not.toMatch(/^---/);
+  });
 });
