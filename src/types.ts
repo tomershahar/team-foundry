@@ -3,7 +3,7 @@
  */
 export interface TemplateContext {
   profile: 'solo' | 'full';
-  tool: 'claude' | 'gemini' | 'cursor' | 'both';
+  tool: 'claude' | 'gemini' | 'cursor' | 'both' | 'all';
   repoVisibility: 'public' | 'internal' | 'private';
   /** ISO date string YYYY-MM-DD */
   date: string;
@@ -36,4 +36,10 @@ export interface ScaffoldOptions extends TemplateContext {
   /** Absolute path to the directory being scaffolded into */
   targetDir: string;
   ingestion: 'local' | 'mcp' | 'paste' | 'skip' | 'repo' | 'repo+local' | 'repo+mcp' | 'repo+paste';
+  /**
+   * Per-file decisions for existing root instruction files detected before scaffold.
+   * Key: relative path (e.g. 'CLAUDE.md', '.cursor/rules/team-foundry.mdc').
+   * Missing key defaults to 'merge'.
+   */
+  mergeDecisions?: Record<string, 'merge' | 'replace' | 'skip'>;
 }
