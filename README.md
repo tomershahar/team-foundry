@@ -129,13 +129,15 @@ Every file has YAML frontmatter (`purpose`, `read_when`, `last_updated`, `owner`
 
 ## Supported tools
 
-| Tool | File generated |
+All scaffolds generate `AGENTS.md` as the shared foundation. Tool-specific files are thin pointers that load it.
+
+| Tool | Files generated |
 |---|---|
-| Claude Code | `CLAUDE.md` |
-| Gemini CLI | `GEMINI.md` |
-| Cursor | `.cursor/rules/team-foundry.mdc` |
-| OpenAI Codex / generic agents | `AGENTS.md` |
-| Both (Claude + Gemini) | `CLAUDE.md` + `GEMINI.md` |
+| Claude Code | `CLAUDE.md` (pointer) + `AGENTS.md` |
+| Gemini CLI | `GEMINI.md` (pointer) + `AGENTS.md` |
+| Cursor | `.cursor/rules/team-foundry.mdc` (pointer) + `AGENTS.md` |
+| Both (Claude + Gemini) | `CLAUDE.md` + `GEMINI.md` (pointers) + `AGENTS.md` |
+| All tools (Recommended) | `CLAUDE.md` + `GEMINI.md` + `.cursor/rules/team-foundry.mdc` (pointers) + `AGENTS.md` |
 
 ---
 
@@ -151,7 +153,9 @@ Health table across all your files: last updated, days since update, PRs shipped
 </details>
 
 <details>
-<summary>Advanced: Skills (Claude Code)</summary>
+<summary>Advanced: Claude Code Skills</summary>
+
+These slash commands are Claude Code–only. For equivalent workflows in Cursor and Codex, see [`skill-parity.md`](skill-parity.md).
 
 Six slash commands ship with every Claude Code setup. They read your team-foundry files and act on them - no extra configuration needed.
 
