@@ -45,8 +45,6 @@ const baseCtx: TemplateContext = {
 const soloCtx: TemplateContext = { ...baseCtx, profile: 'solo' };
 
 const allTemplates = [
-  ['root-gemini', rootGeminiTemplate],
-  ['root-cursor', rootCursorTemplate],
   ['root-agents', rootAgentsTemplate],
   ['getting-started', gettingStartedTemplate],
   ['coach', coachTemplate],
@@ -137,14 +135,6 @@ describe('template stubs', () => {
     expect(rootGeminiTemplate(baseCtx)).toContain('# GEMINI.md');
   });
 
-  it('root-cursor contains routing map', () => {
-    expect(rootCursorTemplate(baseCtx)).toMatch(/routing|outcomes\.md|customers\.md/i);
-  });
-
-  it('root-cursor contains coach activation instructions', () => {
-    expect(rootCursorTemplate(baseCtx)).toMatch(/coach|team-foundry review/i);
-  });
-
   it('root-claude Skills section lists all 6 skills', () => {
     const output = rootClaudeTemplate(baseCtx);
     expect(output).toContain('/team-foundry-intro');
@@ -161,8 +151,8 @@ describe('template stubs', () => {
     expect(output).toContain('/team-foundry-intro');
   });
 
-  it('root-cursor contains last_updated frontmatter', () => {
-    expect(rootCursorTemplate(baseCtx)).toContain('last_updated');
+  it('root-cursor has alwaysApply frontmatter', () => {
+    expect(rootCursorTemplate(baseCtx)).toContain('alwaysApply: true');
   });
 
   it('customers template adds public visibility note for public repos', () => {
@@ -181,6 +171,77 @@ describe('template stubs', () => {
 
   it('getting-started mentions full question count for full profile', () => {
     expect(gettingStartedTemplate(baseCtx)).toContain('18–25');
+  });
+});
+
+describe('rootGeminiTemplate() — pointer', () => {
+  const baseCtx: TemplateContext = {
+    profile: 'full',
+    tool: 'gemini',
+    repoVisibility: 'internal',
+    date: '2026-05-25',
+    ingestion: 'skip',
+  };
+
+  it('contains [!IMPORTANT] callout instructing Gemini to read AGENTS.md', () => {
+    const out = rootGeminiTemplate(baseCtx);
+    expect(out).toContain('> [!IMPORTANT]');
+    expect(out).toContain('AGENTS.md');
+    expect(out).toContain('MUST read');
+  });
+
+  it('has YAML frontmatter with date interpolated', () => {
+    const out = rootGeminiTemplate(baseCtx);
+    expect(out).toMatch(/^---/);
+    expect(out).toContain('last_updated: 2026-05-25');
+  });
+
+  it('does NOT contain the routing map table', () => {
+    const out = rootGeminiTemplate(baseCtx);
+    expect(out).not.toContain('team-foundry/product/outcomes.md');
+  });
+
+  it('does NOT contain a skill table', () => {
+    const out = rootGeminiTemplate(baseCtx);
+    expect(out).not.toContain('/team-foundry-intro');
+  });
+});
+
+describe('rootCursorTemplate() — pointer', () => {
+  const baseCtx: TemplateContext = {
+    profile: 'full',
+    tool: 'cursor',
+    repoVisibility: 'internal',
+    date: '2026-05-25',
+    ingestion: 'skip',
+  };
+
+  it('frontmatter has alwaysApply: true and globs: *', () => {
+    const out = rootCursorTemplate(baseCtx);
+    expect(out).toContain('alwaysApply: true');
+    expect(out).toContain('globs: *');
+  });
+
+  it('instructs Cursor to read AGENTS.md', () => {
+    const out = rootCursorTemplate(baseCtx);
+    expect(out).toContain('AGENTS.md');
+  });
+
+  it('includes draft-then-confirm rule for team-foundry/ writes', () => {
+    const out = rootCursorTemplate(baseCtx);
+    expect(out).toContain('team-foundry/');
+    expect(out).toContain('confirmation');
+  });
+
+  it('does NOT contain the routing map table', () => {
+    const out = rootCursorTemplate(baseCtx);
+    expect(out).not.toContain('team-foundry/product/outcomes.md');
+  });
+
+  it('does NOT have YAML frontmatter purpose/read_when fields', () => {
+    const out = rootCursorTemplate(baseCtx);
+    expect(out).not.toContain('purpose:');
+    expect(out).not.toContain('read_when:');
   });
 });
 
@@ -216,10 +277,10 @@ describe('Iteration 3  -  root routing and coach', () => {
     expect(output).not.toContain('team-foundry/engineering/quality-bar.md');
   });
 
-  it('root-gemini contains routing map table', () => {
+  it('root-gemini is a pointer to AGENTS.md', () => {
     const output = rootGeminiTemplate(baseCtx);
-    expect(output).toContain('## Routing map');
-    expect(output).toContain('team-foundry/product/outcomes.md');
+    expect(output).toContain('AGENTS.md');
+    expect(output).toContain('MUST read');
   });
 
   it('root-claude does NOT contain coach trigger table (moved to AGENTS.md)', () => {
@@ -228,15 +289,13 @@ describe('Iteration 3  -  root routing and coach', () => {
     expect(output).not.toContain('Explicit mode');
   });
 
-  it('root-gemini contains coach pointer with load instruction', () => {
+  it('root-gemini does NOT contain coach load instructions (moved to AGENTS.md)', () => {
     const output = rootGeminiTemplate(baseCtx);
-    expect(output).toContain('.team-foundry/coach.md');
-    expect(output).toContain('Explicit mode');
+    expect(output).not.toContain('.team-foundry/coach.md');
   });
 
-  it('root files instruct AI to load coach.md before activating', () => {
-    // root-claude is now a pointer; only root-gemini retains the coach instructions
-    const output = rootGeminiTemplate(baseCtx);
+  it('root files (AGENTS.md) instruct AI to load coach.md before activating', () => {
+    const output = rootAgentsTemplate(baseCtx);
     expect(output).toContain('.team-foundry/coach.md');
     expect(output).toContain('before activating any mode');
   });
@@ -423,12 +482,12 @@ describe('Iteration 4  -  onboarding interview', () => {
     expect(rootClaudeTemplate(baseCtx)).not.toContain('coach mode');
   });
 
-  it('root-gemini trigger phrases include coach mode', () => {
-    expect(rootGeminiTemplate(baseCtx)).toContain('coach mode');
+  it('root-gemini does NOT contain coach trigger phrases (pointer only)', () => {
+    expect(rootGeminiTemplate(baseCtx)).not.toContain('coach mode');
   });
 
-  it('root-gemini has user-facing trigger phrase table', () => {
-    const output = rootGeminiTemplate(baseCtx);
+  it('root-agents has user-facing trigger phrase table', () => {
+    const output = rootAgentsTemplate(baseCtx);
     expect(output).toContain("let's do a team-foundry review");
     expect(output).toContain("what's missing from team-foundry");
     expect(output).toContain('run the weekly team-foundry review');
@@ -2106,14 +2165,14 @@ describe('v3.2  -  Auto-extraction and template populating', () => {
     expect(output.trimStart()).toMatch(/^@AGENTS\.md/);
   });
 
-  it('rootGeminiTemplate prepopulates project name', () => {
+  it('rootGeminiTemplate is a pointer — delegates to AGENTS.md', () => {
     const output = rootGeminiTemplate(ctxWithStack);
-    expect(output).toContain('* **Project:** test-project');
+    expect(output).toContain('AGENTS.md');
   });
 
-  it('rootCursorTemplate prepopulates project name', () => {
+  it('rootCursorTemplate is a pointer — delegates to AGENTS.md', () => {
     const output = rootCursorTemplate(ctxWithStack);
-    expect(output).toContain('* **Project:** test-project');
+    expect(output).toContain('AGENTS.md');
   });
 });
 

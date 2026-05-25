@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { TemplateContext } from '../types.js';
-import { hierarchyTemplate, rootClaudeTemplate, rootGeminiTemplate, coachTemplate } from '../templates/index.js';
+import { hierarchyTemplate, rootClaudeTemplate, rootGeminiTemplate, rootAgentsTemplate, coachTemplate } from '../templates/index.js';
 import { expectedPaths } from '../scaffold.js';
 
 const baseCtx: TemplateContext = {
@@ -83,8 +83,8 @@ describe('v3 Task 4  -  hierarchy.md pointer in root files and coach', () => {
     expect(rootClaudeTemplate(baseCtx).trimStart()).toMatch(/^@AGENTS\.md/);
   });
 
-  it('full profile GEMINI.md references hierarchy.md', () => {
-    expect(rootGeminiTemplate(baseCtx)).toContain('hierarchy.md');
+  it('full profile hierarchyTemplate explains source priority', () => {
+    expect(hierarchyTemplate(baseCtx)).toContain('hierarchy');
   });
 
   it('solo profile CLAUDE.md does NOT reference hierarchy.md', () => {
