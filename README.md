@@ -78,7 +78,7 @@ The coach runs in three modes. **Inline** is silent by default, surfaces one sen
 
 **No cloud. No sync service. No extra accounts.**
 
-One person runs `npx create-team-foundry` in the shared repo. The CLI scaffolds a `team-foundry/` folder and generates the right tool file (`CLAUDE.md`, `GEMINI.md`, or `.cursor/rules/`). Commit and push.
+One person runs `npx create-team-foundry` in the shared repo. The CLI scaffolds a `team-foundry/` folder and generates `AGENTS.md` (the shared context foundation) plus a thin pointer file for each AI tool your team uses. Commit and push. If your repo already has `CLAUDE.md`, `AGENTS.md`, or cursor rules, the CLI detects them and asks before changing anything.
 
 Teammates `git pull`. Their AI tool reads from the same files. No installs, no logins, no setup.
 
@@ -89,6 +89,7 @@ Updates flow through git. When the coach drafts a fix and you confirm it, it com
                 │   Your shared repo     │
                 │   (GitHub / GitLab)    │
                 │                        │
+                │   AGENTS.md  ← every tool reads this │
                 │   team-foundry/        │
                 │     ├─ outcomes.md     │
                 │     ├─ customers.md    │
@@ -119,7 +120,7 @@ When the team grows or the context gets more complex, you can grow into the full
 
 | Profile | Files | Includes |
 |---|---|---|
-| **Solo** (default) | 8 | AGENTS.md (primary), pointer file(s) for your tool(s), getting started guide, coach playbook, north star, outcomes, customers, stack |
+| **Solo** | 8–16 | AGENTS.md (primary) + pointer file(s) for your tool(s) + getting started guide, coach playbook, north star, outcomes, customers, stack. Count varies: 8 for single tool, up to 16 for "all tools" with Claude Code skills. |
 | Full | 24 | Everything above + strategy, roadmap, assumptions, risks, trio, working agreement, AI practices, quality bar, decisions log, design principles, metrics, glossary, stakeholders, hierarchy, hooks, rules |
 | Full (federated) | 30 | Everything above + per-folder routing files for multi-instance setups |
 
@@ -157,7 +158,7 @@ Health table across all your files: last updated, days since update, PRs shipped
 
 These slash commands are Claude Code–only. For equivalent workflows in Cursor and Codex, see [`skill-parity.md`](skill-parity.md).
 
-Six slash commands ship with every Claude Code setup. They read your team-foundry files and act on them - no extra configuration needed.
+Six slash commands ship with every Claude Code setup. They are written as individual `.md` files in `.claude/skills/` — one file per skill, each with a `description:` frontmatter field that Claude Code surfaces as the slash command. They read your team-foundry files and act on them - no extra configuration needed.
 
 | Skill | What it does |
 |---|---|
@@ -185,7 +186,7 @@ Each cycle tightens the loop. The coach makes step 3 to 4 nearly automatic.
 
 </details>
 
-<details>
+<details open>
 <summary>What's new in v3.3, v3.2 & v3</summary>
 
 ### v3.3 (Cross-Tool Pointer Architecture)
