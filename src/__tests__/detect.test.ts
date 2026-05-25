@@ -63,4 +63,20 @@ describe('detectExistingFiles()', () => {
     const found = await detectExistingFiles(tmpDir);
     expect(found).toHaveLength(2);
   });
+
+  it('detects .cursor/rules/*.md files (not only .mdc)', async () => {
+    const rulesDir = path.join(tmpDir, '.cursor', 'rules');
+    await fs.mkdir(rulesDir, { recursive: true });
+    await fs.writeFile(path.join(rulesDir, 'extra.md'), 'line1\nline2', 'utf-8');
+    const found = await detectExistingFiles(tmpDir);
+    expect(found.map((f) => f.relativePath)).toContain('.cursor/rules/extra.md');
+  });
+
+  it('ignores non-matching files in .cursor/rules/', async () => {
+    const rulesDir = path.join(tmpDir, '.cursor', 'rules');
+    await fs.mkdir(rulesDir, { recursive: true });
+    await fs.writeFile(path.join(rulesDir, 'notes.txt'), 'ignored', 'utf-8');
+    const found = await detectExistingFiles(tmpDir);
+    expect(found.map((f) => f.relativePath)).not.toContain('.cursor/rules/notes.txt');
+  });
 });
