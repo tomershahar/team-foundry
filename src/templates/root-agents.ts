@@ -37,7 +37,8 @@ Use this file to orient yourself and find the right files before answering.
 | Design principles | \`team-foundry/design/principles.md\` |
 | Metric definitions | \`team-foundry/data/metrics.md\` |
 | Domain terms | \`team-foundry/context/glossary.md\` |
-| Stakeholders | \`team-foundry/context/stakeholders.md\` |`}
+| Stakeholders | \`team-foundry/context/stakeholders.md\` |
+| Which source wins when context conflicts | \`.team-foundry/hierarchy.md\` |`}
 
 ## Setup
 

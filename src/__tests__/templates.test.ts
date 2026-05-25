@@ -1583,6 +1583,16 @@ describe('rootAgentsTemplate()', () => {
     const out = rootAgentsTemplate(baseCtx);
     expect(out).toContain("Let's set up our team-foundry");
   });
+
+  it('full profile includes hierarchy.md in routing table', () => {
+    const out = rootAgentsTemplate({ ...baseCtx, profile: 'full' });
+    expect(out).toContain('team-foundry/hierarchy.md');
+  });
+
+  it('solo profile omits hierarchy.md from routing table', () => {
+    const out = rootAgentsTemplate({ ...baseCtx, profile: 'solo' });
+    expect(out).not.toContain('team-foundry/hierarchy.md');
+  });
 });
 
 describe('AGENTS.md generation', () => {
@@ -2215,4 +2225,12 @@ describe('rootClaudeTemplate() — pointer', () => {
   it('does NOT have YAML frontmatter (pointer files are frontmatter-free)', () => {
     expect(rootClaudeTemplate(baseCtx)).not.toMatch(/^---/);
   });
+});
+
+describe('pointer templates return non-empty strings', () => {
+  const ctx: TemplateContext = { profile: 'full', tool: 'claude', repoVisibility: 'internal', date: '2026-05-25', ingestion: 'skip' };
+
+  it('root-gemini', () => { expect(rootGeminiTemplate(ctx)).toBeTruthy(); });
+  it('root-cursor', () => { expect(rootCursorTemplate(ctx)).toBeTruthy(); });
+  it('root-claude', () => { expect(rootClaudeTemplate(ctx)).toBeTruthy(); });
 });

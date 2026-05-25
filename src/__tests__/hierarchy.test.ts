@@ -83,8 +83,9 @@ describe('v3 Task 4  -  hierarchy.md pointer in root files and coach', () => {
     expect(rootClaudeTemplate(baseCtx).trimStart()).toMatch(/^@AGENTS\.md/);
   });
 
-  it('full profile hierarchyTemplate explains source priority', () => {
-    expect(hierarchyTemplate(baseCtx)).toContain('hierarchy');
+  it('full profile AGENTS.md routes to hierarchy.md', () => {
+    const out = rootAgentsTemplate({ profile: 'full', tool: 'claude', repoVisibility: 'internal', date: '2026-05-25', ingestion: 'skip' });
+    expect(out).toContain('.team-foundry/hierarchy.md');
   });
 
   it('solo profile CLAUDE.md does NOT reference hierarchy.md', () => {
