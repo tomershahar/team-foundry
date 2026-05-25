@@ -1,13 +1,12 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { outro, log, confirm, select, isCancel } from '@clack/prompts';
-import { runPrompts } from './prompts.js';
+import { runPrompts, runMergePrompts } from './prompts.js';
 import { scaffold, gitAddCommand } from './scaffold.js';
 import { writeGitignore } from './gitignore.js';
 import { runStatus } from './status.js';
 import { runMigrate } from './migrate.js';
 import { detectExistingFiles } from './detect.js';
-import { runMergePrompts } from './prompts.js';
 
 function groupByFolder(paths: string[]): Record<string, string[]> {
   const groups: Record<string, string[]> = {};

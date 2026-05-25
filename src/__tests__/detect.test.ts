@@ -48,13 +48,13 @@ describe('detectExistingFiles()', () => {
     expect(found.map((f) => f.relativePath)).toContain('AGENTS.md');
   });
 
-  it('detects .cursor/rules/*.mdc files', async () => {
+  it('detects .cursor/rules/team-foundry.mdc when present', async () => {
     const rulesDir = path.join(tmpDir, '.cursor', 'rules');
     await fs.mkdir(rulesDir, { recursive: true });
-    await fs.writeFile(path.join(rulesDir, 'my-rules.mdc'), 'rule content\nline2', 'utf-8');
+    await fs.writeFile(path.join(rulesDir, 'team-foundry.mdc'), 'rule content\nline2', 'utf-8');
     const found = await detectExistingFiles(tmpDir);
-    expect(found.map((f) => f.relativePath)).toContain('.cursor/rules/my-rules.mdc');
-    expect(found.find((f) => f.relativePath === '.cursor/rules/my-rules.mdc')?.lineCount).toBe(2);
+    expect(found.map((f) => f.relativePath)).toContain('.cursor/rules/team-foundry.mdc');
+    expect(found.find((f) => f.relativePath === '.cursor/rules/team-foundry.mdc')?.lineCount).toBe(2);
   });
 
   it('detects multiple files at once', async () => {
@@ -64,12 +64,16 @@ describe('detectExistingFiles()', () => {
     expect(found).toHaveLength(2);
   });
 
-  it('detects .cursor/rules/*.md files (not only .mdc)', async () => {
+  it('does NOT detect non-team-foundry cursor rule files', async () => {
+    // Detection is scoped to ROOT_INSTRUCTION_PATHS to ensure every collected
+    // merge decision maps to a file scaffold() will actually write.
     const rulesDir = path.join(tmpDir, '.cursor', 'rules');
     await fs.mkdir(rulesDir, { recursive: true });
     await fs.writeFile(path.join(rulesDir, 'extra.md'), 'line1\nline2', 'utf-8');
+    await fs.writeFile(path.join(rulesDir, 'my-rules.mdc'), 'content', 'utf-8');
     const found = await detectExistingFiles(tmpDir);
-    expect(found.map((f) => f.relativePath)).toContain('.cursor/rules/extra.md');
+    expect(found.map((f) => f.relativePath)).not.toContain('.cursor/rules/extra.md');
+    expect(found.map((f) => f.relativePath)).not.toContain('.cursor/rules/my-rules.mdc');
   });
 
   it('ignores non-matching files in .cursor/rules/', async () => {

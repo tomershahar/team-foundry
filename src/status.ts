@@ -18,7 +18,10 @@ interface FileStatus {
 export interface PointerFileStatus {
   relativePath: string;
   exists: boolean;
-  /** true if file exists but does not contain the string 'AGENTS.md' */
+  /**
+   * true if the file exists but does not contain the string 'AGENTS.md'.
+   * Only meaningful when exists === true; always false when exists === false.
+   */
   drifted: boolean;
 }
 
