@@ -160,12 +160,13 @@ async function applyMergeDecision(
     await fs.mkdir(backupsDir, { recursive: true });
     let backupPath = path.join(backupsDir, `${filename}.${ts}.backup`);
     let suffix = 2;
-    while (true) {
+    let conflict = true;
+    while (conflict) {
       try {
         await fs.access(backupPath);
         backupPath = path.join(backupsDir, `${filename}.${ts}-${suffix++}.backup`);
       } catch {
-        break;
+        conflict = false;
       }
     }
     const existing = await fs.readFile(fullPath, 'utf-8');
