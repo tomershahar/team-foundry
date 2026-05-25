@@ -119,7 +119,7 @@ When the team grows or the context gets more complex, you can grow into the full
 
 | Profile | Files | Includes |
 |---|---|---|
-| **Solo** (default) | 8 | Root instruction file, AGENTS.md, getting started guide, coach playbook, north star, outcomes, customers, stack |
+| **Solo** (default) | 8 | AGENTS.md (primary), pointer file(s) for your tool(s), getting started guide, coach playbook, north star, outcomes, customers, stack |
 | Full | 24 | Everything above + strategy, roadmap, assumptions, risks, trio, working agreement, AI practices, quality bar, decisions log, design principles, metrics, glossary, stakeholders, hierarchy, hooks, rules |
 | Full (federated) | 30 | Everything above + per-folder routing files for multi-instance setups |
 
@@ -186,7 +186,15 @@ Each cycle tightens the loop. The coach makes step 3 to 4 nearly automatic.
 </details>
 
 <details>
-<summary>What's new in v3.2 & v3</summary>
+<summary>What's new in v3.3, v3.2 & v3</summary>
+
+### v3.3 (Cross-Tool Pointer Architecture)
+- **AGENTS.md is now primary** — one shared context file read by every AI tool. CLAUDE.md, GEMINI.md, and `.cursor/rules` are now thin pointers that load it.
+- **All tools option** — new first/recommended choice that generates all three pointer files in one run.
+- **Detect & merge existing files** — the CLI scans for pre-existing root instruction files before scaffolding and asks merge/replace/skip per file. Backups saved to `.team-foundry/backups/`.
+- **Pointer drift detection** — `status` now reports whether each pointer file still references AGENTS.md.
+- **`migrate --to v3.3`** — upgrades existing repos to the pointer architecture without losing your content.
+- **`skill-parity.md`** — documents Cursor and Codex equivalents for the six Claude Code skills.
 
 ### v3.2 (UX & DX Onboarding Focus)
 - **Zero-Config Auto-Extraction**: The CLI dynamically scans your `package.json` to auto-detect your project's technology stack (Runtime, Frameworks like Next.js/React/Express, Tooling like Vitest/Jest/ESLint/Prettier/Vite) and auto-populates `engineering/stack.md` and root instructions with no extra effort.
@@ -202,7 +210,7 @@ Each cycle tightens the loop. The coach makes step 3 to 4 nearly automatic.
 </details>
 
 <details>
-<summary>Migrate from v2</summary>
+<summary>Migrate from v2 or v3.x</summary>
 
 ```bash
 npx create-team-foundry migrate --to v3
@@ -211,6 +219,14 @@ npx create-team-foundry migrate --to v3
 Adds the three new v3 files (`hierarchy.md`, `instructions/hooks.md`, `instructions/rules.md`) and appends `source:` / `last_validated:` to the frontmatter of your five data-heavy files. **Existing files are never overwritten.** Your content is preserved exactly - the migration is additive only.
 
 Existing v2 repos continue to work without migrating. v3 is the new default for new repos.
+
+### Migrate from v3.x to v3.3
+
+```bash
+npx create-team-foundry migrate --to v3.3
+```
+
+Upgrades existing team-foundry repos to the pointer architecture: backs up `CLAUDE.md`, `GEMINI.md`, and `.cursor/rules/team-foundry.mdc`, then rewrites them as thin pointers to `AGENTS.md`. If your `AGENTS.md` is the old thin v3.2 format (< 40 lines), it is also upgraded to the new primary format. All replaced files are backed up to `.team-foundry/backups/` first.
 
 </details>
 
