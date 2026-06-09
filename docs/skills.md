@@ -2,7 +2,7 @@
 
 # Claude Code Skills
 
-Six slash commands ship with every Claude Code setup (`tool=claude`, `tool=both`, or `tool=all`). They are written as individual `.md` files to `.claude/skills/` — one file per skill, each with a `description:` frontmatter field that Claude Code surfaces as the slash command. No extra configuration needed.
+Six slash commands ship with every Claude Code setup (`tool=claude`, `tool=both`, or `tool=all`). Each skill is a folder under `.claude/skills/` containing a `SKILL.md` — the layout Claude Code discovers automatically. The folder name becomes the slash command; the `description:` frontmatter tells Claude when to load the skill on its own. No extra configuration needed.
 
 > **Note:** These slash commands are Claude Code–only. For equivalent workflows in Cursor and Codex, see [`skill-parity.md`](../skill-parity.md).
 
@@ -25,16 +25,18 @@ Skills don't duplicate your team context. They point Claude Code at the right fi
 
 ## File layout
 
-Each skill is a single `.md` file in `.claude/skills/`:
+Each skill is a folder in `.claude/skills/` with a `SKILL.md` inside:
 
 ```
 .claude/skills/
-  team-foundry-intro.md
-  team-foundry-status.md
-  team-foundry-review.md
-  team-foundry-capture.md
-  team-foundry-decision.md
-  team-foundry-feature.md
+  team-foundry-intro/SKILL.md
+  team-foundry-status/SKILL.md
+  team-foundry-review/SKILL.md
+  team-foundry-capture/SKILL.md
+  team-foundry-decision/SKILL.md
+  team-foundry-feature/SKILL.md
 ```
 
-Each file has `description:` frontmatter (what Claude Code shows in the slash command picker) and a `# /team-foundry-<name>` heading followed by structured instructions for what to read and what to produce.
+Each `SKILL.md` has `name:` and `description:` frontmatter (the description is what Claude Code uses to decide when to load the skill automatically) and a `# /team-foundry-<name>` heading followed by structured instructions for what to read and what to produce.
+
+> **Upgrading from an older install?** Versions before 3.4 wrote skills as flat `.md` files directly in `.claude/skills/`, which Claude Code does not discover. Run `npx create-team-foundry migrate` — it moves them to the folder layout automatically.

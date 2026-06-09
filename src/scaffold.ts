@@ -110,14 +110,16 @@ const FEDERATED_ENTRIES: FileEntry[] = [
   { relativePath: 'team-foundry/context/CLAUDE.md', content: federatedContextTemplate },
 ];
 
-/** Pre-built Claude Code skill files  -  written when tool is claude or both */
+/** Pre-built Claude Code skill files  -  written when tool is claude or both.
+ *  Layout is .claude/skills/<name>/SKILL.md per the skills spec — flat .md files
+ *  directly in .claude/skills/ are not discovered by Claude Code. */
 const CLAUDE_SKILLS_ENTRIES: FileEntry[] = [
-  { relativePath: '.claude/skills/team-foundry-intro.md', content: introSkillTemplate },
-  { relativePath: '.claude/skills/team-foundry-status.md', content: statusSkillTemplate },
-  { relativePath: '.claude/skills/team-foundry-review.md', content: reviewSkillTemplate },
-  { relativePath: '.claude/skills/team-foundry-capture.md', content: captureSkillTemplate },
-  { relativePath: '.claude/skills/team-foundry-decision.md', content: decisionSkillTemplate },
-  { relativePath: '.claude/skills/team-foundry-feature.md', content: featureSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-intro/SKILL.md', content: introSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-status/SKILL.md', content: statusSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-review/SKILL.md', content: reviewSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-capture/SKILL.md', content: captureSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-decision/SKILL.md', content: decisionSkillTemplate },
+  { relativePath: '.claude/skills/team-foundry-feature/SKILL.md', content: featureSkillTemplate },
 ];
 
 /** Returns the root instruction file entry/entries based on tool choice */

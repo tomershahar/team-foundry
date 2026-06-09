@@ -247,12 +247,12 @@ describe('scaffold()  -  cursor tool', () => {
 
 describe('Phase 8  -  Task 16: Claude Code skill paths in expectedPaths()', () => {
   const SKILL_PATHS = [
-    '.claude/skills/team-foundry-intro.md',
-    '.claude/skills/team-foundry-status.md',
-    '.claude/skills/team-foundry-review.md',
-    '.claude/skills/team-foundry-capture.md',
-    '.claude/skills/team-foundry-decision.md',
-    '.claude/skills/team-foundry-feature.md',
+    '.claude/skills/team-foundry-intro/SKILL.md',
+    '.claude/skills/team-foundry-status/SKILL.md',
+    '.claude/skills/team-foundry-review/SKILL.md',
+    '.claude/skills/team-foundry-capture/SKILL.md',
+    '.claude/skills/team-foundry-decision/SKILL.md',
+    '.claude/skills/team-foundry-feature/SKILL.md',
   ];
 
   it('full profile claude tool includes all 6 skill paths', () => {
@@ -298,12 +298,12 @@ describe('Phase 8  -  Task 16: scaffold() writes skill files for claude tool', (
   afterEach(async () => { await cleanup(tmpDir); });
 
   const SKILL_PATHS = [
-    '.claude/skills/team-foundry-intro.md',
-    '.claude/skills/team-foundry-status.md',
-    '.claude/skills/team-foundry-review.md',
-    '.claude/skills/team-foundry-capture.md',
-    '.claude/skills/team-foundry-decision.md',
-    '.claude/skills/team-foundry-feature.md',
+    '.claude/skills/team-foundry-intro/SKILL.md',
+    '.claude/skills/team-foundry-status/SKILL.md',
+    '.claude/skills/team-foundry-review/SKILL.md',
+    '.claude/skills/team-foundry-capture/SKILL.md',
+    '.claude/skills/team-foundry-decision/SKILL.md',
+    '.claude/skills/team-foundry-feature/SKILL.md',
   ];
 
   it('writes all 6 skill files for claude tool', async () => {
@@ -478,7 +478,7 @@ describe('scaffold() — tool=all', () => {
 
   it('tool=all writes Claude Code skills', async () => {
     await scaffold({ ...baseOptions, tool: 'all', targetDir: tmpDir });
-    const exists = await fs.access(path.join(tmpDir, '.claude/skills/team-foundry-intro.md'))
+    const exists = await fs.access(path.join(tmpDir, '.claude/skills/team-foundry-intro/SKILL.md'))
       .then(() => true).catch(() => false);
     expect(exists).toBe(true);
   });
@@ -488,7 +488,7 @@ describe('scaffold() — tool=all', () => {
     expect(paths).toContain('CLAUDE.md');
     expect(paths).toContain('GEMINI.md');
     expect(paths).toContain('.cursor/rules/team-foundry.mdc');
-    expect(paths).toContain('.claude/skills/team-foundry-intro.md');
+    expect(paths).toContain('.claude/skills/team-foundry-intro/SKILL.md');
   });
 });
 

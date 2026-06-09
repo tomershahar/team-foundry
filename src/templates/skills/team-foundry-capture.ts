@@ -2,6 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function captureSkillTemplate(_ctx: TemplateContext): string {
   return `---
+name: team-foundry-capture
 description: Capture what was learned in this session into the right team-foundry file
 ---
 

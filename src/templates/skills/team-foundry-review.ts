@@ -2,6 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function reviewSkillTemplate(_ctx: TemplateContext): string {
   return `---
+name: team-foundry-review
 description: Full team-foundry audit by the coach  -  all files, findings by severity
 ---
 
