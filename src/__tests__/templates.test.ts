@@ -2030,8 +2030,8 @@ describe('v3 skills  -  Tasks 17-22', () => {
   ];
 
   for (const { name, fn } of skills) {
-    it(`${name} skill has description frontmatter`, () => {
-      expect(fn(ctx)).toMatch(/^---\ndescription:/);
+    it(`${name} skill has name and description frontmatter`, () => {
+      expect(fn(ctx)).toMatch(new RegExp(`^---\\nname: team-foundry-${name}\\ndescription:`));
     });
 
     it(`${name} skill has real content (not a stub)`, () => {

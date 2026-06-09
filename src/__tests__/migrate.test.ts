@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
-import { detectMigrateState, detectTool, writeIfAbsent, appendFrontmatterFields, runMigrate, migrateToV33 } from '../migrate.js';
+import { detectMigrateState, detectTool, writeIfAbsent, appendFrontmatterFields, runMigrate, migrateToV33, migrateSkillsLayout } from '../migrate.js';
 
 vi.mock('@clack/prompts', () => ({
   confirm: vi.fn(),
@@ -17,6 +17,96 @@ async function makeTempDir(): Promise<string> {
 async function cleanup(dir: string): Promise<void> {
   await fs.rm(dir, { recursive: true, force: true });
 }
+
+describe('migrateSkillsLayout()', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => {
+    tmpDir = await makeTempDir();
+  });
+
+  afterEach(async () => {
+    await cleanup(tmpDir);
+  });
+
+  async function writeFlatSkill(name: string, content = `# /${name}\n`): Promise<void> {
+    const dir = path.join(tmpDir, '.claude', 'skills');
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(path.join(dir, `${name}.md`), content, 'utf-8');
+  }
+
+  it('moves a flat skill file into <name>/SKILL.md', async () => {
+    await writeFlatSkill('team-foundry-status', 'status instructions');
+    const moved = await migrateSkillsLayout(tmpDir);
+    expect(moved).toBe(1);
+
+    const newContent = await fs.readFile(
+      path.join(tmpDir, '.claude', 'skills', 'team-foundry-status', 'SKILL.md'),
+      'utf-8',
+    );
+    expect(newContent).toBe('status instructions');
+
+    const flatExists = await fs
+      .access(path.join(tmpDir, '.claude', 'skills', 'team-foundry-status.md'))
+      .then(() => true)
+      .catch(() => false);
+    expect(flatExists).toBe(false);
+  });
+
+  it('moves all six flat skill files', async () => {
+    for (const name of [
+      'team-foundry-intro',
+      'team-foundry-status',
+      'team-foundry-review',
+      'team-foundry-capture',
+      'team-foundry-decision',
+      'team-foundry-feature',
+    ]) {
+      await writeFlatSkill(name);
+    }
+    const moved = await migrateSkillsLayout(tmpDir);
+    expect(moved).toBe(6);
+  });
+
+  it('returns 0 and does nothing when there are no flat skill files', async () => {
+    const moved = await migrateSkillsLayout(tmpDir);
+    expect(moved).toBe(0);
+  });
+
+  it('does not overwrite an existing SKILL.md but still removes the flat file', async () => {
+    await writeFlatSkill('team-foundry-status', 'old flat content');
+    const dir = path.join(tmpDir, '.claude', 'skills', 'team-foundry-status');
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(path.join(dir, 'SKILL.md'), 'already migrated', 'utf-8');
+
+    await migrateSkillsLayout(tmpDir);
+
+    const content = await fs.readFile(path.join(dir, 'SKILL.md'), 'utf-8');
+    expect(content).toBe('already migrated');
+    const flatExists = await fs
+      .access(path.join(tmpDir, '.claude', 'skills', 'team-foundry-status.md'))
+      .then(() => true)
+      .catch(() => false);
+    expect(flatExists).toBe(false);
+  });
+
+  it('ignores non-team-foundry files in .claude/skills/', async () => {
+    await writeFlatSkill('my-custom-skill');
+    const moved = await migrateSkillsLayout(tmpDir);
+    expect(moved).toBe(0);
+    const stillThere = await fs
+      .access(path.join(tmpDir, '.claude', 'skills', 'my-custom-skill.md'))
+      .then(() => true)
+      .catch(() => false);
+    expect(stillThere).toBe(true);
+  });
+
+  it('is idempotent across two runs', async () => {
+    await writeFlatSkill('team-foundry-status');
+    expect(await migrateSkillsLayout(tmpDir)).toBe(1);
+    expect(await migrateSkillsLayout(tmpDir)).toBe(0);
+  });
+});
 
 describe('v3 Task 11  -  migrate: detectMigrateState', () => {
   let tmpDir: string;

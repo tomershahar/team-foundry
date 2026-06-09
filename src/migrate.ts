@@ -80,6 +80,40 @@ export async function appendFrontmatterFields(filePath: string): Promise<void> {
   await fs.writeFile(filePath, updated + rest, 'utf-8');
 }
 
+const SKILL_NAMES = [
+  'team-foundry-intro',
+  'team-foundry-status',
+  'team-foundry-review',
+  'team-foundry-capture',
+  'team-foundry-decision',
+  'team-foundry-feature',
+];
+
+/**
+ * Moves legacy flat skill files (.claude/skills/<name>.md) to the layout Claude Code
+ * actually discovers (.claude/skills/<name>/SKILL.md). Flat .md files directly in
+ * .claude/skills/ are silently ignored by Claude Code, so installs scaffolded before
+ * this fix had non-functional skills. Idempotent: returns the number of files moved.
+ */
+export async function migrateSkillsLayout(targetDir: string): Promise<number> {
+  let moved = 0;
+  for (const name of SKILL_NAMES) {
+    const flatPath = path.join(targetDir, '.claude', 'skills', `${name}.md`);
+    let content: string;
+    try {
+      content = await fs.readFile(flatPath, 'utf-8');
+    } catch (err: unknown) {
+      if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
+      continue; // no flat file — nothing to migrate for this skill
+    }
+    const newPath = path.join(targetDir, '.claude', 'skills', name, 'SKILL.md');
+    await writeIfAbsent(newPath, content);
+    await fs.unlink(flatPath);
+    moved++;
+  }
+  return moved;
+}
+
 const DATA_HEAVY_FILES = [
   'team-foundry/product/outcomes.md',
   'team-foundry/product/customers.md',
@@ -149,6 +183,11 @@ export async function migrateToV33(targetDir: string): Promise<void> {
     if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
     // no AGENTS.md — skip
   }
+
+  const movedSkills = await migrateSkillsLayout(targetDir);
+  if (movedSkills > 0) {
+    log.info(`  ✓  Moved ${movedSkills} skill file(s) to .claude/skills/<name>/SKILL.md (required for Claude Code to discover them)`);
+  }
 }
 
 export async function runMigrate(targetDir: string): Promise<void> {
@@ -182,7 +221,15 @@ export async function runMigrate(targetDir: string): Promise<void> {
   }
 
   if (state === 'v3') {
-    outro('Already on v3. Nothing to migrate.');
+    const movedSkills = await migrateSkillsLayout(targetDir);
+    if (movedSkills > 0) {
+      outro(
+        `Moved ${movedSkills} skill file(s) to .claude/skills/<name>/SKILL.md — the layout\n` +
+        'Claude Code discovers. Commit the change when ready.',
+      );
+    } else {
+      outro('Already on v3. Nothing to migrate.');
+    }
     return;
   }
 
@@ -220,6 +267,8 @@ export async function runMigrate(targetDir: string): Promise<void> {
     const filePath = path.join(targetDir, relPath);
     await appendFrontmatterFields(filePath);
   }
+
+  await migrateSkillsLayout(targetDir);
 
   outro(
     'Migration complete.\n\n' +

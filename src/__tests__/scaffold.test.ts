@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 import { scaffold, expectedPaths, gitAddCommand } from '../scaffold.js';
+import { trackedPaths } from '../manifest.js';
 import type { ScaffoldOptions } from '../types.js';
 
 async function makeTempDir(): Promise<string> {
@@ -247,12 +248,12 @@ describe('scaffold()  -  cursor tool', () => {
 
 describe('Phase 8  -  Task 16: Claude Code skill paths in expectedPaths()', () => {
   const SKILL_PATHS = [
-    '.claude/skills/team-foundry-intro.md',
-    '.claude/skills/team-foundry-status.md',
-    '.claude/skills/team-foundry-review.md',
-    '.claude/skills/team-foundry-capture.md',
-    '.claude/skills/team-foundry-decision.md',
-    '.claude/skills/team-foundry-feature.md',
+    '.claude/skills/team-foundry-intro/SKILL.md',
+    '.claude/skills/team-foundry-status/SKILL.md',
+    '.claude/skills/team-foundry-review/SKILL.md',
+    '.claude/skills/team-foundry-capture/SKILL.md',
+    '.claude/skills/team-foundry-decision/SKILL.md',
+    '.claude/skills/team-foundry-feature/SKILL.md',
   ];
 
   it('full profile claude tool includes all 6 skill paths', () => {
@@ -298,12 +299,12 @@ describe('Phase 8  -  Task 16: scaffold() writes skill files for claude tool', (
   afterEach(async () => { await cleanup(tmpDir); });
 
   const SKILL_PATHS = [
-    '.claude/skills/team-foundry-intro.md',
-    '.claude/skills/team-foundry-status.md',
-    '.claude/skills/team-foundry-review.md',
-    '.claude/skills/team-foundry-capture.md',
-    '.claude/skills/team-foundry-decision.md',
-    '.claude/skills/team-foundry-feature.md',
+    '.claude/skills/team-foundry-intro/SKILL.md',
+    '.claude/skills/team-foundry-status/SKILL.md',
+    '.claude/skills/team-foundry-review/SKILL.md',
+    '.claude/skills/team-foundry-capture/SKILL.md',
+    '.claude/skills/team-foundry-decision/SKILL.md',
+    '.claude/skills/team-foundry-feature/SKILL.md',
   ];
 
   it('writes all 6 skill files for claude tool', async () => {
@@ -478,7 +479,7 @@ describe('scaffold() — tool=all', () => {
 
   it('tool=all writes Claude Code skills', async () => {
     await scaffold({ ...baseOptions, tool: 'all', targetDir: tmpDir });
-    const exists = await fs.access(path.join(tmpDir, '.claude/skills/team-foundry-intro.md'))
+    const exists = await fs.access(path.join(tmpDir, '.claude/skills/team-foundry-intro/SKILL.md'))
       .then(() => true).catch(() => false);
     expect(exists).toBe(true);
   });
@@ -488,7 +489,7 @@ describe('scaffold() — tool=all', () => {
     expect(paths).toContain('CLAUDE.md');
     expect(paths).toContain('GEMINI.md');
     expect(paths).toContain('.cursor/rules/team-foundry.mdc');
-    expect(paths).toContain('.claude/skills/team-foundry-intro.md');
+    expect(paths).toContain('.claude/skills/team-foundry-intro/SKILL.md');
   });
 });
 
@@ -636,5 +637,61 @@ describe('scaffold() — mergeDecisions', () => {
     expect(geminiContent).toContain('<!-- BEGIN TEAM-FOUNDRY SECTION -->');
     expect(cursorContent).toContain('# Existing Cursor');
     expect(cursorContent).toContain('<!-- BEGIN TEAM-FOUNDRY SECTION -->');
+  });
+});
+
+describe('stack extraction package.json precedence', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => {
+    tmpDir = await makeTempDir();
+  });
+
+  afterEach(async () => {
+    await cleanup(tmpDir);
+  });
+
+  it("reads targetDir's package.json, not the cwd's", async () => {
+    // The test process cwd is the team-foundry repo itself (TypeScript + tsup).
+    // targetDir gets a distinctly different package.json — Vue, plain JS.
+    await fs.writeFile(
+      path.join(tmpDir, 'package.json'),
+      JSON.stringify({ name: 'target-project', dependencies: { vue: '^3.0.0' } }),
+      'utf-8',
+    );
+
+    await scaffold({ ...baseOptions, targetDir: tmpDir });
+
+    const stack = await fs.readFile(
+      path.join(tmpDir, 'team-foundry/engineering/stack.md'),
+      'utf-8',
+    );
+    expect(stack).toContain('Vue');
+    expect(stack).not.toContain('tsup');
+  });
+});
+
+describe('manifest consistency  -  scaffold and status share one source', () => {
+  it('every status-tracked file is scaffolded for its profile', () => {
+    const fullPaths = expectedPaths('full', 'claude');
+    for (const p of trackedPaths('full')) {
+      expect(fullPaths, `status tracks ${p} but scaffold never writes it`).toContain(p);
+    }
+    const soloPaths = expectedPaths('solo', 'claude');
+    for (const p of trackedPaths('solo')) {
+      expect(soloPaths, `status tracks ${p} but solo scaffold never writes it`).toContain(p);
+    }
+  });
+
+  it('tracked file counts match the documented profiles', () => {
+    expect(trackedPaths('solo')).toHaveLength(4);
+    expect(trackedPaths('full')).toHaveLength(16);
+  });
+
+  it('solo tracked files are a prefix-subset of full tracked files', () => {
+    const full = trackedPaths('full');
+    for (const p of trackedPaths('solo')) {
+      expect(full).toContain(p);
+    }
   });
 });

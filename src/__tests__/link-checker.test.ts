@@ -158,10 +158,10 @@ describe('rankFindings()', () => {
     detail: `detail for ${item}`,
   });
 
-  const makeHealth = (file: string, health: 'stale' | 'empty' | 'missing', prs = 0) => ({
+  const makeHealth = (file: string, health: 'stale' | 'empty' | 'missing', commits = 0) => ({
     file,
     health,
-    prs,
+    commits,
   });
 
   it('returns at most 3 suggestions', () => {
@@ -197,11 +197,11 @@ describe('rankFindings()', () => {
     expect(rankFindings([], [])).toHaveLength(0);
   });
 
-  it('boosts score for files with recent PRs', () => {
-    const healthNoPrs = [makeHealth('a.md', 'stale', 0)];
-    const healthWithPrs = [makeHealth('b.md', 'stale', 5)];
-    const r1 = rankFindings(healthNoPrs, []);
-    const r2 = rankFindings(healthWithPrs, []);
+  it('boosts score for files with recent commits', () => {
+    const healthNoCommits = [makeHealth('a.md', 'stale', 0)];
+    const healthWithCommits = [makeHealth('b.md', 'stale', 5)];
+    const r1 = rankFindings(healthNoCommits, []);
+    const r2 = rankFindings(healthWithCommits, []);
     expect(r2[0].score).toBeGreaterThan(r1[0].score);
   });
 });

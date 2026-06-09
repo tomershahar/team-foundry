@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
+import { spawnSync } from 'child_process';
 import { runStatus, analyzeFile, parseFrontmatter, daysSince, checkPointerFiles } from '../status.js';
 
 async function makeTempDir(): Promise<string> {
@@ -137,6 +138,88 @@ describe('analyzeFile()', () => {
     expect(result.daysSinceUpdate).toBeNull();
     // Should not be classified as stale when date is unparseable
     expect(result.health).not.toBe('stale');
+  });
+});
+
+function git(dir: string, args: string[], dateEnv?: string): void {
+  const env = dateEnv
+    ? { ...process.env, GIT_AUTHOR_DATE: dateEnv, GIT_COMMITTER_DATE: dateEnv }
+    : process.env;
+  const result = spawnSync('git', ['-C', dir, ...args], { encoding: 'utf-8', env });
+  if (result.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${result.stderr}`);
+}
+
+function initGitRepo(dir: string): void {
+  git(dir, ['init']);
+  git(dir, ['config', 'user.email', 'test@example.com']);
+  git(dir, ['config', 'user.name', 'Test']);
+  git(dir, ['config', 'commit.gpgsign', 'false']);
+}
+
+function commitAll(dir: string, message: string, date?: string): void {
+  git(dir, ['add', '-A']);
+  git(dir, ['commit', '-m', message, '--no-verify'], date);
+}
+
+// Content with real body but no last_updated in frontmatter
+const NO_DATE_CONTENT = `---
+purpose: test
+read_when: always
+owner: Bob
+---
+
+# Test
+
+This file has real content that a human wrote. It describes the north star metric
+and explains what success looks like for the team this quarter and beyond.
+`;
+
+describe('analyzeFile() with git history', () => {
+  let tmpDir: string;
+  beforeEach(async () => { tmpDir = await makeTempDir(); });
+  afterEach(async () => { await cleanup(tmpDir); });
+
+  it('falls back to the git commit date when frontmatter has no last_updated', async () => {
+    initGitRepo(tmpDir);
+    await writeFile(tmpDir, 'team-foundry/product/outcomes.md', NO_DATE_CONTENT);
+    commitAll(tmpDir, 'add outcomes', '2020-01-02T12:00:00');
+
+    const result = await analyzeFile(tmpDir, 'team-foundry/product/outcomes.md');
+    expect(result.lastUpdated).toBe('2020-01-02');
+    expect(result.health).toBe('stale');
+  });
+
+  it('treats a file as current when its last commit is newer than a stale frontmatter date', async () => {
+    initGitRepo(tmpDir);
+    await writeFile(tmpDir, 'team-foundry/product/outcomes.md', STALE_CONTENT);
+    commitAll(tmpDir, 'update outcomes'); // committed now
+
+    const result = await analyzeFile(tmpDir, 'team-foundry/product/outcomes.md');
+    expect(result.health).toBe('ok');
+    expect(result.daysSinceUpdate).toBe(0);
+  });
+
+  it('counts plain commits since update, not just merge commits (squash-merge safe)', async () => {
+    initGitRepo(tmpDir);
+    await writeFile(tmpDir, 'team-foundry/product/outcomes.md', STALE_CONTENT);
+    commitAll(tmpDir, 'add outcomes', '2020-01-01T12:00:00');
+    await writeFile(tmpDir, 'other-a.md', 'unrelated change a');
+    commitAll(tmpDir, 'squashed feature a');
+    await writeFile(tmpDir, 'other-b.md', 'unrelated change b');
+    commitAll(tmpDir, 'squashed feature b');
+
+    const result = await analyzeFile(tmpDir, 'team-foundry/product/outcomes.md');
+    expect(result.health).toBe('stale');
+    expect(result.commitsSinceUpdate).toBeGreaterThanOrEqual(2);
+  });
+
+  it('keeps frontmatter date when the file is untracked', async () => {
+    initGitRepo(tmpDir);
+    await writeFile(tmpDir, 'team-foundry/product/outcomes.md', STALE_CONTENT);
+    // never committed
+    const result = await analyzeFile(tmpDir, 'team-foundry/product/outcomes.md');
+    expect(result.lastUpdated).toBe('2020-01-01');
+    expect(result.health).toBe('stale');
   });
 });
 

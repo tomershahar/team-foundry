@@ -2,6 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function decisionSkillTemplate(_ctx: TemplateContext): string {
   return `---
+name: team-foundry-decision
 description: Draft a new architecture decision record (ADR) from the current conversation
 ---
 

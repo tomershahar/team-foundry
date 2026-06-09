@@ -2,6 +2,7 @@ import type { TemplateContext } from '../../types.js';
 
 export function statusSkillTemplate(_ctx: TemplateContext): string {
   return `---
+name: team-foundry-status
 description: Current sprint/cycle status  -  what's on track, what's at risk, what's blocked
 ---
 
