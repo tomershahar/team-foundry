@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "create-team-foundry": "./dist/index.js"
+    "create-team-foundry": "dist/index.js"
   },
   "files": [
     "dist"
