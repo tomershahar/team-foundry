@@ -74,7 +74,7 @@ async function checkDirectory(targetDir: string): Promise<void> {
       'If this is the right place, continue. Otherwise Ctrl-C and cd to your product repo.',
     );
     const ok = await confirm({ message: 'Continue anyway?' });
-    if (!ok) {
+    if (isCancel(ok) || !ok) {
       outro('Cancelled. cd to your product repo and try again.');
       process.exit(0);
     }

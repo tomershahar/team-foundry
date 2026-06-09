@@ -18,7 +18,8 @@ export interface RankedSuggestion {
 interface HealthFinding {
   file: string;
   health: 'stale' | 'empty' | 'missing';
-  prs: number;
+  /** Commits in the repo since the file's last update (squash-merge safe, unlike counting merge commits) */
+  commits: number;
 }
 
 const SEVERITY: Record<string, number> = {
@@ -30,9 +31,9 @@ const SEVERITY: Record<string, number> = {
   empty: 2,
 };
 
-function recencyFactor(prs: number): number {
-  if (prs > 3) return 2;
-  if (prs > 0) return 1;
+function recencyFactor(commits: number): number {
+  if (commits > 3) return 2;
+  if (commits > 0) return 1;
   return 0;
 }
 
@@ -60,7 +61,7 @@ export function rankFindings(
 
   for (const h of healthFindings) {
     const severity = SEVERITY[h.health] ?? 1;
-    const score = severity * 3 + recencyFactor(h.prs);
+    const score = severity * 3 + recencyFactor(h.commits);
     candidates.push({
       item: h.file,
       file: h.file,

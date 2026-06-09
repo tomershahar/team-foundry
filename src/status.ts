@@ -9,7 +9,7 @@ interface FileStatus {
   lastUpdated: string | null;
   owner: string | null;
   daysSinceUpdate: number | null;
-  prsSinceUpdate: number | null;
+  commitsSinceUpdate: number | null;
   exists: boolean;
   isEmpty: boolean;
   health: 'ok' | 'stale' | 'missing' | 'empty';
@@ -95,13 +95,16 @@ export function daysSince(dateStr: string): number | null {
   return Math.floor((Date.now() - then) / 86400000);
 }
 
-function prsSinceDate(targetDir: string, dateStr: string): number | null {
+// Counts all commits, not just merge commits: squash-merge workflows (the GitHub
+// default for many teams) produce no merge commits, which made the old PR count
+// read 0 and silently kill the staleness signal.
+function commitsSinceDate(targetDir: string, dateStr: string): number | null {
   try {
     const since = new Date(dateStr).toISOString();
     if (isNaN(new Date(dateStr).getTime())) return null;
     const result = spawnSync(
       'git',
-      ['-C', targetDir, 'log', '--oneline', '--merges', `--since=${since}`],
+      ['-C', targetDir, 'log', '--oneline', `--since=${since}`],
       { encoding: 'utf-8', timeout: 5000 },
     );
     if (result.status !== 0) return null;
@@ -109,6 +112,35 @@ function prsSinceDate(targetDir: string, dateStr: string): number | null {
   } catch {
     return null;
   }
+}
+
+// Date (YYYY-MM-DD) of the last commit that touched the file, or null when the
+// file is untracked or the directory is not a git repo.
+function gitLastCommitDate(targetDir: string, relativePath: string): string | null {
+  try {
+    const result = spawnSync(
+      'git',
+      ['-C', targetDir, 'log', '-1', '--format=%cs', '--', relativePath],
+      { encoding: 'utf-8', timeout: 5000 },
+    );
+    if (result.status !== 0) return null;
+    return result.stdout.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
+// Frontmatter last_updated relies on humans maintaining it — the exact failure
+// mode status exists to catch. Git history is the honest signal, so the more
+// recent of the two dates wins. A malformed-but-present frontmatter date is
+// preserved when there is no git date, so it still shows up in output.
+function effectiveLastUpdated(fmDate: string | null, gitDate: string | null): string | null {
+  const fmTime = fmDate ? new Date(fmDate).getTime() : NaN;
+  const gitTime = gitDate ? new Date(gitDate).getTime() : NaN;
+  if (isNaN(fmTime) && isNaN(gitTime)) return fmDate ?? gitDate;
+  if (isNaN(fmTime)) return gitDate;
+  if (isNaN(gitTime)) return fmDate;
+  return fmTime >= gitTime ? fmDate : gitDate;
 }
 
 function isEffectivelyEmpty(body: string): boolean {
@@ -127,7 +159,7 @@ export async function analyzeFile(targetDir: string, relativePath: string): Prom
   let lastUpdated: string | null = null;
   let owner: string | null = null;
   let daysSinceUpdate: number | null = null;
-  let prsSince: number | null = null;
+  let commitsSince: number | null = null;
 
   try {
     const content = await fs.readFile(fullPath, 'utf-8');
@@ -136,10 +168,11 @@ export async function analyzeFile(targetDir: string, relativePath: string): Prom
     isEmpty = isEffectivelyEmpty(body);
 
     const fm = parseFrontmatter(content);
-    if (fm['last_updated']) {
-      lastUpdated = fm['last_updated'];
+    const gitDate = gitLastCommitDate(targetDir, relativePath);
+    lastUpdated = effectiveLastUpdated(fm['last_updated'] || null, gitDate);
+    if (lastUpdated) {
       daysSinceUpdate = daysSince(lastUpdated);
-      prsSince = prsSinceDate(targetDir, lastUpdated);
+      commitsSince = commitsSinceDate(targetDir, lastUpdated);
     }
     owner = fm['owner'] || null;
   } catch {
@@ -156,7 +189,7 @@ export async function analyzeFile(targetDir: string, relativePath: string): Prom
     lastUpdated,
     owner,
     daysSinceUpdate,
-    prsSinceUpdate: prsSince,
+    commitsSinceUpdate: commitsSince,
     exists,
     isEmpty,
     health,
@@ -176,16 +209,16 @@ function formatRow(s: FileStatus): string {
   const name = rawName.slice(0, 42).padEnd(42);
   const updated = s.lastUpdated ?? ' - ';
   const age = s.daysSinceUpdate !== null ? `${s.daysSinceUpdate}d` : ' - ';
-  const prs = s.prsSinceUpdate !== null ? `${s.prsSinceUpdate} PRs` : ' - ';
+  const commits = s.commitsSinceUpdate !== null ? `${s.commitsSinceUpdate}` : ' - ';
   const owner = s.owner || ' - ';
-  return `  ${icon}  ${name} ${updated.padEnd(12)} ${age.padEnd(6)} ${prs.padEnd(8)} ${owner}`;
+  return `  ${icon}  ${name} ${updated.padEnd(12)} ${age.padEnd(6)} ${commits.padEnd(8)} ${owner}`;
 }
 
 function whyNudge(s: FileStatus): string {
   const parts: string[] = [];
   if (s.daysSinceUpdate !== null) parts.push(`${s.daysSinceUpdate} days since last update`);
-  if (s.prsSinceUpdate !== null && s.prsSinceUpdate > 0)
-    parts.push(`${s.prsSinceUpdate} PRs shipped since then`);
+  if (s.commitsSinceUpdate !== null && s.commitsSinceUpdate > 0)
+    parts.push(`${s.commitsSinceUpdate} commits shipped since then`);
   if (!s.owner) parts.push('no owner set');
   return parts.join(', ');
 }
@@ -206,7 +239,7 @@ export async function runStatus(targetDir: string): Promise<void> {
   const missing = results.filter(r => r.health === 'missing');
 
   console.log('\n  team-foundry status\n');
-  console.log(`  ${'File'.padEnd(44)} ${'Last updated'.padEnd(12)} ${'Age'.padEnd(6)} ${'PRs'.padEnd(8)} Owner`);
+  console.log(`  ${'File'.padEnd(44)} ${'Last updated'.padEnd(12)} ${'Age'.padEnd(6)} ${'Commits'.padEnd(8)} Owner`);
   console.log(`  ${'─'.repeat(90)}`);
   for (const s of results) console.log(formatRow(s));
   console.log();
@@ -245,7 +278,7 @@ export async function runStatus(targetDir: string): Promise<void> {
     .map(r => ({
       file: r.relativePath,
       health: r.health,
-      prs: r.prsSinceUpdate ?? 0,
+      commits: r.commitsSinceUpdate ?? 0,
     }));
 
   const top3 = rankFindings(healthForRanking, linkFindings);

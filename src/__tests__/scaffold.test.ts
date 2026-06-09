@@ -638,3 +638,34 @@ describe('scaffold() — mergeDecisions', () => {
     expect(cursorContent).toContain('<!-- BEGIN TEAM-FOUNDRY SECTION -->');
   });
 });
+
+describe('stack extraction package.json precedence', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => {
+    tmpDir = await makeTempDir();
+  });
+
+  afterEach(async () => {
+    await cleanup(tmpDir);
+  });
+
+  it("reads targetDir's package.json, not the cwd's", async () => {
+    // The test process cwd is the team-foundry repo itself (TypeScript + tsup).
+    // targetDir gets a distinctly different package.json — Vue, plain JS.
+    await fs.writeFile(
+      path.join(tmpDir, 'package.json'),
+      JSON.stringify({ name: 'target-project', dependencies: { vue: '^3.0.0' } }),
+      'utf-8',
+    );
+
+    await scaffold({ ...baseOptions, targetDir: tmpDir });
+
+    const stack = await fs.readFile(
+      path.join(tmpDir, 'team-foundry/engineering/stack.md'),
+      'utf-8',
+    );
+    expect(stack).toContain('Vue');
+    expect(stack).not.toContain('tsup');
+  });
+});

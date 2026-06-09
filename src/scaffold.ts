@@ -202,11 +202,12 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
 
   let extractedStack: TemplateContext['extractedStack'] = undefined;
   
-  // Prefer cwd: users almost always run the CLI from their project root.
-  // targetDir is the fallback for when scaffold is called with an explicit output path.
+  // Prefer targetDir: when scaffold is called with an explicit output path, that
+  // project's package.json should win. cwd is the fallback (and in the normal CLI
+  // flow targetDir IS cwd, so behavior there is unchanged).
   const pathsToTry = [
-    path.join(process.cwd(), 'package.json'),
     path.join(targetDir, 'package.json'),
+    path.join(process.cwd(), 'package.json'),
   ];
 
   let pkgPath: string | null = null;
