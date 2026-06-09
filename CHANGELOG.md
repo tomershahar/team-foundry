@@ -1,5 +1,35 @@
 # Changelog
 
+## [3.4.0]  -  2026-06-09
+
+### Fixed
+
+**Claude Code skills are now actually discovered** (important — upgrade recommended)
+- Skills were written as flat `.md` files directly in `.claude/skills/`, a layout Claude Code does not discover. All six skills (`/team-foundry-intro`, `/team-foundry-status`, `/team-foundry-review`, `/team-foundry-capture`, `/team-foundry-decision`, `/team-foundry-feature`) were silently non-functional in every install to date.
+- Skills are now written as `.claude/skills/<name>/SKILL.md` with `name:` frontmatter, per the skills spec.
+- **Existing installs:** run `npx create-team-foundry migrate` — it moves the old flat files into the new layout automatically (idempotent, never overwrites your edits, leaves your own custom skills alone).
+
+**`status` staleness signal works on squash-merge repos**
+- Activity since a file's last update was counted with `git log --merges`, which is always 0 on squash-merge workflows (the GitHub default for many teams). It now counts all commits; the output column is "Commits" instead of "PRs".
+
+**`status` no longer trusts stale frontmatter alone**
+- A file's effective last-updated date is now the more recent of its `last_updated` frontmatter and its last git commit date, so files people actually edit aren't flagged stale just because nobody bumped the frontmatter — and forgotten frontmatter can't hide real staleness.
+
+**CLI safety fixes**
+- Pressing Ctrl-C on the "Continue anyway?" prompt no longer proceeds as if you answered yes.
+- Stack auto-extraction now prefers the target directory's `package.json` over the invocation directory's when they differ.
+
+### Internal
+- New `src/manifest.ts` is the single source of truth for every generated file; `scaffold` and `status` both derive from it, with drift-guard tests.
+
+## [3.3.0]  -  2026-05-25
+
+### What's new in v3.3 (Pointer Architecture)
+- `AGENTS.md` is now the primary shared context file; `CLAUDE.md`, `GEMINI.md`, and `.cursor/rules/team-foundry.mdc` become thin pointer files that reference it.
+- `npx create-team-foundry migrate --to v3.3` upgrades existing installs (originals backed up to `.team-foundry/backups/`).
+- `status` checks pointer files for drift (missing `AGENTS.md` reference).
+- See the README and `docs/migrate.md` for full release notes.
+
 ## [3.2.0]  -  2026-05-20
 
 ### What's new in v3.2 (UX & DX Focus)
