@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
 import { scaffold, expectedPaths, gitAddCommand } from '../scaffold.js';
+import { trackedPaths } from '../manifest.js';
 import type { ScaffoldOptions } from '../types.js';
 
 async function makeTempDir(): Promise<string> {
@@ -667,5 +668,30 @@ describe('stack extraction package.json precedence', () => {
     );
     expect(stack).toContain('Vue');
     expect(stack).not.toContain('tsup');
+  });
+});
+
+describe('manifest consistency  -  scaffold and status share one source', () => {
+  it('every status-tracked file is scaffolded for its profile', () => {
+    const fullPaths = expectedPaths('full', 'claude');
+    for (const p of trackedPaths('full')) {
+      expect(fullPaths, `status tracks ${p} but scaffold never writes it`).toContain(p);
+    }
+    const soloPaths = expectedPaths('solo', 'claude');
+    for (const p of trackedPaths('solo')) {
+      expect(soloPaths, `status tracks ${p} but solo scaffold never writes it`).toContain(p);
+    }
+  });
+
+  it('tracked file counts match the documented profiles', () => {
+    expect(trackedPaths('solo')).toHaveLength(4);
+    expect(trackedPaths('full')).toHaveLength(16);
+  });
+
+  it('solo tracked files are a prefix-subset of full tracked files', () => {
+    const full = trackedPaths('full');
+    for (const p of trackedPaths('solo')) {
+      expect(full).toContain(p);
+    }
   });
 });

@@ -2,49 +2,15 @@ import fs from 'fs/promises';
 import path from 'path';
 import type { ScaffoldOptions, TemplateContext } from './types.js';
 import {
-  federatedProductTemplate,
-  federatedTeamTemplate,
-  federatedEngineeringTemplate,
-  federatedDesignTemplate,
-  federatedDataTemplate,
-  federatedContextTemplate,
-} from './templates/federated/index.js';
-import {
-  introSkillTemplate,
-  statusSkillTemplate,
-  reviewSkillTemplate,
-  captureSkillTemplate,
-  decisionSkillTemplate,
-  featureSkillTemplate,
-} from './templates/skills/index.js';
-import {
-  rootClaudeTemplate,
-  rootGeminiTemplate,
-  rootCursorTemplate,
-  rootAgentsTemplate,
-  gettingStartedTemplate,
-  coachTemplate,
-  northStarTemplate,
-  outcomesTemplate,
-  customersTemplate,
-  nowNextLaterTemplate,
-  assumptionsTemplate,
-  risksTemplate,
-  trioTemplate,
-  workingAgreementTemplate,
-  aiPracticesTemplate,
-  stackTemplate,
-  qualityBarTemplate,
-  decisionsReadmeTemplate,
-  principlesTemplate,
-  metricsTemplate,
-  glossaryTemplate,
-  stakeholdersTemplate,
-  strategyTemplate,
-  hierarchyTemplate,
-  hooksTemplate,
-  rulesTemplate,
-} from './templates/index.js';
+  ALWAYS_ROOT_ENTRIES,
+  SOLO_ENTRIES,
+  FULL_ONLY_ENTRIES,
+  FEDERATED_ENTRIES,
+  CLAUDE_SKILLS_ENTRIES,
+  rootEntries,
+  includesClaudeSkills,
+  type FileEntry,
+} from './manifest.js';
 
 const MERGE_MARKER_START = '<!-- BEGIN TEAM-FOUNDRY SECTION -->';
 const MERGE_MARKER_END = '<!-- END TEAM-FOUNDRY SECTION -->';
@@ -55,96 +21,6 @@ const ROOT_INSTRUCTION_PATHS = new Set([
   'GEMINI.md',
   '.cursor/rules/team-foundry.mdc',
 ]);
-
-interface FileEntry {
-  /** Relative path within targetDir (e.g. "team-foundry/product/outcomes.md") */
-  relativePath: string;
-  content: (ctx: TemplateContext) => string;
-}
-
-/** Root files always written regardless of tool choice */
-const ALWAYS_ROOT_ENTRIES: FileEntry[] = [
-  { relativePath: 'AGENTS.md', content: rootAgentsTemplate },
-];
-
-/** Files written for every profile */
-const SOLO_ENTRIES: FileEntry[] = [
-  { relativePath: 'GETTING_STARTED.md', content: gettingStartedTemplate },
-  { relativePath: '.team-foundry/coach.md', content: coachTemplate },
-  { relativePath: 'team-foundry/product/north-star.md', content: northStarTemplate },
-  { relativePath: 'team-foundry/product/outcomes.md', content: outcomesTemplate },
-  { relativePath: 'team-foundry/product/customers.md', content: customersTemplate },
-  { relativePath: 'team-foundry/engineering/stack.md', content: stackTemplate },
-];
-
-/** Additional files written only for full profile (flat layout) */
-const FULL_ONLY_ENTRIES: FileEntry[] = [
-  { relativePath: 'team-foundry/product/now-next-later.md', content: nowNextLaterTemplate },
-  { relativePath: 'team-foundry/product/assumptions.md', content: assumptionsTemplate },
-  { relativePath: 'team-foundry/product/risks.md', content: risksTemplate },
-  { relativePath: 'team-foundry/team/trio.md', content: trioTemplate },
-  { relativePath: 'team-foundry/team/working-agreement.md', content: workingAgreementTemplate },
-  { relativePath: 'team-foundry/team/ai-practices.md', content: aiPracticesTemplate },
-  { relativePath: 'team-foundry/engineering/quality-bar.md', content: qualityBarTemplate },
-  {
-    relativePath: 'team-foundry/engineering/decisions/README.md',
-    content: decisionsReadmeTemplate,
-  },
-  { relativePath: 'team-foundry/design/principles.md', content: principlesTemplate },
-  { relativePath: 'team-foundry/data/metrics.md', content: metricsTemplate },
-  { relativePath: 'team-foundry/context/glossary.md', content: glossaryTemplate },
-  { relativePath: 'team-foundry/context/stakeholders.md', content: stakeholdersTemplate },
-  { relativePath: 'team-foundry/product/strategy.md', content: strategyTemplate },
-  { relativePath: '.team-foundry/hierarchy.md', content: hierarchyTemplate },
-  { relativePath: '.team-foundry/instructions/hooks.md', content: hooksTemplate },
-  { relativePath: '.team-foundry/instructions/rules.md', content: rulesTemplate },
-];
-
-/** Per-folder CLAUDE.md files written only for full profile in federated layout */
-const FEDERATED_ENTRIES: FileEntry[] = [
-  { relativePath: 'team-foundry/product/CLAUDE.md', content: federatedProductTemplate },
-  { relativePath: 'team-foundry/team/CLAUDE.md', content: federatedTeamTemplate },
-  { relativePath: 'team-foundry/engineering/CLAUDE.md', content: federatedEngineeringTemplate },
-  { relativePath: 'team-foundry/design/CLAUDE.md', content: federatedDesignTemplate },
-  { relativePath: 'team-foundry/data/CLAUDE.md', content: federatedDataTemplate },
-  { relativePath: 'team-foundry/context/CLAUDE.md', content: federatedContextTemplate },
-];
-
-/** Pre-built Claude Code skill files  -  written when tool is claude or both.
- *  Layout is .claude/skills/<name>/SKILL.md per the skills spec — flat .md files
- *  directly in .claude/skills/ are not discovered by Claude Code. */
-const CLAUDE_SKILLS_ENTRIES: FileEntry[] = [
-  { relativePath: '.claude/skills/team-foundry-intro/SKILL.md', content: introSkillTemplate },
-  { relativePath: '.claude/skills/team-foundry-status/SKILL.md', content: statusSkillTemplate },
-  { relativePath: '.claude/skills/team-foundry-review/SKILL.md', content: reviewSkillTemplate },
-  { relativePath: '.claude/skills/team-foundry-capture/SKILL.md', content: captureSkillTemplate },
-  { relativePath: '.claude/skills/team-foundry-decision/SKILL.md', content: decisionSkillTemplate },
-  { relativePath: '.claude/skills/team-foundry-feature/SKILL.md', content: featureSkillTemplate },
-];
-
-/** Returns the root instruction file entry/entries based on tool choice */
-function rootEntries(tool: ScaffoldOptions['tool']): FileEntry[] {
-  if (tool === 'claude') {
-    return [{ relativePath: 'CLAUDE.md', content: rootClaudeTemplate }];
-  }
-  if (tool === 'gemini') {
-    return [{ relativePath: 'GEMINI.md', content: rootGeminiTemplate }];
-  }
-  if (tool === 'cursor') {
-    return [{ relativePath: '.cursor/rules/team-foundry.mdc', content: rootCursorTemplate }];
-  }
-  if (tool === 'all') {
-    return [
-      { relativePath: 'CLAUDE.md', content: rootClaudeTemplate },
-      { relativePath: 'GEMINI.md', content: rootGeminiTemplate },
-      { relativePath: '.cursor/rules/team-foundry.mdc', content: rootCursorTemplate },
-    ];
-  }
-  return [
-    { relativePath: 'CLAUDE.md', content: rootClaudeTemplate },
-    { relativePath: 'GEMINI.md', content: rootGeminiTemplate },
-  ];
-}
 
 async function applyMergeDecision(
   fullPath: string,
@@ -254,15 +130,13 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
     extractedStack
   };
 
-  const includesSkills = tool === 'claude' || tool === 'both' || tool === 'all';
-
   const entries: FileEntry[] = [
     ...ALWAYS_ROOT_ENTRIES,
     ...rootEntries(tool),
     ...SOLO_ENTRIES,
     ...(profile === 'full' ? FULL_ONLY_ENTRIES : []),
     ...(profile === 'full' && federated ? FEDERATED_ENTRIES : []),
-    ...(includesSkills ? CLAUDE_SKILLS_ENTRIES : []),
+    ...(includesClaudeSkills(tool) ? CLAUDE_SKILLS_ENTRIES : []),
   ];
 
   const written: string[] = [];
@@ -331,22 +205,12 @@ export function expectedPaths(
   tool: ScaffoldOptions['tool'],
   federated = false,
 ): string[] {
-  const roots =
-    tool === 'both'
-      ? ['CLAUDE.md', 'GEMINI.md']
-      : tool === 'claude'
-        ? ['CLAUDE.md']
-        : tool === 'cursor'
-          ? ['.cursor/rules/team-foundry.mdc']
-          : tool === 'all'
-            ? ['CLAUDE.md', 'GEMINI.md', '.cursor/rules/team-foundry.mdc']
-            : ['GEMINI.md'];
-
+  const roots = rootEntries(tool).map((e) => e.relativePath);
   const alwaysRoot = ALWAYS_ROOT_ENTRIES.map((e) => e.relativePath);
   const solo = SOLO_ENTRIES.map((e) => e.relativePath);
   const full = profile === 'full' ? FULL_ONLY_ENTRIES.map((e) => e.relativePath) : [];
   const fed = profile === 'full' && federated ? FEDERATED_ENTRIES.map((e) => e.relativePath) : [];
-  const skills = (tool === 'claude' || tool === 'both' || tool === 'all') ? CLAUDE_SKILLS_ENTRIES.map((e) => e.relativePath) : [];
+  const skills = includesClaudeSkills(tool) ? CLAUDE_SKILLS_ENTRIES.map((e) => e.relativePath) : [];
 
   return [...alwaysRoot, ...roots, ...solo, ...full, ...fed, ...skills];
 }

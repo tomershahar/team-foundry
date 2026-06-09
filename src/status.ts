@@ -3,6 +3,7 @@ import path from 'path';
 import { spawnSync } from 'child_process';
 import { runLinkChecks, rankFindings } from './link-checker.js';
 import type { LinkFinding } from './link-checker.js';
+import { trackedPaths } from './manifest.js';
 
 interface FileStatus {
   relativePath: string;
@@ -48,30 +49,10 @@ export async function checkPointerFiles(targetDir: string): Promise<PointerFileS
   return results;
 }
 
-// Matches SOLO_ENTRIES in scaffold.ts (excluding root + coach which have no owner field)
-const SOLO_FILES = [
-  'team-foundry/product/north-star.md',
-  'team-foundry/product/outcomes.md',
-  'team-foundry/product/customers.md',
-  'team-foundry/engineering/stack.md',
-];
-
-const FULL_ONLY_FILES = [
-  'team-foundry/product/now-next-later.md',
-  'team-foundry/product/assumptions.md',
-  'team-foundry/product/risks.md',
-  'team-foundry/product/strategy.md',
-  'team-foundry/team/trio.md',
-  'team-foundry/team/working-agreement.md',
-  'team-foundry/team/ai-practices.md',
-  'team-foundry/engineering/quality-bar.md',
-  'team-foundry/design/principles.md',
-  'team-foundry/data/metrics.md',
-  'team-foundry/context/glossary.md',
-  'team-foundry/context/stakeholders.md',
-];
-
-const ALL_FILES = [...SOLO_FILES, ...FULL_ONLY_FILES];
+// Derived from the manifest (entries with tracked: true) — the same source
+// scaffold writes from, so status can't drift when files are added or renamed.
+const SOLO_FILES = trackedPaths('solo');
+const ALL_FILES = trackedPaths('full');
 
 const STALE_DAYS = 45;
 
