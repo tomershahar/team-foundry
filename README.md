@@ -14,19 +14,67 @@ npx create-team-foundry
 
 ---
 
-## See it in action
+## Try it in 60 seconds
 
-The [`example/`](example/) folder is a complete team-foundry for Clearline, a fictional 8-person B2B SaaS team. Open it in Claude Code or Cursor and ask:
+```bash
+npx create-team-foundry playground
+```
+
+This drops a fully-populated example team (Clearline, a fictional 8-person B2B SaaS company) into `team-foundry-playground/`. Open it in Claude Code, Cursor, or Gemini CLI and ask:
 
 - *"What are we working toward this quarter?"*
 - *"Should we prioritize collaborative editing?"*
 - *"What architecture decisions have we made and why?"*
 
-The AI answers with your team's actual context. No guessing.
+The AI answers with the team's actual context. No guessing. The same content lives in [`example/`](example/) if you'd rather browse it.
 
-```bash
-git clone https://github.com/tomershahar/team-foundry-example
+---
+
+## What gets generated
+
+A real, populated `AGENTS.md` looks like this — the single file every AI tool reads:
+
+```markdown
+# Agents
+
+## Project overview
+
+**clearline** — Finance teams at mid-market companies close their month-end
+without chasing anyone.
+
+## Where to find context
+
+| Topic | Path |
+|---|---|
+| Vision and north star metric | team-foundry/product/north-star.md |
+| This quarter's outcomes      | team-foundry/product/outcomes.md  |
+| Who our customers are        | team-foundry/product/customers.md |
+| Tech stack and conventions   | team-foundry/engineering/stack.md |
+| Architecture decisions       | team-foundry/engineering/decisions/ |
 ```
+
+…and an outcome it routes to reads like a PM wrote it, not a template:
+
+```markdown
+### O1 — AP leads process month-end in under 2 days
+Baseline: 4.1 days average (cohort data, Q1 2026). Target: ≤2 days.
+Signal: time-to-close in approval routing data, tracked per cohort.
+Why it matters: month-end duration is the #1 complaint in NPS verbatims.
+```
+
+### Before / after
+
+| | What the AI sees |
+|---|---|
+| **Before team-foundry** | Each teammate's AI guesses from code + whatever they paste into chat |
+| **Right after `npx create-team-foundry`** | `AGENTS.md` with project overview, stack, and owners **auto-detected from your `package.json`, README, and git** — the rest scaffolded as visible gaps to fill |
+| **After onboarding** | Outcomes, customers, decisions, and quality bar — every AI answers the same way |
+
+### Who edits what
+
+- **You edit** everything under `team-foundry/` (outcomes, customers, decisions…). These are your team's words.
+- **The CLI generates and owns** the pointer files (`CLAUDE.md`, `GEMINI.md`, `.cursor/rules/…`) and the `AGENTS.md` scaffold. Re-running is safe — it merges in place.
+- **Keep it honest** with `npx create-team-foundry status` (and `status --ci` in CI).
 
 ---
 
@@ -50,9 +98,23 @@ No cloud. No sync service. No accounts. Git is the sync.
 
 ---
 
+## Commands
+
+| Command | What it does |
+|---|---|
+| `npx create-team-foundry` | Scaffold context into the current repo (interactive) |
+| `npx create-team-foundry playground` | Drop a populated example team into `team-foundry-playground/` |
+| `npx create-team-foundry status` | Health table: stale, empty, missing, link-integrity, owners |
+| `npx create-team-foundry status --ci` | Same checks, non-interactive, exits 1 on drift (for CI) |
+| `npx create-team-foundry init-ci` | Write a GitHub Action that runs the drift gate on every PR |
+| `npx create-team-foundry migrate` | Upgrade an existing install to the latest profile |
+
+---
+
 ## Learn more
 
 - [How it works](docs/how-it-works.md) — architecture, AGENTS.md primacy, pointer files, detect-and-merge, drift detection
+- [Drift gate in CI](docs/ci.md) — `status --ci`, the GitHub Action, and what fails a build
 - [The coach](docs/coach.md) — drift detection patterns, trigger phrases, three modes, the flywheel
 - [Claude Code skills](docs/skills.md) — six slash commands and their file layout
 - [Profiles](docs/profiles.md) — solo, full, federated; file counts and frontmatter
