@@ -8,6 +8,7 @@ import { runStatus, runStatusCi } from './status.js';
 import { runMigrate } from './migrate.js';
 import { runPlayground, PLAYGROUND_DIR } from './playground.js';
 import { runInitCi, CI_WORKFLOW_PATH } from './ci.js';
+import { runAdopt } from './adopt.js';
 import { detectExistingFiles } from './detect.js';
 
 function groupByFolder(paths: string[]): Record<string, string[]> {
@@ -132,6 +133,29 @@ async function main(): Promise<void> {
 
   if (process.argv[2] === 'migrate') {
     await runMigrate(targetDir);
+    return;
+  }
+
+  if (process.argv[2] === 'adopt') {
+    const date = new Date().toISOString().split('T')[0];
+    const result = await runAdopt(targetDir, date);
+    if (result.written) {
+      outro(
+        `Imported existing AI rules into:\n\n  ${result.written}\n\n` +
+          `Sources: ${result.sources.join(', ')}\n\n` +
+          `Next:\n` +
+          `  1. Run \`npx create-team-foundry\` to scaffold the full structure\n` +
+          `     (it will detect your existing CLAUDE.md and offer to merge).\n` +
+          `  2. Move each section of imported-rules.md into the file where it belongs,\n` +
+          `     then delete it.`,
+      );
+    } else {
+      outro(
+        'No pre-existing AI rules found to adopt (looked for .cursorrules, CLAUDE.md,\n' +
+          'GEMINI.md, AGENTS.md, .github/copilot-instructions.md, .cursor/rules/*.mdc,\n' +
+          'and similar). Run `npx create-team-foundry` to start fresh.',
+      );
+    }
     return;
   }
 
