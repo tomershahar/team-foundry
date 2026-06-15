@@ -21,6 +21,7 @@ const ROOT_INSTRUCTION_PATHS = new Set([
   'CLAUDE.md',
   'GEMINI.md',
   '.cursor/rules/team-foundry.mdc',
+  '.github/copilot-instructions.md',
 ]);
 
 async function applyMergeDecision(
@@ -207,6 +208,7 @@ export function gitAddCommand(tool: ScaffoldOptions['tool']): string {
   if (tool === 'claude' || tool === 'both' || tool === 'all') toolFiles.push('CLAUDE.md', '.claude/');
   if (tool === 'gemini' || tool === 'both' || tool === 'all') toolFiles.push('GEMINI.md');
   if (tool === 'cursor' || tool === 'all') toolFiles.push('.cursor/');
+  if (tool === 'copilot' || tool === 'all') toolFiles.push('.github/copilot-instructions.md');
 
   const paths = [
     'team-foundry/',

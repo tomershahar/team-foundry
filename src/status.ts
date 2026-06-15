@@ -36,6 +36,7 @@ const POINTER_FILE_PATHS = [
   'CLAUDE.md',
   'GEMINI.md',
   '.cursor/rules/team-foundry.mdc',
+  '.github/copilot-instructions.md',
 ];
 
 export async function checkPointerFiles(targetDir: string): Promise<PointerFileStatus[]> {

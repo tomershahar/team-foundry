@@ -25,8 +25,10 @@ const TOOL_LABEL: Record<string, string> = {
   claude: 'Claude Code',
   gemini: 'Gemini CLI',
   cursor: 'Cursor',
+  copilot: 'GitHub Copilot',
+  agents: 'your AI tool',
   both: 'Claude Code or Gemini CLI',
-  all: 'Claude Code, Gemini CLI, or Cursor',
+  all: 'Claude Code, Gemini CLI, Cursor, or GitHub Copilot',
 };
 
 const PASTE_PLACEHOLDER = `# Paste your existing docs here
