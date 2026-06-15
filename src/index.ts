@@ -9,6 +9,7 @@ import { runMigrate } from './migrate.js';
 import { runPlayground, PLAYGROUND_DIR } from './playground.js';
 import { runInitCi, CI_WORKFLOW_PATH } from './ci.js';
 import { runAdopt } from './adopt.js';
+import { runFeedback, FEEDBACK_NUDGE } from './feedback.js';
 import { detectExistingFiles } from './detect.js';
 
 function groupByFolder(paths: string[]): Record<string, string[]> {
@@ -136,6 +137,11 @@ async function main(): Promise<void> {
     return;
   }
 
+  if (process.argv[2] === 'feedback') {
+    runFeedback();
+    return;
+  }
+
   if (process.argv[2] === 'adopt') {
     const date = new Date().toISOString().split('T')[0];
     const result = await runAdopt(targetDir, date);
@@ -183,7 +189,8 @@ async function main(): Promise<void> {
         `  2. Ask: "What are we working toward this quarter?"\n` +
         `         "What architecture decisions have we made and why?"\n\n` +
         `The AI answers from the example team's real context. When you're ready,\n` +
-        `run \`npx create-team-foundry\` in your own repo to set up your team.`,
+        `run \`npx create-team-foundry\` in your own repo to set up your team.\n\n` +
+        FEEDBACK_NUDGE,
     );
     return;
   }

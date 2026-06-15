@@ -4,6 +4,7 @@ import { spawnSync } from 'child_process';
 import { runLinkChecks, rankFindings } from './link-checker.js';
 import type { LinkFinding } from './link-checker.js';
 import { trackedPaths } from './manifest.js';
+import { FEEDBACK_NUDGE } from './feedback.js';
 
 export interface FileStatus {
   relativePath: string;
@@ -409,4 +410,8 @@ export async function runStatus(targetDir: string): Promise<void> {
     pointerLines.push(`  ${symbol}  ${p.relativePath.padEnd(40)} ${label}`);
   }
   console.log(pointerLines.join('\n'));
+
+  // Value-moment nudge: status is re-run regularly, so this is a far better place
+  // to ask for feedback than the one-shot install outro. Not shown in --ci output.
+  console.log(`\n  ${FEEDBACK_NUDGE}\n`);
 }

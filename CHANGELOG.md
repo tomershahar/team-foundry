@@ -24,6 +24,9 @@
 **More accurate drift detection**
 - The outcome↔assumption link check is now ID-based (`O1`/`A1`) and symmetric: a reference in either file links both, grouping headings are no longer mistaken for items, and it stays silent on freeform prose. Fixes false positives that flagged correctly-linked files (including the bundled example, which now passes its own `status --ci`). Templates suggest the ID convention.
 
+**Feedback funnel**
+- `npx create-team-foundry feedback` opens a prefilled GitHub issue (title, body, and environment filled in) so feedback is one command away instead of "go find the repo." A one-line nudge now appears at value moments — the `status` output and the `playground` outro (re-run regularly), not just the install screen.
+
 **README evidence pass**
 - README now shows a real generated `AGENTS.md` excerpt, a before/after, a commands table, and which files humans edit vs the CLI owns.
 

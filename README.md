@@ -109,6 +109,7 @@ No cloud. No sync service. No accounts. Git is the sync.
 | `npx create-team-foundry status` | Health table: stale, empty, missing, link-integrity, owners |
 | `npx create-team-foundry status --ci` | Same checks, non-interactive, exits 1 on drift (for CI) |
 | `npx create-team-foundry init-ci` | Write a GitHub Action that runs the drift gate on every PR |
+| `npx create-team-foundry feedback` | Open a prefilled GitHub issue to send feedback |
 | `npx create-team-foundry migrate` | Upgrade an existing install to the latest profile |
 
 ---
