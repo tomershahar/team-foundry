@@ -16,6 +16,15 @@ export interface TemplateContext {
   ingestion?: 'local' | 'mcp' | 'paste' | 'skip' | 'repo' | 'repo+local' | 'repo+mcp' | 'repo+paste';
   /** Whether to generate per-folder CLAUDE.md files (full profile only; ignored for solo) */
   federated?: boolean;
+  /**
+   * Auto-extracted project identity from package.json / README / git.
+   * Used to pre-fill the AGENTS.md project overview and default file owner.
+   */
+  projectIdentity?: {
+    name?: string;
+    summary?: string;
+    defaultOwner?: string;
+  };
   /** Auto-extracted stack details from package.json */
   extractedStack?: {
     name?: string;

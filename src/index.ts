@@ -6,6 +6,7 @@ import { scaffold, gitAddCommand } from './scaffold.js';
 import { writeGitignore } from './gitignore.js';
 import { runStatus } from './status.js';
 import { runMigrate } from './migrate.js';
+import { runPlayground, PLAYGROUND_DIR } from './playground.js';
 import { detectExistingFiles } from './detect.js';
 
 function groupByFolder(paths: string[]): Record<string, string[]> {
@@ -120,6 +121,21 @@ async function main(): Promise<void> {
 
   if (process.argv[2] === 'migrate') {
     await runMigrate(targetDir);
+    return;
+  }
+
+  if (process.argv[2] === 'playground') {
+    const written = await runPlayground(targetDir);
+    outro(
+      `Playground ready — a fully-populated example team in:\n\n` +
+        `  ${path.join(targetDir, PLAYGROUND_DIR)}\n\n` +
+        `Scaffolded ${written.length} files. Try it now:\n\n` +
+        `  1. Open ${PLAYGROUND_DIR}/ in Claude Code, Cursor, or Gemini CLI\n` +
+        `  2. Ask: "What are we working toward this quarter?"\n` +
+        `         "What architecture decisions have we made and why?"\n\n` +
+        `The AI answers from the example team's real context. When you're ready,\n` +
+        `run \`npx create-team-foundry\` in your own repo to set up your team.`,
+    );
     return;
   }
 
