@@ -4,9 +4,10 @@ import { outro, log, confirm, select, isCancel } from '@clack/prompts';
 import { runPrompts, runMergePrompts } from './prompts.js';
 import { scaffold, gitAddCommand } from './scaffold.js';
 import { writeGitignore } from './gitignore.js';
-import { runStatus } from './status.js';
+import { runStatus, runStatusCi } from './status.js';
 import { runMigrate } from './migrate.js';
 import { runPlayground, PLAYGROUND_DIR } from './playground.js';
+import { runInitCi, CI_WORKFLOW_PATH } from './ci.js';
 import { detectExistingFiles } from './detect.js';
 
 function groupByFolder(paths: string[]): Record<string, string[]> {
@@ -115,12 +116,34 @@ async function main(): Promise<void> {
   const targetDir = process.cwd();
 
   if (process.argv[2] === 'status') {
+    const args = process.argv.slice(3);
+    if (args.includes('--ci')) {
+      const maxStaleArg = args.find((a) => a.startsWith('--max-stale='));
+      const parsed = maxStaleArg ? Number(maxStaleArg.split('=')[1]) : NaN;
+      const maxStale = Number.isFinite(parsed) ? parsed : undefined;
+      process.exitCode = await runStatusCi(targetDir, { maxStale });
+      return;
+    }
     await runStatus(targetDir);
     return;
   }
 
   if (process.argv[2] === 'migrate') {
     await runMigrate(targetDir);
+    return;
+  }
+
+  if (process.argv[2] === 'init-ci') {
+    const written = await runInitCi(targetDir);
+    if (written) {
+      outro(
+        `Wrote ${written}\n\n` +
+          `Commit it, and every PR will fail if team-foundry context drifts\n` +
+          `(missing files or broken cross-references). Tune with --max-stale=N.`,
+      );
+    } else {
+      outro(`${CI_WORKFLOW_PATH} already exists — leaving it untouched.`);
+    }
     return;
   }
 
