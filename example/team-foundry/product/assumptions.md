@@ -38,6 +38,15 @@ Evidence so far: 90-day retention is 3× higher for customers who hit first auto
 How to test: this assumption is reasonably validated. Next test: does improving time-to-first-auto-approval actually improve retention in the next 2 cohorts?
 Last validated: 2026-04-02 (David's cohort analysis)
 
+## A4  -  Enterprise buyers will adopt multi-approver auto-processing if accuracy holds
+
+Logged: 2026-04-15 | Expires: 2026-08-01
+Outcome: O4  -  One enterprise customer reaches 80% auto-processing rate (stretch)
+We believe: enterprise prospects asking about auto-processing rates will commit once we prove accuracy at multi-approver scale. The stretch outcome O4 rests entirely on this bet.
+Evidence so far: three enterprise prospects raised auto-processing rates unprompted in Q1 discovery calls. No signed commitment yet.
+How to test: land one enterprise design partner on the multi-approver workflow and measure their auto-processing rate over a full quarter.
+Last validated: not yet tested  -  net-new bet for the enterprise motion.
+
 ### Experiment readouts
 
 *Completed experiments are logged here. Do not pre-fill.*

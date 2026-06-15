@@ -35,8 +35,12 @@ owner:
      - What decision it affects  -  so you know what's at stake if it's wrong
      - How you'd test it  -  the smallest experiment that would give you real signal
 
+     Give each assumption an ID (### A1, ### A2 ...) and name the outcome it backs by ID
+     ("Outcome: O1"). The status command uses that link to flag bets and outcomes that float free.
+
      Example:
-     ### Ops managers will self-serve report fixes without training
+     ### A1  -  Ops managers will self-serve report fixes without training
+     **Outcome:** O2  -  New customers reach first value within 5 days
      **Added:** 2026-03-01
      **Last Validated:** *(never tested)*
      **Evidence:** *(none yet)*

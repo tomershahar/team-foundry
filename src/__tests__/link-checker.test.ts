@@ -124,22 +124,36 @@ describe('checkNowAssumptionLinks()', () => {
 // ── checkAssumptionOutcomeReciprocity ─────────────────────────────────────────
 
 describe('checkAssumptionOutcomeReciprocity()', () => {
-  const outcomesContent = `## Grow activation\n\nsome text\n\n## Reduce churn\n\nsome text`;
-  const assumptionsContent = `## Speed matters\n\nLinked to Grow activation outcome.\n\n## Orphan assumption\n\nno outcome mentioned here.`;
+  // IDs live on ### items under ## grouping headings — the structure the templates
+  // generate. Grouping headings ("Validated", "Open") must not be treated as items.
+  const outcomesContent = `## Validated\n\n### O1  -  Grow activation\n\nsome text\n\n### O2  -  Reduce churn\n\nsome text`;
+  const assumptionsContent = `## Open\n\n### A1  -  Speed matters\n\nSupports O1.\n\n### A2  -  Orphan assumption\n\nno outcome mentioned here.`;
 
-  it('flags assumptions that reference no outcome heading', () => {
+  it('flags assumptions that reference no outcome', () => {
     const findings = checkAssumptionOutcomeReciprocity(assumptionsContent, outcomesContent);
-    expect(findings.some(f => f.item === 'Orphan assumption' && f.type === 'assumption-outcome')).toBe(true);
+    expect(findings.some(f => f.item === 'A2' && f.type === 'assumption-outcome')).toBe(true);
   });
 
-  it('does not flag assumptions that reference an outcome', () => {
+  it('does not flag an assumption that references an outcome, and links it symmetrically', () => {
     const findings = checkAssumptionOutcomeReciprocity(assumptionsContent, outcomesContent);
-    expect(findings.some(f => f.item === 'Speed matters')).toBe(false);
+    expect(findings.some(f => f.item === 'A1')).toBe(false);
+    expect(findings.some(f => f.item === 'O1')).toBe(false); // linked via A1's "Supports O1."
   });
 
-  it('flags outcomes that reference no assumption heading', () => {
+  it('flags outcomes that no assumption references', () => {
     const findings = checkAssumptionOutcomeReciprocity(assumptionsContent, outcomesContent);
-    expect(findings.some(f => f.item === 'Reduce churn' && f.type === 'assumption-outcome')).toBe(true);
+    expect(findings.some(f => f.item === 'O2' && f.type === 'assumption-outcome')).toBe(true);
+  });
+
+  it('does not treat grouping headings as items', () => {
+    const findings = checkAssumptionOutcomeReciprocity(assumptionsContent, outcomesContent);
+    expect(findings.some(f => f.item === 'Validated' || f.item === 'Open')).toBe(false);
+  });
+
+  it('stays silent on freeform prose with no ID-tagged items', () => {
+    const o = `## Outcomes\n\n### Grow activation\n\ntext`;
+    const a = `## Assumptions\n\n### Speed matters\n\ntext`;
+    expect(checkAssumptionOutcomeReciprocity(a, o)).toHaveLength(0);
   });
 
   it('returns empty when either content is empty', () => {
