@@ -93,7 +93,8 @@ No cloud. No sync service. No accounts. Git is the sync.
 | Claude Code | `CLAUDE.md` (pointer) + `AGENTS.md` |
 | Gemini CLI | `GEMINI.md` (pointer) + `AGENTS.md` |
 | Cursor | `.cursor/rules/team-foundry.mdc` (pointer) + `AGENTS.md` |
-| Both (Claude + Gemini) | `CLAUDE.md` + `GEMINI.md` (pointers) + `AGENTS.md` |
+| GitHub Copilot | `.github/copilot-instructions.md` (pointer) + `AGENTS.md` |
+| Other (Codex, Copilot CLI, Windsurf…) | `AGENTS.md` only — these read it natively |
 | All tools (Recommended) | All pointers + `AGENTS.md` |
 
 ---
@@ -103,6 +104,7 @@ No cloud. No sync service. No accounts. Git is the sync.
 | Command | What it does |
 |---|---|
 | `npx create-team-foundry` | Scaffold context into the current repo (interactive) |
+| `npx create-team-foundry adopt` | Import existing `.cursorrules`/`CLAUDE.md`/etc. before scaffolding |
 | `npx create-team-foundry playground` | Drop a populated example team into `team-foundry-playground/` |
 | `npx create-team-foundry status` | Health table: stale, empty, missing, link-integrity, owners |
 | `npx create-team-foundry status --ci` | Same checks, non-interactive, exits 1 on drift (for CI) |

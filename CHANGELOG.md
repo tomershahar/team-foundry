@@ -15,6 +15,15 @@
 - `npx create-team-foundry status --ci` runs the existing drift checks non-interactively and exits `1` on missing files or link-integrity issues (stale/empty are warn-only). `--max-stale=N` also fails when more than N files are stale.
 - `npx create-team-foundry init-ci` writes `.github/workflows/team-foundry.yml` (checks out with `fetch-depth: 0` so staleness history is available). See [docs/ci.md](docs/ci.md).
 
+**Wider tool coverage**
+- New tool options: **GitHub Copilot** (`.github/copilot-instructions.md` pointer) and **Other** (`AGENTS.md` only, for any tool that reads it natively — Codex, Copilot CLI, Windsurf). "All tools" now includes the Copilot pointer. Pointer-drift detection and detect-and-merge cover the new files too.
+
+**`adopt` — bring your existing rules**
+- `npx create-team-foundry adopt` imports pre-existing AI config (`.cursorrules`, `.windsurfrules`, `.clinerules`, `CLAUDE.md`, `GEMINI.md`, `AGENTS.md`, `.github/copilot-instructions.md`, `.cursor/rules/*.mdc`) into `team-foundry/context/imported-rules.md` with provenance, so a team moving to team-foundry doesn't start from a blank page. Skips files already managed by team-foundry; refuses to clobber an existing import.
+
+**More accurate drift detection**
+- The outcome↔assumption link check is now ID-based (`O1`/`A1`) and symmetric: a reference in either file links both, grouping headings are no longer mistaken for items, and it stays silent on freeform prose. Fixes false positives that flagged correctly-linked files (including the bundled example, which now passes its own `status --ci`). Templates suggest the ID convention.
+
 **README evidence pass**
 - README now shows a real generated `AGENTS.md` excerpt, a before/after, a commands table, and which files humans edit vs the CLI owns.
 
