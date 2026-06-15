@@ -19,6 +19,7 @@ import {
   rootClaudeTemplate,
   rootGeminiTemplate,
   rootCursorTemplate,
+  rootCopilotTemplate,
   rootAgentsTemplate,
   gettingStartedTemplate,
   coachTemplate,
@@ -132,11 +133,20 @@ export function rootEntries(tool: ScaffoldOptions['tool']): FileEntry[] {
   if (tool === 'cursor') {
     return [{ relativePath: '.cursor/rules/team-foundry.mdc', content: rootCursorTemplate }];
   }
+  if (tool === 'copilot') {
+    return [{ relativePath: '.github/copilot-instructions.md', content: rootCopilotTemplate }];
+  }
+  // 'agents': any tool that reads AGENTS.md natively (Codex, Copilot CLI, etc.) —
+  // no pointer file, AGENTS.md (always written) is enough.
+  if (tool === 'agents') {
+    return [];
+  }
   if (tool === 'all') {
     return [
       { relativePath: 'CLAUDE.md', content: rootClaudeTemplate },
       { relativePath: 'GEMINI.md', content: rootGeminiTemplate },
       { relativePath: '.cursor/rules/team-foundry.mdc', content: rootCursorTemplate },
+      { relativePath: '.github/copilot-instructions.md', content: rootCopilotTemplate },
     ];
   }
   return [

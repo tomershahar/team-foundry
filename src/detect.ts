@@ -16,6 +16,7 @@ const ROOT_INSTRUCTION_PATHS = [
   'GEMINI.md',
   'AGENTS.md',
   '.cursor/rules/team-foundry.mdc',
+  '.github/copilot-instructions.md',
 ];
 
 /**

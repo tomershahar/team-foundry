@@ -38,12 +38,14 @@ export async function runPrompts(): Promise<PromptResult> {
     options: [
       {
         value: 'all',
-        label: 'All tools (Recommended — generates pointers for Claude Code, Gemini CLI, Cursor, and AGENTS.md)',
+        label: 'All tools (Recommended — pointers for Claude Code, Gemini CLI, Cursor, GitHub Copilot, and AGENTS.md)',
       },
       { value: 'claude', label: 'Claude Code' },
       { value: 'gemini', label: 'Gemini CLI' },
       { value: 'cursor', label: 'Cursor' },
+      { value: 'copilot', label: 'GitHub Copilot  (.github/copilot-instructions.md)' },
       { value: 'both', label: 'Multiple (Claude Code + Gemini CLI)' },
+      { value: 'agents', label: 'Other  (any tool that reads AGENTS.md — Codex, Copilot CLI, Windsurf…)' },
     ],
   });
   cancelIfNeeded(tool);

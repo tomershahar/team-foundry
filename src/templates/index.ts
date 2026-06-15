@@ -1,6 +1,7 @@
 export { rootClaudeTemplate } from './root-claude.js';
 export { rootGeminiTemplate } from './root-gemini.js';
 export { rootCursorTemplate } from './root-cursor.js';
+export { rootCopilotTemplate } from './root-copilot.js';
 export { gettingStartedTemplate } from './getting-started.js';
 export { coachTemplate } from './coach.js';
 export { northStarTemplate } from './product/north-star.js';

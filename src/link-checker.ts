@@ -205,40 +205,80 @@ export function checkNowAssumptionLinks(
   return findings;
 }
 
-// Rule 3: Assumptions with no outcome reference AND outcomes with no assumption reference.
+// Extracts items tagged with an ID (e.g. `### O1  -  …`, `## A2 …`) from ## or
+// ### headings, with each item's body (text until the next heading of any level).
+// Headings without an ID prefix — grouping headings like "Validated outcomes" or
+// "Experiment readouts" — are skipped, so they can't produce false positives.
+function extractIdItems(content: string, prefix: 'O' | 'A'): { id: string; body: string }[] {
+  const idHead = new RegExp(`^#{2,3}\\s+(${prefix}\\d+)\\b`);
+  const anyHead = /^#{2,3}\s+/;
+  const items: { id: string; body: string }[] = [];
+  let cur: { id: string; body: string } | null = null;
+
+  for (const line of content.split('\n')) {
+    const m = line.match(idHead);
+    if (m) {
+      if (cur) items.push(cur);
+      cur = { id: m[1], body: '' };
+      continue;
+    }
+    if (anyHead.test(line)) {
+      // A non-item heading ends the current item's body.
+      if (cur) { items.push(cur); cur = null; }
+      continue;
+    }
+    if (cur) cur.body += line + '\n';
+  }
+  if (cur) items.push(cur);
+  return items;
+}
+
+// Rule 3: every outcome should have a linked assumption and vice versa. Matching
+// is by ID token (O1, A2 …) and symmetric — a reference in either file links both
+// items, since teams usually write the link once ("Outcome: O1" on the assumption).
+// When neither file uses the ID convention there's no signal, so it stays silent
+// rather than flagging freeform prose.
 export function checkAssumptionOutcomeReciprocity(
   assumptionsContent: string,
   outcomesContent: string,
 ): LinkFinding[] {
   if (!assumptionsContent.trim() || !outcomesContent.trim()) return [];
 
-  const outcomeHeadings = extractHeadings(outcomesContent);
-  const assumptionHeadings = extractHeadings(assumptionsContent);
-  const assumptionBodies = extractSectionBodies(assumptionsContent);
-  const outcomeBodies = extractSectionBodies(outcomesContent);
+  const outcomes = extractIdItems(outcomesContent, 'O');
+  const assumptions = extractIdItems(assumptionsContent, 'A');
+  if (outcomes.length === 0 || assumptions.length === 0) return [];
 
-  const findings: LinkFinding[] = [];
+  const linkedO = new Set<string>();
+  const linkedA = new Set<string>();
+  const mentions = (body: string, id: string) => new RegExp(`\\b${id}\\b`).test(body);
 
-  for (const assumption of assumptionHeadings) {
-    const body = assumptionBodies[assumption] ?? '';
-    if (!outcomeHeadings.some(o => body.includes(o))) {
-      findings.push({
-        type: 'assumption-outcome',
-        file: 'team-foundry/product/assumptions.md',
-        item: assumption,
-        detail: `Assumption "${assumption}" does not reference any outcome`,
-      });
+  for (const a of assumptions) {
+    for (const o of outcomes) {
+      if (mentions(a.body, o.id) || mentions(o.body, a.id)) {
+        linkedA.add(a.id);
+        linkedO.add(o.id);
+      }
     }
   }
 
-  for (const outcome of outcomeHeadings) {
-    const body = outcomeBodies[outcome] ?? '';
-    if (!assumptionHeadings.some(a => body.includes(a))) {
+  const findings: LinkFinding[] = [];
+  for (const a of assumptions) {
+    if (!linkedA.has(a.id)) {
+      findings.push({
+        type: 'assumption-outcome',
+        file: 'team-foundry/product/assumptions.md',
+        item: a.id,
+        detail: `Assumption "${a.id}" does not reference any outcome`,
+      });
+    }
+  }
+  for (const o of outcomes) {
+    if (!linkedO.has(o.id)) {
       findings.push({
         type: 'assumption-outcome',
         file: 'team-foundry/product/outcomes.md',
-        item: outcome,
-        detail: `Outcome "${outcome}" does not reference any assumption`,
+        item: o.id,
+        detail: `Outcome "${o.id}" does not reference any assumption`,
       });
     }
   }

@@ -1,5 +1,40 @@
 # Changelog
 
+## [3.5.0]  -  2026-06-15
+
+### What's new (Time-to-aha + drift gate)
+
+**Project identity auto-extraction**
+- `AGENTS.md` now opens with a real project overview auto-detected from `package.json` (name + description), falling back to your README's title and first paragraph. No network, no AI — purely local.
+- Empty `owner:` frontmatter is pre-filled with your `git config user.name` (still editable). Closes the gap where the "Standard Scan" prompt promised more than the CLI delivered.
+
+**Playground mode**
+- `npx create-team-foundry playground` scaffolds the fully-populated Clearline example into `team-foundry-playground/` so you can experience the tool in under a minute, before doing any onboarding. Refuses to overwrite a non-empty playground directory.
+
+**Drift gate for CI**
+- `npx create-team-foundry status --ci` runs the existing drift checks non-interactively and exits `1` on missing files or link-integrity issues (stale/empty are warn-only). `--max-stale=N` also fails when more than N files are stale.
+- `npx create-team-foundry init-ci` writes `.github/workflows/team-foundry.yml` (checks out with `fetch-depth: 0` so staleness history is available). See [docs/ci.md](docs/ci.md).
+
+**Wider tool coverage**
+- New tool options: **GitHub Copilot** (`.github/copilot-instructions.md` pointer) and **Other** (`AGENTS.md` only, for any tool that reads it natively — Codex, Copilot CLI, Windsurf). "All tools" now includes the Copilot pointer. Pointer-drift detection and detect-and-merge cover the new files too.
+
+**`adopt` — bring your existing rules**
+- `npx create-team-foundry adopt` imports pre-existing AI config (`.cursorrules`, `.windsurfrules`, `.clinerules`, `CLAUDE.md`, `GEMINI.md`, `AGENTS.md`, `.github/copilot-instructions.md`, `.cursor/rules/*.mdc`) into `team-foundry/context/imported-rules.md` with provenance, so a team moving to team-foundry doesn't start from a blank page. Skips files already managed by team-foundry; refuses to clobber an existing import.
+
+**More accurate drift detection**
+- The outcome↔assumption link check is now ID-based (`O1`/`A1`) and symmetric: a reference in either file links both, grouping headings are no longer mistaken for items, and it stays silent on freeform prose. Fixes false positives that flagged correctly-linked files (including the bundled example, which now passes its own `status --ci`). Templates suggest the ID convention.
+
+**Feedback funnel**
+- `npx create-team-foundry feedback` opens a prefilled GitHub issue (title, body, and environment filled in) so feedback is one command away instead of "go find the repo." A one-line nudge now appears at value moments — the `status` output and the `playground` outro (re-run regularly), not just the install screen.
+
+**README evidence pass**
+- README now shows a real generated `AGENTS.md` excerpt, a before/after, a commands table, and which files humans edit vs the CLI owns.
+
+### Internal
+- `src/extract.ts` — pure, unit-tested identity extraction (fs/exec isolated at the edge).
+- `status.ts` refactored so the human view and `--ci` gate share one `gatherStatus()` analysis path; `ciExitDecision()` is pure and unit-tested.
+- `scripts/gen-playground.mjs` regenerates the bundled playground content from `example/`.
+
 ## [3.4.0]  -  2026-06-09
 
 ### Fixed

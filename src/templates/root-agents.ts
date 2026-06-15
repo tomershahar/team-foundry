@@ -2,6 +2,17 @@ import type { TemplateContext } from '../types.js';
 
 export function rootAgentsTemplate(ctx: TemplateContext): string {
   const isSolo = ctx.profile === 'solo';
+
+  // Pre-fill the overview from extracted identity when available; otherwise keep
+  // the GAP placeholder so the onboarding interview still prompts for it.
+  const id = ctx.projectIdentity;
+  const overview =
+    id?.name || id?.summary
+      ? `${id?.name ? `**${id.name}**` : ''}${id?.name && id?.summary ? ' — ' : ''}${id?.summary ?? ''}
+
+<!-- Auto-detected from package.json / README. Refine during onboarding. -->`
+      : `<!-- GAP: The project overview hasn't been filled in yet. Run the onboarding interview to populate it. -->`;
+
   return `---
 purpose: Entry point for AI agents — routes to team-foundry context files and contains the full coach section
 read_when: always
@@ -16,7 +27,7 @@ Use this file to orient yourself and find the right files before answering.
 
 ## Project overview
 
-<!-- GAP: The project overview hasn't been filled in yet. Run the onboarding interview to populate it. -->
+${overview}
 
 ## Where to find context
 

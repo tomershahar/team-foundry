@@ -26,6 +26,10 @@ owner:
      "Write your outcomes in the form 'we want X to change for Y customer segment.'
      What does winning this quarter look like for your customers, not your roadmap?" -->
 
+<!-- CONVENTION: give each outcome an ID (### O1, ### O2 ...). The status command
+     links outcomes to the assumptions behind them by that ID, so an outcome with no
+     backing bet is visible. Reference the ID from product/assumptions.md (e.g. "Outcome: O1"). -->
+
 ${ctx.profile === 'full' ? `## Validated outcomes
 
 <!-- Outcomes confirmed by data: cohort analysis, retention curves, usage metrics, or direct

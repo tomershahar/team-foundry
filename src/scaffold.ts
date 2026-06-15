@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import type { ScaffoldOptions, TemplateContext } from './types.js';
+import { readProjectSignals, extractProjectIdentity } from './extract.js';
 import {
   ALWAYS_ROOT_ENTRIES,
   SOLO_ENTRIES,
@@ -20,6 +21,7 @@ const ROOT_INSTRUCTION_PATHS = new Set([
   'CLAUDE.md',
   'GEMINI.md',
   '.cursor/rules/team-foundry.mdc',
+  '.github/copilot-instructions.md',
 ]);
 
 async function applyMergeDecision(
@@ -119,6 +121,11 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
     }
   }
 
+  // Deterministic identity extraction (package.json / README / git user). No
+  // network, no AI; missing sources degrade to undefined and the templates fall
+  // back to their existing GAP placeholders.
+  const projectIdentity = extractProjectIdentity(await readProjectSignals(targetDir));
+
   const ctx: TemplateContext = {
     profile,
     tool,
@@ -127,7 +134,8 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
     ingestionPath,
     ingestion,
     federated,
-    extractedStack
+    extractedStack,
+    projectIdentity,
   };
 
   const entries: FileEntry[] = [
@@ -146,6 +154,8 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
     const dir = path.dirname(fullPath);
     await fs.mkdir(dir, { recursive: true });
 
+    const content = fillDefaultOwner(entry.content(ctx), projectIdentity.defaultOwner);
+
     // Root instruction files: apply merge decision if file exists and mergeDecisions is provided
     if (ROOT_INSTRUCTION_PATHS.has(entry.relativePath) && mergeDecisions !== undefined) {
       let fileExists = false;
@@ -159,7 +169,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
         const didWrite = await applyMergeDecision(
           fullPath,
           entry.relativePath,
-          entry.content(ctx),
+          content,
           decision,
           targetDir,
         );
@@ -174,11 +184,22 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
       continue; // file exists — skip
     } catch { /* not found — write it */ }
 
-    await fs.writeFile(fullPath, entry.content(ctx), 'utf-8');
+    await fs.writeFile(fullPath, content, 'utf-8');
     written.push(entry.relativePath);
   }
 
   return written;
+}
+
+/**
+ * Fills an empty `owner:` frontmatter line with the detected git user. Only the
+ * first empty owner line (the frontmatter one) is touched; templates that ship
+ * a non-empty owner are left alone. Function replacement avoids `$` in names
+ * being interpreted as replacement patterns.
+ */
+function fillDefaultOwner(content: string, owner: string | undefined): string {
+  if (!owner) return content;
+  return content.replace(/^(owner:)[ \t]*$/m, (_m, p1: string) => `${p1} ${owner}`);
 }
 
 /** Returns the git add + commit command appropriate for the chosen tool. */
@@ -187,6 +208,7 @@ export function gitAddCommand(tool: ScaffoldOptions['tool']): string {
   if (tool === 'claude' || tool === 'both' || tool === 'all') toolFiles.push('CLAUDE.md', '.claude/');
   if (tool === 'gemini' || tool === 'both' || tool === 'all') toolFiles.push('GEMINI.md');
   if (tool === 'cursor' || tool === 'all') toolFiles.push('.cursor/');
+  if (tool === 'copilot' || tool === 'all') toolFiles.push('.github/copilot-instructions.md');
 
   const paths = [
     'team-foundry/',

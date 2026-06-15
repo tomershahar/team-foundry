@@ -1,6 +1,6 @@
 {
   "name": "create-team-foundry",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "Scaffold a team-foundry into any repo  -  structured context files for Claude Code, Gemini CLI, and Cursor",
   "license": "MIT",
   "type": "module",
@@ -11,6 +11,7 @@
     "dist"
   ],
   "scripts": {
+    "gen:playground": "node scripts/gen-playground.mjs",
     "build": "tsup",
     "dev": "tsup --watch",
     "cli": "node dist/index.js",

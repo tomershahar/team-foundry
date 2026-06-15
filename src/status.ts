@@ -4,8 +4,9 @@ import { spawnSync } from 'child_process';
 import { runLinkChecks, rankFindings } from './link-checker.js';
 import type { LinkFinding } from './link-checker.js';
 import { trackedPaths } from './manifest.js';
+import { FEEDBACK_NUDGE } from './feedback.js';
 
-interface FileStatus {
+export interface FileStatus {
   relativePath: string;
   lastUpdated: string | null;
   owner: string | null;
@@ -14,6 +15,12 @@ interface FileStatus {
   exists: boolean;
   isEmpty: boolean;
   health: 'ok' | 'stale' | 'missing' | 'empty';
+}
+
+export interface StatusAnalysis {
+  isFullProfile: boolean;
+  results: FileStatus[];
+  linkFindings: LinkFinding[];
 }
 
 export interface PointerFileStatus {
@@ -30,6 +37,7 @@ const POINTER_FILE_PATHS = [
   'CLAUDE.md',
   'GEMINI.md',
   '.cursor/rules/team-foundry.mdc',
+  '.github/copilot-instructions.md',
 ];
 
 export async function checkPointerFiles(targetDir: string): Promise<PointerFileStatus[]> {
@@ -204,15 +212,89 @@ function whyNudge(s: FileStatus): string {
   return parts.join(', ');
 }
 
-export async function runStatus(targetDir: string): Promise<void> {
-  // Detect profile: full if any full-only file exists, solo otherwise
+/**
+ * Gathers raw status data (file health + link integrity) without rendering.
+ * Shared by the human `status` view and the `--ci` gate so the two can't drift.
+ * Link checks run on the full profile only (solo has no metrics/assumptions).
+ */
+export async function gatherStatus(targetDir: string): Promise<StatusAnalysis> {
   const fullProfileFile = path.join(targetDir, 'team-foundry/team/trio.md');
   let isFullProfile = false;
   try { await fs.access(fullProfileFile); isFullProfile = true; } catch { /* solo */ }
 
   const filesToCheck = isFullProfile ? ALL_FILES : SOLO_FILES;
-
   const results = await Promise.all(filesToCheck.map(f => analyzeFile(targetDir, f)));
+  const linkFindings = isFullProfile ? await runLinkChecks(targetDir) : [];
+
+  return { isFullProfile, results, linkFindings };
+}
+
+export interface CiCounts {
+  missing: number;
+  empty: number;
+  stale: number;
+  linkFindings: number;
+}
+
+export interface CiDecision {
+  code: 0 | 1;
+  failures: string[];
+  warnings: string[];
+}
+
+/**
+ * Pure exit-code decision for `status --ci`. Missing files and link-integrity
+ * issues are hard failures (these mean an AI is reading nothing, or reading
+ * contradictory context). Stale/empty are warn-only unless `maxStale` is set,
+ * which lets a team additionally fail the build when too many files go stale.
+ */
+export function ciExitDecision(c: CiCounts, opts: { maxStale?: number } = {}): CiDecision {
+  const failures: string[] = [];
+  const warnings: string[] = [];
+
+  if (c.missing > 0) failures.push(`${c.missing} missing context file(s)`);
+  if (c.linkFindings > 0) failures.push(`${c.linkFindings} link-integrity issue(s)`);
+
+  if (opts.maxStale !== undefined && c.stale > opts.maxStale) {
+    failures.push(`${c.stale} stale file(s) exceeds --max-stale=${opts.maxStale}`);
+  } else if (c.stale > 0) {
+    warnings.push(`${c.stale} stale file(s)`);
+  }
+  if (c.empty > 0) warnings.push(`${c.empty} empty file(s)`);
+
+  return { code: failures.length > 0 ? 1 : 0, failures, warnings };
+}
+
+/**
+ * Non-interactive drift gate for CI. Prints a concise summary and returns the
+ * process exit code (0 clean, 1 drift). The caller sets process.exitCode.
+ */
+export async function runStatusCi(
+  targetDir: string,
+  opts: { maxStale?: number } = {},
+): Promise<number> {
+  const { results, linkFindings } = await gatherStatus(targetDir);
+  const counts: CiCounts = {
+    missing: results.filter(r => r.health === 'missing').length,
+    empty: results.filter(r => r.health === 'empty').length,
+    stale: results.filter(r => r.health === 'stale').length,
+    linkFindings: linkFindings.length,
+  };
+  const decision = ciExitDecision(counts, opts);
+
+  console.log('team-foundry status --ci');
+  console.log(
+    `  ${counts.missing} missing  ${counts.empty} empty  ${counts.stale} stale  ${counts.linkFindings} link issue(s)`,
+  );
+  for (const f of decision.failures) console.log(`  FAIL: ${f}`);
+  for (const w of decision.warnings) console.log(`  warn: ${w}`);
+  console.log(decision.code === 0 ? '  team-foundry: context OK' : '  team-foundry: drift detected');
+
+  return decision.code;
+}
+
+export async function runStatus(targetDir: string): Promise<void> {
+  const { isFullProfile, results, linkFindings: gatheredLinks } = await gatherStatus(targetDir);
 
   const ok = results.filter(r => r.health === 'ok');
   const stale = results.filter(r => r.health === 'stale');
@@ -228,9 +310,8 @@ export async function runStatus(targetDir: string): Promise<void> {
   console.log(`  ✓ ${ok.length} current   ~ ${stale.length} stale   ○ ${empty.length} empty   ✗ ${missing.length} missing\n`);
 
   // Link integrity section (full profile only)
-  let linkFindings: LinkFinding[] = [];
+  const linkFindings: LinkFinding[] = gatheredLinks;
   if (isFullProfile) {
-    linkFindings = await runLinkChecks(targetDir);
     if (linkFindings.length > 0) {
       console.log(`  Link Integrity`);
       console.log(`  ${'─'.repeat(60)}`);
@@ -329,4 +410,8 @@ export async function runStatus(targetDir: string): Promise<void> {
     pointerLines.push(`  ${symbol}  ${p.relativePath.padEnd(40)} ${label}`);
   }
   console.log(pointerLines.join('\n'));
+
+  // Value-moment nudge: status is re-run regularly, so this is a far better place
+  // to ask for feedback than the one-shot install outro. Not shown in --ci output.
+  console.log(`\n  ${FEEDBACK_NUDGE}\n`);
 }

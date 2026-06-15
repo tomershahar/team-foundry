@@ -4,8 +4,12 @@ import { outro, log, confirm, select, isCancel } from '@clack/prompts';
 import { runPrompts, runMergePrompts } from './prompts.js';
 import { scaffold, gitAddCommand } from './scaffold.js';
 import { writeGitignore } from './gitignore.js';
-import { runStatus } from './status.js';
+import { runStatus, runStatusCi } from './status.js';
 import { runMigrate } from './migrate.js';
+import { runPlayground, PLAYGROUND_DIR } from './playground.js';
+import { runInitCi, CI_WORKFLOW_PATH } from './ci.js';
+import { runAdopt } from './adopt.js';
+import { runFeedback, FEEDBACK_NUDGE } from './feedback.js';
 import { detectExistingFiles } from './detect.js';
 
 function groupByFolder(paths: string[]): Record<string, string[]> {
@@ -23,8 +27,10 @@ const TOOL_LABEL: Record<string, string> = {
   claude: 'Claude Code',
   gemini: 'Gemini CLI',
   cursor: 'Cursor',
+  copilot: 'GitHub Copilot',
+  agents: 'your AI tool',
   both: 'Claude Code or Gemini CLI',
-  all: 'Claude Code, Gemini CLI, or Cursor',
+  all: 'Claude Code, Gemini CLI, Cursor, or GitHub Copilot',
 };
 
 const PASTE_PLACEHOLDER = `# Paste your existing docs here
@@ -114,12 +120,78 @@ async function main(): Promise<void> {
   const targetDir = process.cwd();
 
   if (process.argv[2] === 'status') {
+    const args = process.argv.slice(3);
+    if (args.includes('--ci')) {
+      const maxStaleArg = args.find((a) => a.startsWith('--max-stale='));
+      const parsed = maxStaleArg ? Number(maxStaleArg.split('=')[1]) : NaN;
+      const maxStale = Number.isFinite(parsed) ? parsed : undefined;
+      process.exitCode = await runStatusCi(targetDir, { maxStale });
+      return;
+    }
     await runStatus(targetDir);
     return;
   }
 
   if (process.argv[2] === 'migrate') {
     await runMigrate(targetDir);
+    return;
+  }
+
+  if (process.argv[2] === 'feedback') {
+    runFeedback();
+    return;
+  }
+
+  if (process.argv[2] === 'adopt') {
+    const date = new Date().toISOString().split('T')[0];
+    const result = await runAdopt(targetDir, date);
+    if (result.written) {
+      outro(
+        `Imported existing AI rules into:\n\n  ${result.written}\n\n` +
+          `Sources: ${result.sources.join(', ')}\n\n` +
+          `Next:\n` +
+          `  1. Run \`npx create-team-foundry\` to scaffold the full structure\n` +
+          `     (it will detect your existing CLAUDE.md and offer to merge).\n` +
+          `  2. Move each section of imported-rules.md into the file where it belongs,\n` +
+          `     then delete it.`,
+      );
+    } else {
+      outro(
+        'No pre-existing AI rules found to adopt (looked for .cursorrules, CLAUDE.md,\n' +
+          'GEMINI.md, AGENTS.md, .github/copilot-instructions.md, .cursor/rules/*.mdc,\n' +
+          'and similar). Run `npx create-team-foundry` to start fresh.',
+      );
+    }
+    return;
+  }
+
+  if (process.argv[2] === 'init-ci') {
+    const written = await runInitCi(targetDir);
+    if (written) {
+      outro(
+        `Wrote ${written}\n\n` +
+          `Commit it, and every PR will fail if team-foundry context drifts\n` +
+          `(missing files or broken cross-references). Tune with --max-stale=N.`,
+      );
+    } else {
+      outro(`${CI_WORKFLOW_PATH} already exists — leaving it untouched.`);
+    }
+    return;
+  }
+
+  if (process.argv[2] === 'playground') {
+    const written = await runPlayground(targetDir);
+    outro(
+      `Playground ready — a fully-populated example team in:\n\n` +
+        `  ${path.join(targetDir, PLAYGROUND_DIR)}\n\n` +
+        `Scaffolded ${written.length} files. Try it now:\n\n` +
+        `  1. Open ${PLAYGROUND_DIR}/ in Claude Code, Cursor, or Gemini CLI\n` +
+        `  2. Ask: "What are we working toward this quarter?"\n` +
+        `         "What architecture decisions have we made and why?"\n\n` +
+        `The AI answers from the example team's real context. When you're ready,\n` +
+        `run \`npx create-team-foundry\` in your own repo to set up your team.\n\n` +
+        FEEDBACK_NUDGE,
+    );
     return;
   }
 
