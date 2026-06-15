@@ -15,10 +15,11 @@ describe('buildFeedbackUrl()', () => {
   });
 
   it('embeds the environment in the body for triage', () => {
-    const decoded = decodeURIComponent(buildFeedbackUrl(env));
-    expect(decoded).toContain('create-team-foundry: 3.5.0');
-    expect(decoded).toContain('node: v20.0.0');
-    expect(decoded).toContain('platform: darwin arm64');
+    // searchParams.get decodes form-encoded '+' back to spaces (decodeURIComponent does not).
+    const body = new URL(buildFeedbackUrl(env)).searchParams.get('body') ?? '';
+    expect(body).toContain('create-team-foundry: 3.5.0');
+    expect(body).toContain('node: v20.0.0');
+    expect(body).toContain('platform: darwin arm64');
   });
 
   it('produces a valid, parseable URL', () => {
