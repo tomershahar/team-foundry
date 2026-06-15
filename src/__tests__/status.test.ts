@@ -339,9 +339,10 @@ describe('checkPointerFiles()', () => {
   beforeEach(async () => { tmpDir = await makeTempDir(); });
   afterEach(async () => { await cleanup(tmpDir); });
 
-  it('returns all three pointer files as missing when none exist', async () => {
+  it('returns all pointer files as missing when none exist', async () => {
     const results = await checkPointerFiles(tmpDir);
-    expect(results).toHaveLength(3);
+    expect(results).toHaveLength(4);
+    expect(results.map((r) => r.relativePath)).toContain('.github/copilot-instructions.md');
     expect(results.every((r) => !r.exists)).toBe(true);
     expect(results.every((r) => !r.drifted)).toBe(true);
   });
