@@ -127,6 +127,15 @@ No cloud. No sync service. No accounts. Git is the sync.
 
 ---
 
+## Feedback & a small ask
+
+team-foundry is open source and built in the open. If it saves your team from context drift:
+
+- ⭐ **Star the repo** — it's the signal that tells us (and other teams) this is worth maintaining.
+- 💬 **Tell us what's rough** — run `npx create-team-foundry feedback` to open a prefilled issue, or [open one here](https://github.com/tomershahar/team-foundry/issues/new). Bugs, missing tools, and "I wish it did X" are all welcome.
+
+---
+
 ## Requirements
 
 Node 18+. Claude Code, Gemini CLI, Cursor, or any AI tool that reads files from your repo.
