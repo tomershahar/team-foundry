@@ -30,6 +30,12 @@ export async function runPlayground(targetDir: string): Promise<string[]> {
   const written: string[] = [];
   for (const file of PLAYGROUND_FILES) {
     const fullPath = path.join(dest, file.relativePath);
+    // Defense-in-depth: bundled content is trusted, but never let a relativePath
+    // escape the playground directory.
+    const rel = path.relative(dest, fullPath);
+    if (rel.startsWith('..') || path.isAbsolute(rel)) {
+      throw new Error(`Refusing to write outside playground: ${file.relativePath}`);
+    }
     await fs.mkdir(path.dirname(fullPath), { recursive: true });
     await fs.writeFile(fullPath, file.content, 'utf-8');
     written.push(path.join(PLAYGROUND_DIR, file.relativePath));

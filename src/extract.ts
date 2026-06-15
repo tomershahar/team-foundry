@@ -116,7 +116,10 @@ function readGitUser(targetDir: string): string | null {
       timeout: 5000,
     });
     if (r.status !== 0) return null;
-    return r.stdout.trim() || null;
+    // Collapse any internal whitespace/newlines to a single space so the value
+    // can't break out of its single-line YAML frontmatter slot.
+    const name = r.stdout.replace(/\s+/g, ' ').trim();
+    return name || null;
   } catch {
     return null;
   }
