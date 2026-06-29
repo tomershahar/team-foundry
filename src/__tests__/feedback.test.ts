@@ -22,6 +22,13 @@ describe('buildFeedbackUrl()', () => {
     expect(body).toContain('platform: darwin arm64');
   });
 
+  it('asks focused questions that are quick to answer', () => {
+    const body = new URL(buildFeedbackUrl(env)).searchParams.get('body') ?? '';
+    expect(body).toContain('What were you trying to do?');
+    expect(body).toContain('Where did team-foundry help or get in the way?');
+    expect(body).toContain('What would make you use it again?');
+  });
+
   it('produces a valid, parseable URL', () => {
     expect(() => new URL(buildFeedbackUrl(env))).not.toThrow();
   });

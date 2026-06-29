@@ -8,7 +8,7 @@ export const FEEDBACK_REPO = 'tomershahar/team-foundry';
 
 /** One-line nudge shown at value moments (status, playground) to drive feedback. */
 export const FEEDBACK_NUDGE =
-  'Useful? Tell us in 30s — run: npx create-team-foundry feedback';
+  'Would you use this again? Tell us why in 30s: npx create-team-foundry feedback';
 
 export interface FeedbackEnv {
   version: string;
@@ -24,7 +24,13 @@ export interface FeedbackEnv {
 export function buildFeedbackUrl(env: FeedbackEnv): string {
   const title = 'Feedback: ';
   const body = [
-    "What's working, what's not, or what you wish it did:",
+    'What were you trying to do?',
+    '',
+    '',
+    'Where did team-foundry help or get in the way?',
+    '',
+    '',
+    'What would make you use it again?',
     '',
     '',
     '---',
@@ -69,7 +75,7 @@ export function runFeedback(): void {
     platform: `${process.platform} ${process.arch}`,
   });
   console.log(
-    `\nThanks for helping shape team-foundry. Opening a prefilled issue — if it\n` +
+    `\nThree short questions, no polished write-up needed. Opening a prefilled issue — if it\n` +
       `doesn't open automatically, paste this into your browser:\n\n  ${url}\n`,
   );
   tryOpenBrowser(url);

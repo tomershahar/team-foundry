@@ -1,6 +1,6 @@
 {
   "project": "create-team-foundry",
-  "description": "Add project description here",
+  "description": "Git-native shared product context for AI coding tools",
   "schema": {
     "status_values": ["not_started", "active", "blocked", "passing"],
     "required_fields": ["id", "name", "behavior", "verification", "status"]
@@ -8,12 +8,48 @@
   "features": [
     {
       "id": "F01",
-      "name": "First feature",
-      "behavior": "Describe what the user sees or gets",
+      "name": "Manifest-driven scaffolding",
+      "behavior": "Generates profile- and tool-specific context files without silently overwriting existing instructions",
       "verification": "npm test",
-      "status": "not_started",
-      "evidence": null,
-      "testedAt": null
+      "status": "passing",
+      "evidence": "User-reported npm test: 19 files passed, 817 tests passed",
+      "testedAt": "2026-06-29"
+    },
+    {
+      "id": "F02",
+      "name": "Multi-tool instruction routing",
+      "behavior": "Creates AGENTS.md plus compatible pointers for Claude Code, Gemini CLI, Cursor, and GitHub Copilot",
+      "verification": "npm test",
+      "status": "passing",
+      "evidence": "User-reported npm test: 19 files passed, 817 tests passed",
+      "testedAt": "2026-06-29"
+    },
+    {
+      "id": "F03",
+      "name": "Repository-aware onboarding",
+      "behavior": "Extracts project identity and stack hints, and can adopt existing AI instructions",
+      "verification": "npm test",
+      "status": "passing",
+      "evidence": "User-reported npm test: 19 files passed, 817 tests passed",
+      "testedAt": "2026-06-29"
+    },
+    {
+      "id": "F04",
+      "name": "Context health and CI drift gate",
+      "behavior": "Reports missing, stale, empty, ownerless, or broken context and can enforce integrity in CI",
+      "verification": "npm test",
+      "status": "passing",
+      "evidence": "User-reported npm test: 19 files passed, 817 tests passed",
+      "testedAt": "2026-06-29"
+    },
+    {
+      "id": "F05",
+      "name": "Playground and focused feedback",
+      "behavior": "Provides a populated example and opens a short prefilled feedback issue at value moments",
+      "verification": "npm test",
+      "status": "passing",
+      "evidence": "User-reported npm test: 19 files passed, 817 tests passed",
+      "testedAt": "2026-06-29"
     }
   ]
 }

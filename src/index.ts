@@ -316,11 +316,9 @@ async function main(): Promise<void> {
       `\nSee GETTING_STARTED.md for more detail.\n\n` +
       `Reminder: team-foundry works best in a shared repo  -  one the whole\n` +
       `team commits to, so everyone's AI tool gets the same context.\n\n` +
-      `────────────────────────────────────────────────────────────\n` +
-      `🌟 Enjoying team-foundry?\n` +
-      `   Help us grow by leaving a star or feedback on GitHub!\n` +
-      `   👉 https://github.com/tomershahar/team-foundry\n` +
-      `────────────────────────────────────────────────────────────`
+      `Once you try the onboarding, one question would help us:\n` +
+      `Would you use this again? Tell us why in 30s:\n` +
+      `  npx create-team-foundry feedback`
   );
 }
 

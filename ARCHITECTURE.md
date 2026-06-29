@@ -10,19 +10,18 @@
 npx create-team-foundry
         │
         ▼
-   src/index.ts          ← CLI entry: command routing (scaffold | status | migrate)
+   src/index.ts          ← CLI entry and command routing
         │
-   ┌────┴────────────────────────┐
-   │                             │
-src/prompts.ts           src/status.ts / src/migrate.ts
-(interactive prompts)    (subcommands)
+   ┌────┴──────────────────────────────────────────────┐
+   │                                                   │
+src/prompts.ts                          command modules
+(interactive setup)                    status / migrate / adopt / CI / playground / feedback
         │
-src/scaffold.ts          ← core scaffold engine: resolves profile → writes files
+src/scaffold.ts          ← safe file writing, merge decisions, backups
         │
-   ┌────┴────────────────┐
-   │                     │
-src/templates/       src/types.ts
-(file templates)     (shared types)
+src/manifest.ts          ← source of truth for generated and tracked files
+        │
+src/templates/ + src/types.ts
 ```
 
 ## Key Modules
@@ -31,9 +30,16 @@ src/templates/       src/types.ts
 |------|---------------|
 | `src/index.ts` | Entry point, command routing, first-run UX |
 | `src/prompts.ts` | Interactive @clack/prompts flows |
-| `src/scaffold.ts` | Template resolution, file writing, profile logic |
+| `src/scaffold.ts` | File writing, root-file merge behavior, backups, profile materialization |
+| `src/manifest.ts` | Generated-file registry, profile/tool selection, tracked status paths |
 | `src/status.ts` | `status` subcommand  -  reads existing `.team-foundry/` and reports health |
 | `src/migrate.ts` | Migration logic for existing team-foundry installations |
+| `src/adopt.ts` | Imports existing AI instruction files into a reviewable transition file |
+| `src/detect.ts` | Detects existing instruction files before setup/adoption |
+| `src/extract.ts` | Extracts project identity and stack hints from the repository |
+| `src/ci.ts` | Installs the GitHub Actions drift gate |
+| `src/playground.ts` | Materializes the populated example project |
+| `src/feedback.ts` | Builds and opens a prefilled GitHub feedback issue |
 | `src/link-checker.ts` | Validates cross-file links in generated output |
 | `src/types.ts` | Shared TypeScript types |
 | `src/gitignore.ts` | Gitignore update logic |
@@ -53,15 +59,21 @@ src/templates/       src/types.ts
 | `claude` | CLAUDE.md root instruction file |
 | `gemini` | GEMINI.md root instruction file |
 | `cursor` | `.cursor/rules/team-foundry.mdc` |
+| `copilot` | `.github/copilot-instructions.md` |
+| `agents` | `AGENTS.md` only |
 | `both` | CLAUDE.md + GEMINI.md |
+| `all` | All pointer files + `AGENTS.md` |
 
 ## Data Flow
 
 1. User runs `npx create-team-foundry`
 2. `index.ts` detects if first-run or re-run, routes to appropriate flow
-3. `prompts.ts` collects: tool, profile, team name, owner
-4. `scaffold.ts` resolves template set for the profile, interpolates frontmatter, writes files
-5. Files land in `.team-foundry/` with YAML frontmatter (`purpose`, `read_when`, `last_updated`, `owner`)
+3. `prompts.ts` collects tool, profile, visibility, layout, and ingestion choices
+4. `detect.ts` finds existing root instruction files and the user chooses merge, replace, or skip
+5. `extract.ts` reads repository identity and stack hints
+6. `manifest.ts` resolves the profile/tool-specific file set
+7. `scaffold.ts` renders templates, protects existing content, and writes confirmed changes
+8. Content lands in `team-foundry/`; operational files live in `.team-foundry/`
 
 ## Storage Layout
 
@@ -70,13 +82,12 @@ src/templates/       src/types.ts
 ├── CLAUDE.md                        ← root AI instruction file (claude)
 ├── GEMINI.md                        ← root AI instruction file (gemini)
 ├── .cursor/rules/team-foundry.mdc   ← cursor rules
-└── .team-foundry/
-    ├── coach.md                     ← diagnostic coach playbook
-    ├── outcomes.md
-    ├── customers.md
-    ├── decisions.md
-    ├── quality.md
-    └── ... (profile-dependent files)
+├── .github/copilot-instructions.md  ← GitHub Copilot pointer
+├── team-foundry/                    ← team-owned product and engineering context
+│   ├── product/
+│   ├── engineering/
+│   └── ... (profile-dependent folders)
+└── .team-foundry/                   ← coach and operational instructions
 ```
 
 ## Design Constraints

@@ -151,6 +151,20 @@ describe('template stubs', () => {
     expect(output).toContain('/team-foundry-intro');
   });
 
+  it('root-agents omits Claude Code skills when Claude files are not generated', () => {
+    for (const tool of ['gemini', 'cursor', 'copilot', 'agents'] as const) {
+      const output = rootAgentsTemplate({ ...baseCtx, tool });
+      expect(output).not.toContain('## Claude Code Skills');
+      expect(output).not.toContain('.claude/skills/');
+    }
+  });
+
+  it('root-agents includes Claude Code skills for combined tool choices', () => {
+    for (const tool of ['both', 'all'] as const) {
+      expect(rootAgentsTemplate({ ...baseCtx, tool })).toContain('## Claude Code Skills');
+    }
+  });
+
   it('root-cursor has alwaysApply frontmatter', () => {
     expect(rootCursorTemplate(baseCtx)).toContain('alwaysApply: true');
   });

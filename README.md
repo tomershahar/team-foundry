@@ -1,6 +1,6 @@
 # team-foundry
 
-**Great products come from teams that share context. When the PM's AI, the engineer's AI, and the designer's AI all know different things, the work fragments and customers feel it. team-foundry puts your team's context in one place every AI reads.**
+**Your coding agents know the code. They usually do not know which customer matters, what the team is optimizing for, or why a decision was made. team-foundry turns that missing product context into versioned files your team's AI tools can load from the repo.**
 
 [![npm](https://img.shields.io/npm/v/create-team-foundry)](https://www.npmjs.com/package/create-team-foundry)
 [![npm downloads](https://img.shields.io/npm/dw/create-team-foundry)](https://www.npmjs.com/package/create-team-foundry)
@@ -14,25 +14,25 @@ npx create-team-foundry
 
 ---
 
-## Try it in 60 seconds
+## See the difference in 60 seconds
 
 ```bash
 npx create-team-foundry playground
 ```
 
-This drops a fully-populated example team (Clearline, a fictional 8-person B2B SaaS company) into `team-foundry-playground/`. Open it in Claude Code, Cursor, or Gemini CLI and ask:
+This creates a populated example team in `team-foundry-playground/`. Open that folder in Claude Code, Cursor, Gemini CLI, Codex, or another tool that reads repository instructions, then ask:
 
 - *"What are we working toward this quarter?"*
 - *"Should we prioritize collaborative editing?"*
 - *"What architecture decisions have we made and why?"*
 
-The AI answers with the team's actual context. No guessing. The same content lives in [`example/`](example/) if you'd rather browse it.
+Instead of inferring answers from code, the AI can cite the team's outcomes, customers, risks, and decisions. The same example lives in [`example/`](example/) if you would rather browse it.
 
 ---
 
 ## What gets generated
 
-A real, populated `AGENTS.md` looks like this — the single file every AI tool reads:
+A real, populated `AGENTS.md` looks like this. Tools that support `AGENTS.md` read it directly; team-foundry generates thin pointer files for tools with their own instruction format.
 
 ```markdown
 # Agents
@@ -80,7 +80,7 @@ Why it matters: month-end duration is the #1 complaint in NPS verbatims.
 
 ## How it works
 
-One person runs `npx create-team-foundry` in the shared repo. The CLI generates `AGENTS.md` (the shared context every AI tool reads) plus thin pointer files for each tool your team uses. Commit and push. Teammates `git pull`. Done.
+One person runs `npx create-team-foundry` in the shared repo. The CLI generates `AGENTS.md` as the shared routing map plus compatible pointer files for the tools the team selects. Commit and push; teammates receive the same context through Git.
 
 No cloud. No sync service. No accounts. Git is the sync.
 
@@ -127,12 +127,11 @@ No cloud. No sync service. No accounts. Git is the sync.
 
 ---
 
-## Feedback & a small ask
+## Feedback
 
-team-foundry is open source and built in the open. If it saves your team from context drift:
+The most useful question is not "do you like it?" It is: **would you use team-foundry again, and why?**
 
-- ⭐ **Star the repo** — it's the signal that tells us (and other teams) this is worth maintaining.
-- 💬 **Tell us what's rough** — run `npx create-team-foundry feedback` to open a prefilled issue, or [open one here](https://github.com/tomershahar/team-foundry/issues/new). Bugs, missing tools, and "I wish it did X" are all welcome.
+Run `npx create-team-foundry feedback` to open three short, prefilled questions, or [answer on GitHub](https://github.com/tomershahar/team-foundry/issues/new). Rough notes are more useful than polished praise.
 
 ---
 

@@ -2,6 +2,8 @@ import type { TemplateContext } from '../types.js';
 
 export function rootAgentsTemplate(ctx: TemplateContext): string {
   const isSolo = ctx.profile === 'solo';
+  const includesClaudeSkills =
+    ctx.tool === 'claude' || ctx.tool === 'both' || ctx.tool === 'all';
 
   // Pre-fill the overview from extracted identity when available; otherwise keep
   // the GAP placeholder so the onboarding interview still prompts for it.
@@ -83,7 +85,7 @@ The coach runs in three modes — inline (always on, surfaces one-sentence nudge
 
 **Draft-then-confirm rule:** the coach always shows a proposed file change and waits for confirmation before writing. Silence is not confirmation.
 
-<!-- Skills are shown for both solo and full profiles — slash commands work regardless of team size -->
+${includesClaudeSkills ? `<!-- Skills are shown for both solo and full profiles — slash commands work regardless of team size -->
 
 ## Claude Code Skills
 
@@ -99,7 +101,7 @@ Pre-built skills are in \`.claude/skills/\`. Invoke with a slash command:
 | \`/team-foundry-capture\` | Capture what was learned in this session into the right file |
 | \`/team-foundry-decision\` | Draft an ADR from the current conversation |
 | \`/team-foundry-feature\` | Synthesize everything team-foundry knows about a specific feature |
-${isSolo ? '' : `
+` : ''}${isSolo ? '' : `
 ## Glossary
 
 See \`team-foundry/context/glossary.md\` for domain terms, acronyms, and known naming inconsistencies between teams.
