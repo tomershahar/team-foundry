@@ -15,7 +15,7 @@ npx create-team-foundry
    ┌────┴──────────────────────────────────────────────┐
    │                                                   │
 src/prompts.ts                          command modules
-(interactive setup)                    status / migrate / adopt / CI / playground / feedback
+(interactive setup)                    status / doctor / migrate / adopt / CI / playground / feedback
         │
 src/scaffold.ts          ← safe file writing, merge decisions, backups
         │
@@ -33,6 +33,7 @@ src/templates/ + src/types.ts
 | `src/scaffold.ts` | File writing, root-file merge behavior, backups, profile materialization |
 | `src/manifest.ts` | Generated-file registry, profile/tool selection, tracked status paths |
 | `src/status.ts` | `status` subcommand  -  reads existing `.team-foundry/` and reports health |
+| `src/doctor.ts` | `doctor` subcommand  -  scores shared status analysis and recommends one fix |
 | `src/migrate.ts` | Migration logic for existing team-foundry installations |
 | `src/adopt.ts` | Imports existing AI instruction files into a reviewable transition file |
 | `src/detect.ts` | Detects existing instruction files before setup/adoption |

@@ -50,6 +50,51 @@
       "status": "passing",
       "evidence": "User-reported npm test: 19 files passed, 817 tests passed",
       "testedAt": "2026-06-29"
+    },
+    {
+      "id": "F06",
+      "name": "Context Health Score / Doctor",
+      "behavior": "Summarizes deterministic context health in five explained categories and recommends one highest-leverage fix",
+      "verification": "docs/action-plan/01-context-health-score.md",
+      "status": "passing",
+      "evidence": "Post-review npm test rerun reported passing; typecheck/lint/build and four Doctor UAT fixtures pass",
+      "testedAt": "2026-07-02"
+    },
+    {
+      "id": "F07",
+      "name": "Evidence-led README",
+      "behavior": "Shows a reproducible before/after agent decision and real Doctor output above implementation details",
+      "verification": "docs/action-plan/02-evidence-led-readme.md",
+      "status": "active",
+      "evidence": "README has playground, excerpts, and abstract before/after; controlled transcript and Doctor evidence remain",
+      "testedAt": null
+    },
+    {
+      "id": "F08",
+      "name": "AGENTS.md compatibility hardening",
+      "behavior": "Verifies every advertised tool selection routes through one protected AGENTS.md source of truth",
+      "verification": "docs/action-plan/03-agents-compatibility.md",
+      "status": "active",
+      "evidence": "Core bridge is delivered under F02; compatibility matrix characterization and available-tool UAT remain",
+      "testedAt": null
+    },
+    {
+      "id": "F09",
+      "name": "Lightweight drift automation",
+      "behavior": "Adds low-noise scheduled and change-aware context review without a server or mandatory local hook",
+      "verification": "docs/action-plan/04-drift-automation.md",
+      "status": "blocked",
+      "evidence": "Start gate requires evidence that ongoing decay remains a material problem after Doctor research",
+      "testedAt": null
+    },
+    {
+      "id": "F10",
+      "name": "Distribution experiment",
+      "behavior": "Uses reproducible product proof, accurate metadata, durable directories, and consented trials to learn why users return",
+      "verification": "docs/action-plan/05-distribution.md",
+      "status": "blocked",
+      "evidence": "Starts after F06 Doctor output and F07 controlled before/after proof are available",
+      "testedAt": null
     }
   ]
 }

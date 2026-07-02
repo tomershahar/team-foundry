@@ -5,6 +5,7 @@ import { runPrompts, runMergePrompts } from './prompts.js';
 import { scaffold, gitAddCommand } from './scaffold.js';
 import { writeGitignore } from './gitignore.js';
 import { runStatus, runStatusCi } from './status.js';
+import { runDoctor } from './doctor.js';
 import { runMigrate } from './migrate.js';
 import { runPlayground, PLAYGROUND_DIR } from './playground.js';
 import { runInitCi, CI_WORKFLOW_PATH } from './ci.js';
@@ -118,6 +119,11 @@ async function checkExistingInstall(targetDir: string): Promise<'status' | 'migr
 
 async function main(): Promise<void> {
   const targetDir = process.cwd();
+
+  if (process.argv[2] === 'doctor') {
+    await runDoctor(targetDir, { json: process.argv.slice(3).includes('--json') });
+    return;
+  }
 
   if (process.argv[2] === 'status') {
     const args = process.argv.slice(3);

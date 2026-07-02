@@ -95,6 +95,39 @@ function runCliPaste(cwd: string): Promise<{ code: number | null; stdout: string
   });
 }
 
+function runCliCommand(cwd: string, args: string[]): Promise<{ code: number | null; stdout: string }> {
+  return new Promise((resolve) => {
+    const proc = spawn('node', [DIST_ENTRY, ...args], {
+      cwd,
+      env: { ...process.env, FORCE_COLOR: '0' },
+    });
+    let stdout = '';
+    proc.stdout.on('data', (chunk: Buffer) => { stdout += chunk.toString(); });
+    proc.stderr.on('data', () => {});
+    proc.on('close', (code) => { resolve({ code, stdout }); });
+  });
+}
+
+describe('CLI doctor command', () => {
+  let tmpDir: string;
+
+  beforeEach(async () => { tmpDir = await makeTempDir(); });
+  afterEach(async () => { await cleanup(tmpDir); });
+
+  it('prints a human context-health report and exits 0', async () => {
+    const result = await runCliCommand(tmpDir, ['doctor']);
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain('Context health:');
+    expect(result.stdout).toContain('Highest-leverage fix:');
+  });
+
+  it('prints versioned JSON with --json and exits 0', async () => {
+    const result = await runCliCommand(tmpDir, ['doctor', '--json']);
+    expect(result.code).toBe(0);
+    expect(JSON.parse(result.stdout).schemaVersion).toBe(1);
+  });
+});
+
 describe('CLI smoke test', () => {
   let tmpDir: string;
 

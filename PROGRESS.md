@@ -3,11 +3,11 @@
 ## Current State
 
 - Package version: 3.5.0
-- Change base: `123c040 docs: add SECURITY.md (supported versions, threat model, private reporting)`
-- Type check: passing (`npx tsc --noEmit`, 2026-06-29)
+- Change base: `21c2c33 improve positioning and feedback flow`
+- Type check: passing (`npx tsc --noEmit`, 2026-07-01)
 - Lint: passing (`npm run lint`, 2026-06-29)
 - Build: passing (`npm run build`, 2026-06-29)
-- Tests: passing (user-reported `npm test`: 19 files, 817 tests; 2026-06-29)
+- Tests: passing (user-reported post-review `npm test` rerun; 2026-07-02)
 
 ## Completed
 
@@ -17,20 +17,37 @@
 - Fixed AGENTS.md generation so Claude Code skills are advertised only when the selected tool set includes Claude Code.
 - Reworked feedback prompts around one retention question: whether the user would use team-foundry again, and why.
 - Added regression coverage for tool-specific skill advertising and focused feedback questions.
+- Reconciled the five-item three-AI review with the current v3.5 implementation.
+- Added five independent implementation specs under `docs/action-plan/`, each with
+  planning, test-first or acceptance-first work, implementation, verification, independent
+  review, UAT, and release gates.
+- Added F06-F10 to feature tracking with partial and dependency-blocked states preserved.
+- Implemented F06 Doctor with deterministic five-category scoring, privacy-safe JSON,
+  one highest-leverage fix, and shared Status analysis.
+- Added Doctor unit and CLI coverage; typecheck, lint, and build pass locally.
+- Completed F06 UAT across no-installation, fresh-scaffold, AGENTS-only, and broken-link fixtures.
+- Applied F06 review fixes for Connectedness wording, rule-family exhaustiveness,
+  category-definition duplication, CI-path overhead, and independent I/O parallelism.
 
 ## In Progress
 
-- No active implementation work in this change set.
+- F06 Context Health Score / Doctor is passing after review fixes.
+- F07 Evidence-led README is partially delivered and waits for real Doctor output.
+- F08 AGENTS.md compatibility hardening can run independently.
+- F09 drift automation and F10 distribution remain gated by evidence defined in their specs.
 
 ## Known Issues
 
 - Untracked feedback and scratch files predate this work and were intentionally left untouched.
+- The bundled Clearline playground predates AGENTS.md primacy and currently scores 65/100:
+  its content is stale and its legacy CLAUDE.md does not reference AGENTS.md. Refresh under F07.
 
 ## Next Steps
 
-1. Publish the next package version when the change set is ready for npm.
-2. Recruit a small group of users and ask the new retention question after they try the playground or onboarding.
-3. Use feedback themes to choose the next product iteration rather than adding features speculatively.
+1. Commit F06 separately from the next development track.
+2. Start F07 by refreshing the Clearline playground and defining the controlled comparison rubric.
+3. Capture real before/after evidence without changing the rubric after seeing results.
+4. Run F08 characterization independently when capacity allows.
 
 ---
-*Updated 2026-06-29*
+*Updated 2026-07-02*

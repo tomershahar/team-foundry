@@ -1,7 +1,15 @@
 import { readFile } from 'fs/promises';
 
+export const LINK_FINDING_TYPES = [
+  'outcome-metric',
+  'now-assumption',
+  'assumption-outcome',
+] as const;
+
+export type LinkFindingType = (typeof LINK_FINDING_TYPES)[number];
+
 export interface LinkFinding {
-  type: 'outcome-metric' | 'now-assumption' | 'assumption-outcome';
+  type: LinkFindingType;
   file: string;
   item: string;
   detail: string;
@@ -47,7 +55,7 @@ function actionForHealth(health: 'stale' | 'empty' | 'missing', file: string): s
   return `Update last_updated in ${file} and review content for accuracy`;
 }
 
-function actionForLink(type: LinkFinding['type'], item: string, file: string): string {
+function actionForLink(type: LinkFindingType, item: string, file: string): string {
   if (type === 'outcome-metric') return `Define "${item}" in data/metrics.md with formula, source, window, owner`;
   if (type === 'now-assumption') return `Add assumption reference to "${item}" in ${file} or link it in assumptions.md`;
   return `Add cross-reference between "${item}" and a related outcome or assumption`;

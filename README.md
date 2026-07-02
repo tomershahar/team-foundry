@@ -106,6 +106,7 @@ No cloud. No sync service. No accounts. Git is the sync.
 | `npx create-team-foundry` | Scaffold context into the current repo (interactive) |
 | `npx create-team-foundry adopt` | Import existing `.cursorrules`/`CLAUDE.md`/etc. before scaffolding |
 | `npx create-team-foundry playground` | Drop a populated example team into `team-foundry-playground/` |
+| `npx create-team-foundry doctor` | Score context health and show the highest-leverage fix |
 | `npx create-team-foundry status` | Health table: stale, empty, missing, link-integrity, owners |
 | `npx create-team-foundry status --ci` | Same checks, non-interactive, exits 1 on drift (for CI) |
 | `npx create-team-foundry init-ci` | Write a GitHub Action that runs the drift gate on every PR |

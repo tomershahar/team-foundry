@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { spawnSync } from 'child_process';
 import { runLinkChecks, rankFindings } from './link-checker.js';
-import type { LinkFinding } from './link-checker.js';
+import type { LinkFinding, RankedSuggestion } from './link-checker.js';
 import { trackedPaths } from './manifest.js';
 import { FEEDBACK_NUDGE } from './feedback.js';
 
@@ -23,6 +23,11 @@ export interface StatusAnalysis {
   linkFindings: LinkFinding[];
 }
 
+export interface ContextHealthAnalysis extends StatusAnalysis {
+  pointerStatuses: PointerFileStatus[];
+  rankedSuggestions: RankedSuggestion[];
+}
+
 export interface PointerFileStatus {
   relativePath: string;
   exists: boolean;
@@ -41,20 +46,18 @@ const POINTER_FILE_PATHS = [
 ];
 
 export async function checkPointerFiles(targetDir: string): Promise<PointerFileStatus[]> {
-  const results: PointerFileStatus[] = [];
-  for (const relPath of POINTER_FILE_PATHS) {
+  return Promise.all(POINTER_FILE_PATHS.map(async (relPath): Promise<PointerFileStatus> => {
     try {
       const content = await fs.readFile(path.join(targetDir, relPath), 'utf-8');
-      results.push({
+      return {
         relativePath: relPath,
         exists: true,
         drifted: !content.includes('AGENTS.md'),
-      });
+      };
     } catch {
-      results.push({ relativePath: relPath, exists: false, drifted: false });
+      return { relativePath: relPath, exists: false, drifted: false };
     }
-  }
-  return results;
+  }));
 }
 
 // Derived from the manifest (entries with tracked: true) — the same source
@@ -217,7 +220,7 @@ function whyNudge(s: FileStatus): string {
  * Shared by the human `status` view and the `--ci` gate so the two can't drift.
  * Link checks run on the full profile only (solo has no metrics/assumptions).
  */
-export async function gatherStatus(targetDir: string): Promise<StatusAnalysis> {
+async function gatherCoreStatus(targetDir: string): Promise<StatusAnalysis> {
   const fullProfileFile = path.join(targetDir, 'team-foundry/team/trio.md');
   let isFullProfile = false;
   try { await fs.access(fullProfileFile); isFullProfile = true; } catch { /* solo */ }
@@ -227,6 +230,38 @@ export async function gatherStatus(targetDir: string): Promise<StatusAnalysis> {
   const linkFindings = isFullProfile ? await runLinkChecks(targetDir) : [];
 
   return { isFullProfile, results, linkFindings };
+}
+
+function rankStatusFindings(
+  results: FileStatus[],
+  linkFindings: LinkFinding[],
+): RankedSuggestion[] {
+  const healthFindings = results
+    .filter((result): result is FileStatus & { health: 'stale' | 'empty' | 'missing' } =>
+      result.health !== 'ok',
+    )
+    .map((result) => ({
+      file: result.relativePath,
+      health: result.health,
+      commits: result.commitsSinceUpdate ?? 0,
+    }));
+
+  return rankFindings(healthFindings, linkFindings);
+}
+
+/** Shared enriched analysis used by Status and Doctor. */
+export async function analyzeContextHealth(targetDir: string): Promise<ContextHealthAnalysis> {
+  const [status, pointerStatuses] = await Promise.all([
+    gatherCoreStatus(targetDir),
+    checkPointerFiles(targetDir),
+  ]);
+  const rankedSuggestions = rankStatusFindings(status.results, status.linkFindings);
+  return { ...status, pointerStatuses, rankedSuggestions };
+}
+
+/** Compatibility wrapper for callers that only need file and link status. */
+export async function gatherStatus(targetDir: string): Promise<StatusAnalysis> {
+  return gatherCoreStatus(targetDir);
 }
 
 export interface CiCounts {
@@ -294,7 +329,13 @@ export async function runStatusCi(
 }
 
 export async function runStatus(targetDir: string): Promise<void> {
-  const { isFullProfile, results, linkFindings: gatheredLinks } = await gatherStatus(targetDir);
+  const {
+    isFullProfile,
+    results,
+    linkFindings: gatheredLinks,
+    pointerStatuses,
+    rankedSuggestions,
+  } = await analyzeContextHealth(targetDir);
 
   const ok = results.filter(r => r.health === 'ok');
   const stale = results.filter(r => r.health === 'stale');
@@ -335,22 +376,13 @@ export async function runStatus(targetDir: string): Promise<void> {
   }
 
   // Top 3 fix suggestions
-  const healthForRanking = results
-    .filter((r): r is FileStatus & { health: 'stale' | 'empty' | 'missing' } => r.health !== 'ok')
-    .map(r => ({
-      file: r.relativePath,
-      health: r.health,
-      commits: r.commitsSinceUpdate ?? 0,
-    }));
-
-  const top3 = rankFindings(healthForRanking, linkFindings);
   console.log(`  Top 3 Fix Suggestions`);
   console.log(`  ${'─'.repeat(60)}`);
-  if (top3.length === 0) {
+  if (rankedSuggestions.length === 0) {
     console.log('  No critical drift detected this week.\n');
   } else {
-    for (let i = 0; i < top3.length; i++) {
-      const s = top3[i];
+    for (let i = 0; i < rankedSuggestions.length; i++) {
+      const s = rankedSuggestions[i];
       console.log(`\n  ${i + 1}) ${s.detail}`);
       console.log(`     In: ${s.file.replace('team-foundry/', '')}`);
       console.log(`     Action: ${s.action}`);
@@ -388,7 +420,6 @@ export async function runStatus(targetDir: string): Promise<void> {
   }
 
   // Pointer files section
-  const pointerStatuses = await checkPointerFiles(targetDir);
   const pointerLines = [
     '',
     'Pointer files (each should reference AGENTS.md):',
