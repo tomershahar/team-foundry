@@ -75,7 +75,7 @@
       "behavior": "Verifies every advertised tool selection routes through one protected AGENTS.md source of truth",
       "verification": "docs/action-plan/03-agents-compatibility.md",
       "status": "active",
-      "evidence": "Characterization suite committed (e8c370f); npm test 901/901 user-reported passing; Cursor UAT passed 2026-07-02 (docs/evidence/f08-cursor-uat.md) - route verified, @-expansion undetermined; Gemini/Claude/Copilot UAT remain",
+      "evidence": "Characterization suite committed (e8c370f); npm test 901/901 user-reported passing; Cursor 3.9.16, Gemini CLI 0.28.2, and Claude Code 2.1.198 UAT all passed 2026-07-02 (docs/evidence/f08-*-uat.md); Copilot UAT remains (surface not locally available)",
       "testedAt": "2026-07-02"
     },
     {
