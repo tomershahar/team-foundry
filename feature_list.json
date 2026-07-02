@@ -75,8 +75,8 @@
       "behavior": "Verifies every advertised tool selection routes through one protected AGENTS.md source of truth",
       "verification": "docs/action-plan/03-agents-compatibility.md",
       "status": "active",
-      "evidence": "Core bridge is delivered under F02; compatibility matrix characterization and available-tool UAT remain",
-      "testedAt": null
+      "evidence": "Characterization suite committed (e8c370f); npm test 901/901 user-reported passing; Cursor UAT passed 2026-07-02 (docs/evidence/f08-cursor-uat.md) - route verified, @-expansion undetermined; Gemini/Claude/Copilot UAT remain",
+      "testedAt": "2026-07-02"
     },
     {
       "id": "F09",
