@@ -12,7 +12,7 @@ codebase rather than assuming every recommendation is still unbuilt.
 | Item | Current state in v3.5 | Remaining work | Spec status |
 |---|---|---|---|
 | 1. Context Health Score | Doctor is implemented and verified | Run the post-release comprehension decision gate | Passing |
-| 2. README before/after proof | Playground, generated excerpts, and a high-level before/after are present | Capture a real controlled transcript and real Doctor output; replace abstract claims with evidence | Active |
+| 2. README before/after proof | Controlled 0/5 vs 5/5 transcript, real Doctor output, and refreshed multi-tool playground are implemented | User test run and five-person comprehension UAT | Active - verification pending |
 | 3. AGENTS.md bridge | `AGENTS.md` is already primary; Claude, Gemini, Cursor, and Copilot pointers exist | Characterize and harden the compatibility matrix; correct any unsupported documentation claims | Active verification track |
 | 4. Lightweight drift automation | Manual status, CI mode, and PR workflow already cover the need | None; maintainer chose not to add another automation layer | Dropped |
 | 5. Distribution mechanics | GitHub description and in-product feedback ask were improved | Topics, durable directory submissions, pain-led content, and measurement ledger remain | Blocked by Item 2 |

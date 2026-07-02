@@ -2,8 +2,27 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
+import { fileURLToPath } from 'url';
 import { runPlayground, PLAYGROUND_DIR } from '../playground.js';
 import { PLAYGROUND_FILES } from '../templates/playground/content.js';
+
+const EXAMPLE_DIR = fileURLToPath(new URL('../../example/', import.meta.url));
+
+async function readTree(dir: string, root = dir): Promise<Map<string, string>> {
+  const files = new Map<string, string>();
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.name === '.DS_Store') continue;
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      const nested = await readTree(fullPath, root);
+      for (const [relativePath, content] of nested) files.set(relativePath, content);
+    } else {
+      files.set(path.relative(root, fullPath).split(path.sep).join('/'), await fs.readFile(fullPath, 'utf-8'));
+    }
+  }
+  return files;
+}
 
 async function makeTempDir(): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), 'tf-playground-test-'));
@@ -23,10 +42,42 @@ describe('PLAYGROUND_FILES', () => {
     expect(paths).toContain('team-foundry/product/outcomes.md');
   });
 
+  it('bundles AGENTS.md as the shared routing source', () => {
+    const agents = PLAYGROUND_FILES.find((f) => f.relativePath === 'AGENTS.md');
+    expect(agents?.content).toContain('Clearline');
+    expect(agents?.content).toContain('team-foundry/engineering/decisions/');
+  });
+
+  it('bundles thin pointers for every advertised playground tool', () => {
+    const pointerPaths = [
+      'CLAUDE.md',
+      'GEMINI.md',
+      '.cursor/rules/team-foundry.mdc',
+      '.github/copilot-instructions.md',
+    ];
+    for (const pointerPath of pointerPaths) {
+      const pointer = PLAYGROUND_FILES.find((f) => f.relativePath === pointerPath);
+      expect(pointer?.content).toContain('AGENTS.md');
+    }
+  });
+
+  it('keeps CLAUDE.md as a thin pointer rather than a second routing map', () => {
+    const claude = PLAYGROUND_FILES.find((f) => f.relativePath === 'CLAUDE.md');
+    expect(claude?.content.trimStart()).toMatch(/^@AGENTS\.md/);
+    expect(claude?.content).not.toContain('## Routing map');
+  });
+
   it('every entry has non-empty content', () => {
     for (const f of PLAYGROUND_FILES) {
       expect(f.content.trim().length).toBeGreaterThan(0);
     }
+  });
+
+  it('matches the complete example tree byte for byte', async () => {
+    const exampleFiles = await readTree(EXAMPLE_DIR);
+    const bundledFiles = new Map(PLAYGROUND_FILES.map((file) => [file.relativePath, file.content]));
+
+    expect(bundledFiles).toEqual(exampleFiles);
   });
 });
 

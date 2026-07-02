@@ -1,6 +1,8 @@
 # team-foundry
 
-**Your coding agents know the code. They usually do not know which customer matters, what the team is optimizing for, or why a decision was made. team-foundry turns that missing product context into versioned files your team's AI tools can load from the repo.**
+**Your coding agents know the code. They usually do not know which customer matters,
+what the team is optimizing for, or why a decision was made. team-foundry turns that
+missing product context into versioned files your team's AI tools can load from the repo.**
 
 [![npm](https://img.shields.io/npm/v/create-team-foundry)](https://www.npmjs.com/package/create-team-foundry)
 [![npm downloads](https://img.shields.io/npm/dw/create-team-foundry)](https://www.npmjs.com/package/create-team-foundry)
@@ -10,9 +12,48 @@
 npx create-team-foundry
 ```
 
-![Three teammates — PM on Claude Code, Engineer on Cursor, Designer on Gemini CLI — all connected to a shared AGENTS.md](assets/hero.svg)
+Or try a populated fictional team without changing your repo:
 
----
+```bash
+npx create-team-foundry playground
+```
+
+## Controlled comparison
+
+On July 2, 2026, two fresh Codex background agents received the **same prompt**, runner
+configuration, and Clearline repository snapshot, with no model override. The runner did
+not expose the exact model ID. The control could not read team-foundry context; the other
+could. We fixed the five-point scoring rubric before running either case.
+
+> **Prompt:** Our deploys are slow. Should we automate database migrations in CI? Give
+> a recommendation and implementation constraints.
+
+| Without team-foundry | With team-foundry |
+|---|---|
+| **"Automate migration validation in CI and execution in the deployment pipeline."** | **"Automate migration validation in CI, but do not automatically execute production migrations yet."** |
+| Sensible generic safeguards, but it conflicts with Clearline's existing decision. **Score: 0/5.** | Cited two prior incidents, three prevented near-misses, Marcus and Priya's ownership, customer-trust risk, and the active ADR. **Score: 5/5.** |
+
+In this controlled example, repository context changed the recommendation rather than
+merely making it longer. See the [complete first responses, fixed rubric, and reproduction
+notes](docs/evidence/f07-controlled-comparison.md), plus the source
+[decision](example/team-foundry/engineering/decisions/ADR-005.md).
+
+The same fixture produced this real health report:
+
+```text
+team-foundry doctor
+
+Context health: 80/100  Needs attention
+
+  Completeness      30/30   16/16 required files contain real content
+  Freshness          0/20    0/16 populated files are current
+  Connectedness     25/25    3/3 integrity rule families clean
+  Ownership         10/10   16/16 existing files have an owner
+  Tool routing      15/15    4/4 pointer files reference AGENTS.md
+```
+
+Clearline is a frozen Q2 example, so Doctor correctly flags its April context as stale.
+The score was preserved rather than improved by changing dates for the demonstration.
 
 ## See the difference in 60 seconds
 
@@ -29,6 +70,8 @@ This creates a populated example team in `team-foundry-playground/`. Open that f
 Instead of inferring answers from code, the AI can cite the team's outcomes, customers, risks, and decisions. The same example lives in [`example/`](example/) if you would rather browse it.
 
 ---
+
+![Three teammates - PM on Claude Code, Engineer on Cursor, Designer on Gemini CLI - connected to a shared AGENTS.md](assets/hero.svg)
 
 ## What gets generated
 
@@ -68,7 +111,7 @@ Why it matters: month-end duration is the #1 complaint in NPS verbatims.
 |---|---|
 | **Before team-foundry** | Each teammate's AI guesses from code + whatever they paste into chat |
 | **Right after `npx create-team-foundry`** | `AGENTS.md` with project overview, stack, and owners **auto-detected from your `package.json`, README, and git** — the rest scaffolded as visible gaps to fill |
-| **After onboarding** | Outcomes, customers, decisions, and quality bar — every AI answers the same way |
+| **After onboarding** | Outcomes, customers, decisions, and quality bar - selected tools receive the same repo-owned context |
 
 ### Who edits what
 
@@ -94,7 +137,7 @@ No cloud. No sync service. No accounts. Git is the sync.
 | Gemini CLI | `GEMINI.md` (pointer) + `AGENTS.md` |
 | Cursor | `.cursor/rules/team-foundry.mdc` (pointer) + `AGENTS.md` |
 | GitHub Copilot | `.github/copilot-instructions.md` (pointer) + `AGENTS.md` |
-| Other (Codex, Copilot CLI, Windsurf…) | `AGENTS.md` only — these read it natively |
+| Other tools with `AGENTS.md` support | `AGENTS.md` only - confirm support in your tool version |
 | All tools (Recommended) | All pointers + `AGENTS.md` |
 
 ---

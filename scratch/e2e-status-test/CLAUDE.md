@@ -1,0 +1,4 @@
+---
+purpose: pointer
+---
+@AGENTS.md

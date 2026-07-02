@@ -3,11 +3,11 @@
 ## Current State
 
 - Package version: 3.5.0
-- Change base: `21c2c33 improve positioning and feedback flow`
-- Type check: passing (`npx tsc --noEmit`, 2026-07-01)
-- Lint: passing (`npm run lint`, 2026-06-29)
-- Build: passing (`npm run build`, 2026-06-29)
-- Tests: passing (user-reported post-review `npm test` rerun; 2026-07-02)
+- Change base: `e3fd421 drop planned drift automation`
+- Type check: passing (`npx tsc --noEmit`, 2026-07-02)
+- Lint: passing (`npm run lint`, 2026-07-02)
+- Build: passing (`npm run build`, 2026-07-02)
+- Tests: passing (user-reported F07 `npm test`, 2026-07-02)
 
 ## Completed
 
@@ -30,26 +30,34 @@
   category-definition duplication, CI-path overhead, and independent I/O parallelism.
 - Dropped F09 lightweight drift automation by maintainer decision; existing Status and CI
   checks are sufficient.
+- Refreshed the Clearline playground around `AGENTS.md` primacy with thin Claude, Gemini,
+  Cursor, and GitHub Copilot pointers and regenerated the bundled playground.
+- Captured a fixed-rubric, same-prompt comparison: 0/5 without repository context and
+  5/5 with it. Preserved full responses and reproduction notes under `docs/evidence/`.
+- Captured real Doctor output from the generated playground: 80/100, with the frozen Q2
+  example's stale April context reported honestly rather than cosmetically refreshed.
+- Reworked the README to lead with observed behavior and added documentation acceptance
+  checks plus a regression check against uncommitted executable-hook promises.
+- Completed an independent F07 review and resolved its reproduction, model disclosure,
+  hierarchy authority, and complete playground-parity findings.
 
 ## In Progress
 
-- F06 Context Health Score / Doctor is passing after review fixes.
-- F07 Evidence-led README is partially delivered and waits for real Doctor output.
+- F07 implementation, evidence capture, independent review, and automated tests are
+  complete; five-person comprehension UAT remains.
 - F08 AGENTS.md compatibility hardening can run independently.
-- F09 drift automation is dropped. F10 distribution waits for F07 evidence.
+- F09 drift automation is dropped. F10 distribution waits for F07 verification sign-off.
 
 ## Known Issues
 
 - Untracked feedback and scratch files predate this work and were intentionally left untouched.
-- The bundled Clearline playground predates AGENTS.md primacy and currently scores 65/100:
-  its content is stale and its legacy CLAUDE.md does not reference AGENTS.md. Refresh under F07.
+- The bundled Clearline playground intentionally remains a frozen Q2 2026 snapshot. Doctor
+  scores it 80/100 and flags all 16 tracked files as stale; routing now scores 15/15.
 
 ## Next Steps
 
-1. Commit F06 separately from the next development track.
-2. Start F07 by refreshing the Clearline playground and defining the controlled comparison rubric.
-3. Capture real before/after evidence without changing the rubric after seeing results.
-4. Run F08 characterization independently when capacity allows.
+1. Run the five-person README comprehension UAT and record answers verbatim.
+2. Mark F07 passing, then start F10 distribution or run F08 characterization independently.
 
 ---
 *Updated 2026-07-02*

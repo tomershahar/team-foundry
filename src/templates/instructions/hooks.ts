@@ -11,10 +11,8 @@ owner: team
 # Hooks
 
 These are markdown conventions, not executable scripts. They define behaviors the AI
-must treat as enforced  -  not suggestions to weigh against convenience.
-
-In v3.1, an optional \`--with-hooks\` flag will generate real Claude Code hook scripts
-wired to \`.claude/settings.json\`. For now, treat this file as the enforcement layer.
+must treat as enforced  -  not suggestions to weigh against convenience. Treat this
+file as the project's instruction layer.
 
 ---
 

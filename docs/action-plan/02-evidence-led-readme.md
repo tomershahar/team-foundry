@@ -1,6 +1,6 @@
 # Spec 02: Evidence-Led README
 
-**Status:** Planned; current README contains partial before/after content  
+**Status:** Implemented and tests passing; five-person comprehension UAT pending
 **Outcome:** A skeptical visitor can understand the behavioral difference within 60 seconds.  
 **Depends on:** Spec 01 UAT output
 
@@ -48,7 +48,7 @@ example," not universal claims such as "every agent always follows the decision.
 - `assets/`: one optimized Doctor image only if terminal text is not readable inline.
 - `example/`: only if a missing decision is genuinely needed for the scenario.
 - `src/templates/playground/content.ts`: regenerate through `npm run gen:playground` if example content changes; never hand-edit the generated module.
-- `docs/internal/evidence/`: raw, trimmed transcript evidence and reproduction notes.
+- `docs/evidence/`: raw, trimmed transcript evidence and reproduction notes.
 
 ## Non-Goals
 

@@ -34,6 +34,12 @@ describe('v3 Task 3  -  hierarchy.md template', () => {
     expect(hierarchyTemplate(baseCtx)).toContain('File Precedence');
   });
 
+  it('treats AGENTS.md as the constitution instead of tool-specific pointers', () => {
+    const output = hierarchyTemplate(baseCtx);
+    expect(output).toContain('AGENTS.md');
+    expect(output).not.toContain('CLAUDE.md / GEMINI.md');
+  });
+
   it('contains Data Source Precedence section', () => {
     expect(hierarchyTemplate(baseCtx)).toContain('Data Source Precedence');
   });

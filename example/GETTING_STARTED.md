@@ -1,7 +1,7 @@
 ---
 purpose: Orientation for this example repo
 read_when: First time opening this repo
-last_updated: 2026-04-25
+last_updated: 2026-07-02
 ---
 
 # Getting Started with the Clearline Example
@@ -10,7 +10,7 @@ This is a fully populated team-foundry for a fictional product team. You don't n
 
 ## Try it now
 
-Open this directory in Claude Code and ask:
+Open this directory in Claude Code, Gemini CLI, Cursor, Codex, or GitHub Copilot and ask:
 
 - "What are Clearline's Q2 outcomes?"
 - "Who are the key customers and what do they care about?"
@@ -24,7 +24,8 @@ Open this directory in Claude Code and ask:
 
 | File | What it contains |
 |---|---|
-| `CLAUDE.md` | Team identity and routing map |
+| `AGENTS.md` | Shared team identity, routing map, and working constraints |
+| `CLAUDE.md`, `GEMINI.md`, `.cursor/`, `.github/` | Thin pointers to `AGENTS.md` |
 | `team-foundry/product/north-star.md` | Vision and north star metric |
 | `team-foundry/product/outcomes.md` | Q2 2026 committed outcomes |
 | `team-foundry/product/customers.md` | Named customers, personas, quotes |

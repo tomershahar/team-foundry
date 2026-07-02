@@ -66,8 +66,8 @@
       "behavior": "Shows a reproducible before/after agent decision and real Doctor output above implementation details",
       "verification": "docs/action-plan/02-evidence-led-readme.md",
       "status": "active",
-      "evidence": "README has playground, excerpts, and abstract before/after; controlled transcript and Doctor evidence remain",
-      "testedAt": null
+      "evidence": "Controlled same-prompt capture scored 0/5 without context and 5/5 with context; raw responses and real 80/100 Doctor output are recorded; independent review findings resolved; user-reported npm test plus typecheck/lint/build and local-link checks pass; five-person comprehension UAT remains",
+      "testedAt": "2026-07-02"
     },
     {
       "id": "F08",
@@ -93,7 +93,7 @@
       "behavior": "Uses reproducible product proof, accurate metadata, durable directories, and consented trials to learn why users return",
       "verification": "docs/action-plan/05-distribution.md",
       "status": "blocked",
-      "evidence": "Starts after F06 Doctor output and F07 controlled before/after proof are available",
+      "evidence": "F06 Doctor output and F07 controlled proof are now available; starts after F07 test and comprehension sign-off",
       "testedAt": null
     }
   ]

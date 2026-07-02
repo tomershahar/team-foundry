@@ -12,7 +12,7 @@ Do not average conflicting data  -  name the conflict and state which source win
 
 ## File Precedence
 
-1. **Constitution**  -  CLAUDE.md / GEMINI.md (always-loaded rules and routing)
+1. **Constitution**  -  AGENTS.md (shared rules and routing; tool files are pointers)
 2. **Context files**  -  team-foundry/ files (the substance of what the team knows)
 3. **Memory / notes**  -  session notes, conversation history
 4. **Project logs**  -  git log, CI output, issue trackers
@@ -41,7 +41,7 @@ Do not average conflicting data  -  name the conflict and state which source win
 
 ## Version Authority
 
-- **Working docs** (team-foundry/ files, CLAUDE.md): latest commit wins
+- **Working docs** (team-foundry/ files, AGENTS.md): latest commit wins
 - **Research** (customer interviews, experiments, market data): newer does not supersede older  - 
   it adds a data point. A 2026 interview does not erase a 2025 cohort result; it adds signal.
   Surface both and name the gap.

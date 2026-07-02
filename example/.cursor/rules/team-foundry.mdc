@@ -1,0 +1,10 @@
+---
+description: Team-foundry context loader for Cursor
+globs: *
+alwaysApply: true
+---
+
+# team-foundry
+
+Read and follow `AGENTS.md` before answering questions or modifying files. It is the
+shared source for Clearline's identity, context routing, and working constraints.

@@ -54,6 +54,11 @@ describe('v3 Task 5  -  instructions/hooks.md template', () => {
     const output = hooksTemplate(baseCtx);
     expect(output).toMatch(/markdown|convention|not.*executable|not.*script/i);
   });
+
+  it('does not promise an uncommitted executable-hooks release', () => {
+    const output = hooksTemplate(baseCtx);
+    expect(output).not.toMatch(/v\d|--with-hooks|will generate real/i);
+  });
 });
 
 describe('v3 Task 6  -  instructions/rules.md template', () => {
