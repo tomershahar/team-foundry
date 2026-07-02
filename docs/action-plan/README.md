@@ -11,11 +11,11 @@ codebase rather than assuming every recommendation is still unbuilt.
 
 | Item | Current state in v3.5 | Remaining work | Spec status |
 |---|---|---|---|
-| 1. Context Health Score | `status`, link integrity, ranking, `status --ci`, and `init-ci` already exist | Add a legible score, category breakdown, stable machine output, and a shareable Doctor experience | Planned |
-| 2. README before/after proof | Playground, generated excerpts, and a high-level before/after are present | Capture a real controlled transcript and real Doctor output; replace abstract claims with evidence | Planned |
-| 3. AGENTS.md bridge | `AGENTS.md` is already primary; Claude, Gemini, Cursor, and Copilot pointers exist | Characterize and harden the compatibility matrix; correct any unsupported documentation claims | Verification track |
-| 4. Lightweight drift automation | Manual status, CI mode, and PR workflow already exist | Add low-noise scheduled/change-aware automation, gated by evidence from Item 1 | Conditional |
-| 5. Distribution mechanics | GitHub description and in-product feedback ask were improved | Topics, durable directory submissions, pain-led content, and measurement ledger remain | Blocked by Items 1–2 |
+| 1. Context Health Score | Doctor is implemented and verified | Run the post-release comprehension decision gate | Passing |
+| 2. README before/after proof | Playground, generated excerpts, and a high-level before/after are present | Capture a real controlled transcript and real Doctor output; replace abstract claims with evidence | Active |
+| 3. AGENTS.md bridge | `AGENTS.md` is already primary; Claude, Gemini, Cursor, and Copilot pointers exist | Characterize and harden the compatibility matrix; correct any unsupported documentation claims | Active verification track |
+| 4. Lightweight drift automation | Manual status, CI mode, and PR workflow already cover the need | None; maintainer chose not to add another automation layer | Dropped |
+| 5. Distribution mechanics | GitHub description and in-product feedback ask were improved | Topics, durable directory submissions, pain-led content, and measurement ledger remain | Blocked by Item 2 |
 
 ## Sequencing
 
@@ -25,14 +25,11 @@ codebase rather than assuming every recommendation is still unbuilt.
         -> 05 Distribution experiment
 
 03 AGENTS compatibility hardening may run independently.
-
-04 Drift automation starts only if Doctor usage or feedback shows that ongoing
-context decay is a meaningful problem after first value is understood.
 ```
 
 This sequencing is a product decision, not just a dependency graph. Item 1 tests
-whether visible transformation improves engagement. Item 4 must not become runtime
-infrastructure built before that hypothesis has evidence.
+whether visible transformation improves engagement. Item 4 was intentionally dropped:
+the existing Status and CI checks are enough, and another automation layer is not essential.
 
 ## Delivery Protocol
 
@@ -55,7 +52,7 @@ The human maintainer owns product acceptance and the final release decision.
 1. [Context Health Score / Doctor](01-context-health-score.md)
 2. [Evidence-Led README](02-evidence-led-readme.md)
 3. [AGENTS.md Compatibility Hardening](03-agents-compatibility.md)
-4. [Lightweight Drift Automation](04-drift-automation.md)
+4. [Lightweight Drift Automation - dropped](04-drift-automation.md)
 5. [Distribution Experiment](05-distribution.md)
 
 ## Portfolio Exit Criteria

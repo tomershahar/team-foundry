@@ -2,7 +2,7 @@
   "project": "create-team-foundry",
   "description": "Git-native shared product context for AI coding tools",
   "schema": {
-    "status_values": ["not_started", "active", "blocked", "passing"],
+    "status_values": ["not_started", "active", "blocked", "passing", "dropped"],
     "required_fields": ["id", "name", "behavior", "verification", "status"]
   },
   "features": [
@@ -83,8 +83,8 @@
       "name": "Lightweight drift automation",
       "behavior": "Adds low-noise scheduled and change-aware context review without a server or mandatory local hook",
       "verification": "docs/action-plan/04-drift-automation.md",
-      "status": "blocked",
-      "evidence": "Start gate requires evidence that ongoing decay remains a material problem after Doctor research",
+      "status": "dropped",
+      "evidence": "Maintainer decision on 2026-07-02: existing status and CI drift checks are sufficient; no additional automation needed",
       "testedAt": null
     },
     {

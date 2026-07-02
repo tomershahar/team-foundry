@@ -1,8 +1,15 @@
 # Spec 04: Lightweight Drift Automation
 
-**Status:** Conditional; manual Status and PR CI gate already delivered  
+**Status:** Dropped by maintainer on 2026-07-02
 **Outcome:** Teams are reminded about likely context drift without installing a server or blocking routine work.  
 **Start gate:** Evidence from Doctor usage or user interviews shows ongoing decay after initial setup
+
+## Decision
+
+Do not implement this track. The existing `status`, `status --ci`, and generated PR
+workflow provide sufficient drift visibility. Another scheduled or change-aware layer
+would add maintenance and noise without a demonstrated user need. This document remains
+only as the record of what was considered and why it was declined.
 
 ## Problem
 

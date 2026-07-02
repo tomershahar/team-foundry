@@ -28,13 +28,15 @@
 - Completed F06 UAT across no-installation, fresh-scaffold, AGENTS-only, and broken-link fixtures.
 - Applied F06 review fixes for Connectedness wording, rule-family exhaustiveness,
   category-definition duplication, CI-path overhead, and independent I/O parallelism.
+- Dropped F09 lightweight drift automation by maintainer decision; existing Status and CI
+  checks are sufficient.
 
 ## In Progress
 
 - F06 Context Health Score / Doctor is passing after review fixes.
 - F07 Evidence-led README is partially delivered and waits for real Doctor output.
 - F08 AGENTS.md compatibility hardening can run independently.
-- F09 drift automation and F10 distribution remain gated by evidence defined in their specs.
+- F09 drift automation is dropped. F10 distribution waits for F07 evidence.
 
 ## Known Issues
 
