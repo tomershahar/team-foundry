@@ -11,7 +11,7 @@ a culture artifact first, AI context second.
 
 ## Status
 
-v3.5.0 is published to npm. `PROGRESS.md` records current work and `feature_list.json` tracks verification state.
+v3.6.0 is published to npm. `PROGRESS.md` records current work and `feature_list.json` tracks verification state.
 
 Implemented: manifest-driven scaffolding, solo/full/federated layouts, multi-tool pointers, project identity extraction, safe merge/replace/skip behavior, adopt and migrate flows, playground, drift status and CI gate, Claude Code skills, and prefilled feedback.
 

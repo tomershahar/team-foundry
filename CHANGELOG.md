@@ -1,5 +1,25 @@
 # Changelog
 
+## [3.6.0]  -  2026-07-02
+
+### What's new (Context health + verified tool routing)
+
+**`doctor` — context health score**
+- `npx create-team-foundry doctor` scores context health 0–100 across five explained categories (completeness, freshness, connectedness, ownership, tool routing) and recommends the single highest-leverage fix. `--json` emits a versioned schema for automation. Advisory-only by design — `status --ci` remains the enforcement surface.
+- Doctor, `status`, and the CI gate share one analysis, so the three can't disagree about what counts as drift.
+
+**Verified AGENTS.md routing**
+- New [compatibility matrix](docs/compatibility.md) documents the loading contract per tool with evidence status. The route is UAT-verified end-to-end for Codex, Cursor 3.9.16, Gemini CLI 0.28.2, and Claude Code 2.1.198 ([evidence](docs/evidence/)).
+- Cursor and Gemini pointers now use `@AGENTS.md` imports while keeping an explicit read-`AGENTS.md` instruction as the guaranteed fallback.
+
+**Safer merges and migration**
+- Cursor rule merges are frontmatter-aware: your `description`/`globs` are preserved, `alwaysApply: true` is ensured, and BOM/CRLF files no longer produce duplicate frontmatter.
+- v3.3 migration now covers Copilot instructions via a merged, clearly-marked team-foundry section (your content is kept), disclosed accurately before you confirm.
+- Setup only asks merge/replace/skip for files your selected tools will actually write.
+
+**Evidence-led README**
+- The README leads with a controlled same-prompt comparison (0/5 without context, 5/5 with) and real doctor output, with raw captures preserved in `docs/evidence/`.
+
 ## [3.5.0]  -  2026-06-15
 
 ### What's new (Time-to-aha + drift gate)
