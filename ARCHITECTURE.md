@@ -2,7 +2,9 @@
 
 ## System Overview
 
-`create-team-foundry` is a Node CLI that scaffolds structured markdown context files into any repo. It has no backend  -  all logic runs locally. Users run it once (or periodically) to generate or update `.team-foundry/` files that their AI tools read natively.
+`create-team-foundry` is a Node CLI that scaffolds structured markdown context files into
+any repo. It has no backend - all logic runs locally. Users run it once (or periodically)
+to generate or update context consumed through native `AGENTS.md` support or tool adapters.
 
 ## Layer Diagram
 
@@ -49,20 +51,20 @@ src/templates/ + src/types.ts
 
 | Profile | Files generated |
 |---------|----------------|
-| `solo` | 7 files (minimal  -  one PM working alone) |
-| `full` | 20 files flat structure |
-| `federated` | 26 files with squad-level subdirectories |
+| `solo` | 7 base files; 7-17 including selected adapters and skills |
+| `full` | 23 base files; 23-33 including selected adapters and skills |
+| `federated` | 36-39 files; Claude-capable full output plus 6 scoped routing files |
 
 ## Tools Supported
 
 | Tool flag | Output |
 |-----------|--------|
-| `claude` | CLAUDE.md root instruction file |
-| `gemini` | GEMINI.md root instruction file |
+| `claude` | `AGENTS.md`, `CLAUDE.md` import, Claude skills |
+| `gemini` | `AGENTS.md`, `GEMINI.md` import |
 | `cursor` | `.cursor/rules/team-foundry.mdc` |
 | `copilot` | `.github/copilot-instructions.md` |
-| `agents` | `AGENTS.md` only |
-| `both` | CLAUDE.md + GEMINI.md |
+| `agents` | `AGENTS.md` only; user confirms tool support |
+| `both` | Claude + Gemini outputs |
 | `all` | All pointer files + `AGENTS.md` |
 
 ## Data Flow
@@ -80,8 +82,9 @@ src/templates/ + src/types.ts
 
 ```
 <user's repo>/
-├── CLAUDE.md                        ← root AI instruction file (claude)
-├── GEMINI.md                        ← root AI instruction file (gemini)
+├── AGENTS.md                        ← shared routing source
+├── CLAUDE.md                        ← Claude import adapter
+├── GEMINI.md                        ← Gemini import adapter
 ├── .cursor/rules/team-foundry.mdc   ← cursor rules
 ├── .github/copilot-instructions.md  ← GitHub Copilot pointer
 ├── team-foundry/                    ← team-owned product and engineering context
@@ -95,5 +98,5 @@ src/templates/ + src/types.ts
 
 - No backend, no API keys, no token costs
 - No silent writes  -  user confirms before any file is written or overwritten
-- Root instruction file stays minimal; coach playbook loaded on demand
+- The shared routing source stays focused; coach playbook loads on demand
 - Files expose gaps, not hide them (mirror, not template pack)

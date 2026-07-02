@@ -100,7 +100,7 @@ export const FULL_ONLY_ENTRIES: FileEntry[] = [
   { relativePath: '.team-foundry/instructions/rules.md', content: rulesTemplate },
 ];
 
-/** Per-folder CLAUDE.md files written only for full profile in federated layout */
+/** Per-folder CLAUDE.md files written for Claude-capable full profiles in federated layout */
 export const FEDERATED_ENTRIES: FileEntry[] = [
   { relativePath: 'team-foundry/product/CLAUDE.md', content: federatedProductTemplate },
   { relativePath: 'team-foundry/team/CLAUDE.md', content: federatedTeamTemplate },

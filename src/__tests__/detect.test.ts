@@ -64,6 +64,22 @@ describe('detectExistingFiles()', () => {
     expect(found).toHaveLength(2);
   });
 
+  it('filters existing files to the selected tool output', async () => {
+    await fs.writeFile(path.join(tmpDir, 'AGENTS.md'), 'agents', 'utf-8');
+    await fs.writeFile(path.join(tmpDir, 'CLAUDE.md'), 'claude', 'utf-8');
+    await fs.writeFile(path.join(tmpDir, 'GEMINI.md'), 'gemini', 'utf-8');
+
+    const agentsOnly = await detectExistingFiles(tmpDir, 'agents');
+    expect(agentsOnly.map((file) => file.relativePath)).toEqual(['AGENTS.md']);
+
+    const both = await detectExistingFiles(tmpDir, 'both');
+    expect(both.map((file) => file.relativePath)).toEqual([
+      'AGENTS.md',
+      'CLAUDE.md',
+      'GEMINI.md',
+    ]);
+  });
+
   it('does NOT detect non-team-foundry cursor rule files', async () => {
     // Detection is scoped to ROOT_INSTRUCTION_PATHS to ensure every collected
     // merge decision maps to a file scaffold() will actually write.

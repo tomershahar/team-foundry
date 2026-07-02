@@ -211,7 +211,7 @@ async function main(): Promise<void> {
   const date = new Date().toISOString().split('T')[0];
 
   // Detect existing root instruction files and collect per-file merge decisions
-  const detectedFiles = await detectExistingFiles(targetDir);
+  const detectedFiles = await detectExistingFiles(targetDir, answers.tool);
   const mergeDecisions = detectedFiles.length > 0
     ? await runMergePrompts(detectedFiles)
     : {};

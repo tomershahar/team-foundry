@@ -24,7 +24,33 @@ const ROOT_INSTRUCTION_PATHS = new Set([
   '.github/copilot-instructions.md',
 ]);
 
-async function applyMergeDecision(
+function prepareCursorMerge(existing: string, generated: string): { existing: string; generated: string } {
+  // The frontmatter regexes below require LF; a BOM or CRLF endings (git on Windows
+  // defaults to CRLF checkout) would miss the match and produce a second frontmatter
+  // block that Cursor silently ignores.
+  existing = existing.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n');
+  const generatedMatch = generated.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (!generatedMatch) return { existing, generated };
+
+  const existingMatch = existing.match(/^---\n([\s\S]*?)\n---([\s\S]*)$/);
+  if (!existingMatch) {
+    return {
+      existing: `---\n${generatedMatch[1]}\n---\n\n${existing}`,
+      generated: generatedMatch[2],
+    };
+  }
+
+  const frontmatter = /^alwaysApply:/m.test(existingMatch[1])
+    ? existingMatch[1].replace(/^alwaysApply:.*$/m, 'alwaysApply: true')
+    : `${existingMatch[1]}\nalwaysApply: true`;
+
+  return {
+    existing: `---\n${frontmatter}\n---${existingMatch[2]}`,
+    generated: generatedMatch[2],
+  };
+}
+
+export async function applyMergeDecision(
   fullPath: string,
   relativePath: string,
   newContent: string,
@@ -56,7 +82,12 @@ async function applyMergeDecision(
   }
 
   // 'merge'
-  const existing = await fs.readFile(fullPath, 'utf-8');
+  let existing = await fs.readFile(fullPath, 'utf-8');
+  if (relativePath === '.cursor/rules/team-foundry.mdc') {
+    const prepared = prepareCursorMerge(existing, newContent);
+    existing = prepared.existing;
+    newContent = prepared.generated;
+  }
   const wrappedContent = `${MERGE_MARKER_START}\n${newContent}\n${MERGE_MARKER_END}`;
   let merged: string;
 
@@ -143,7 +174,7 @@ export async function scaffold(options: ScaffoldOptions): Promise<string[]> {
     ...rootEntries(tool),
     ...SOLO_ENTRIES,
     ...(profile === 'full' ? FULL_ONLY_ENTRIES : []),
-    ...(profile === 'full' && federated ? FEDERATED_ENTRIES : []),
+    ...(profile === 'full' && federated && includesClaudeSkills(tool) ? FEDERATED_ENTRIES : []),
     ...(includesClaudeSkills(tool) ? CLAUDE_SKILLS_ENTRIES : []),
   ];
 
@@ -231,7 +262,9 @@ export function expectedPaths(
   const alwaysRoot = ALWAYS_ROOT_ENTRIES.map((e) => e.relativePath);
   const solo = SOLO_ENTRIES.map((e) => e.relativePath);
   const full = profile === 'full' ? FULL_ONLY_ENTRIES.map((e) => e.relativePath) : [];
-  const fed = profile === 'full' && federated ? FEDERATED_ENTRIES.map((e) => e.relativePath) : [];
+  const fed = profile === 'full' && federated && includesClaudeSkills(tool)
+    ? FEDERATED_ENTRIES.map((e) => e.relativePath)
+    : [];
   const skills = includesClaudeSkills(tool) ? CLAUDE_SKILLS_ENTRIES.map((e) => e.relativePath) : [];
 
   return [...alwaysRoot, ...roots, ...solo, ...full, ...fed, ...skills];

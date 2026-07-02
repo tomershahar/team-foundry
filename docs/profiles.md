@@ -10,9 +10,9 @@ team-foundry ships two profiles. Start with solo — it's enough to make your AI
 
 | Profile | Files | Includes |
 |---|---|---|
-| **Solo** | 8–16 | AGENTS.md (primary) + pointer file(s) for your tool(s) + getting started guide, coach playbook, north star, outcomes, customers, stack. Count varies: 8 for single tool, up to 16 for "all tools" with Claude Code skills. |
-| **Full** | 24 | Everything above + strategy, roadmap, assumptions, risks, trio, working agreement, AI practices, quality bar, decisions log, design principles, metrics, glossary, stakeholders, hierarchy, hooks, rules |
-| **Full (federated)** | 30 | Everything above + per-folder `CLAUDE.md` routing files for multi-instance setups (8+ person teams) |
+| **Solo** | 7-17 | Seven base files plus selected adapters and, for Claude selections, six skills |
+| **Full** | 23-33 | Everything in solo plus strategy, roadmap, assumptions, risks, team practices, quality, decisions, design, metrics, glossary, stakeholders, hierarchy, hooks, and rules |
+| **Full (federated)** | 36-39 | Claude-capable full output plus six per-folder `CLAUDE.md` routing files for multi-instance setups |
 
 > **Tip:** Solo is the right default for most teams. The full profile adds structure that pays off at 4+ people — before that it can feel like overhead.
 
@@ -44,6 +44,9 @@ The `source:` and `last_validated:` fields let the AI reason about trust: a metr
 
 ## Federated layout
 
-The federated option (full profile only) adds a `CLAUDE.md` inside each content folder — `team-foundry/product/`, `team-foundry/engineering/`, `team-foundry/team/`, etc. Each one is a short routing file for that area, loaded automatically when Claude Code is working in that folder.
+The federated option (full profile with Claude, Claude + Gemini, or all tools) adds a
+`CLAUDE.md` inside each content folder - `team-foundry/product/`,
+`team-foundry/engineering/`, `team-foundry/team/`, and the other domain folders. Each is
+a short routing file loaded when Claude Code works in that folder.
 
 Use federated for larger teams (8+ people) where different roles own different folders and the full routing map is too much to load every session.

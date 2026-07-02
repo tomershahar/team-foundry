@@ -24,8 +24,8 @@ npx create-team-foundry migrate --to v3.3
 
 Upgrades existing team-foundry repos to the pointer architecture:
 
-1. Backs up `CLAUDE.md`, `GEMINI.md`, and `.cursor/rules/team-foundry.mdc` to `.team-foundry/backups/` with a timestamp
-2. Rewrites each as a thin pointer to `AGENTS.md`
+1. Backs up existing `CLAUDE.md`, `GEMINI.md`, `.cursor/rules/team-foundry.mdc`, and `.github/copilot-instructions.md` files to `.team-foundry/backups/` with a timestamp
+2. Rewrites legacy Claude, Gemini, and Cursor files as thin adapters; preserves existing Copilot instructions and adds a marked team-foundry route
 3. If your `AGENTS.md` is the old thin v3.2 format (< 40 lines), backs it up and upgrades it to the new primary format
 
 > **Note:** All replaced files are backed up before anything is written. You can find them at `.team-foundry/backups/{filename}.{timestamp}.backup` and restore manually if needed.

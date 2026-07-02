@@ -1,7 +1,17 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { confirm, log, outro } from '@clack/prompts';
-import { hierarchyTemplate, hooksTemplate, rulesTemplate, rootClaudeTemplate, rootGeminiTemplate, rootCursorTemplate, rootAgentsTemplate } from './templates/index.js';
+import { applyMergeDecision } from './scaffold.js';
+import {
+  hierarchyTemplate,
+  hooksTemplate,
+  rulesTemplate,
+  rootClaudeTemplate,
+  rootGeminiTemplate,
+  rootCursorTemplate,
+  rootCopilotTemplate,
+  rootAgentsTemplate,
+} from './templates/index.js';
 import type { TemplateContext } from './types.js';
 
 export type MigrateState = 'none' | 'v2' | 'v3' | 'v3.3';
@@ -10,6 +20,7 @@ export type MigrateState = 'none' | 'v2' | 'v3' | 'v3.3';
 export async function detectTool(targetDir: string): Promise<TemplateContext['tool']> {
   const checks: [string, TemplateContext['tool']][] = [
     ['.cursor/rules/team-foundry.mdc', 'cursor'],
+    ['.github/copilot-instructions.md', 'copilot'],
     ['GEMINI.md', 'gemini'],
     ['CLAUDE.md', 'claude'],
   ];
@@ -124,7 +135,7 @@ const DATA_HEAVY_FILES = [
 
 /**
  * Upgrades a v3.x repo to the v3.3 pointer architecture:
- * - Backs up and replaces CLAUDE.md, GEMINI.md, .cursor/rules/team-foundry.mdc with pointer templates.
+ * - Backs up and replaces existing tool instruction files with pointer templates.
  * - If AGENTS.md is thin (< 40 lines), backs up and replaces with the new primary template.
  * Does not prompt — caller is responsible for confirming before calling.
  */
@@ -147,19 +158,32 @@ export async function migrateToV33(targetDir: string): Promise<void> {
   };
 
   // Pointer files to back up and replace
-  const pointerCandidates: Array<{ relPath: string; template: (c: TemplateContext) => string }> = [
-    { relPath: 'CLAUDE.md', template: rootClaudeTemplate },
-    { relPath: 'GEMINI.md', template: rootGeminiTemplate },
-    { relPath: '.cursor/rules/team-foundry.mdc', template: rootCursorTemplate },
+  const pointerCandidates: Array<{
+    relPath: string;
+    template: (c: TemplateContext) => string;
+    strategy: 'replace' | 'merge';
+  }> = [
+    { relPath: 'CLAUDE.md', template: rootClaudeTemplate, strategy: 'replace' },
+    { relPath: 'GEMINI.md', template: rootGeminiTemplate, strategy: 'replace' },
+    { relPath: '.cursor/rules/team-foundry.mdc', template: rootCursorTemplate, strategy: 'replace' },
+    {
+      relPath: '.github/copilot-instructions.md',
+      template: rootCopilotTemplate,
+      strategy: 'merge',
+    },
   ];
 
-  for (const { relPath, template } of pointerCandidates) {
+  for (const { relPath, template, strategy } of pointerCandidates) {
     const fullPath = path.join(targetDir, relPath);
     try {
       const existing = await fs.readFile(fullPath, 'utf-8');
       const backupPath = path.join(backupsDir, `${path.basename(relPath)}.${ts}.backup`);
       await fs.writeFile(backupPath, existing, 'utf-8');
-      await fs.writeFile(fullPath, template(ctx), 'utf-8');
+      if (strategy === 'merge') {
+        await applyMergeDecision(fullPath, relPath, template(ctx), 'merge', targetDir);
+      } else {
+        await fs.writeFile(fullPath, template(ctx), 'utf-8');
+      }
       log.info(`  ✓  Upgraded ${relPath}  →  backup saved to .team-foundry/backups/`);
     } catch (err: unknown) {
       if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
@@ -201,7 +225,8 @@ export async function runMigrate(targetDir: string): Promise<void> {
     log.info(
       'Upgrading to v3.3 pointer architecture.\n\n' +
       'Changes:\n' +
-      '  • CLAUDE.md, GEMINI.md, .cursor rules → thin pointer files\n' +
+      '  • Existing Claude, Gemini, and Cursor instructions → thin pointers\n' +
+      '  • Existing Copilot instructions → team-foundry section merged in (your content is kept)\n' +
       '  • AGENTS.md → primary context file (if currently thin)\n\n' +
       'All replaced files are backed up to .team-foundry/backups/ first.',
     );

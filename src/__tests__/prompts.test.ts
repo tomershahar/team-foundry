@@ -118,7 +118,6 @@ describe('runPrompts()', () => {
       .mockResolvedValueOnce('cursor')
       .mockResolvedValueOnce('full')
       .mockResolvedValueOnce('internal')
-      .mockResolvedValueOnce('flat')
       .mockResolvedValueOnce('skip');
 
     const result = await runPrompts();
@@ -128,8 +127,8 @@ describe('runPrompts()', () => {
       profile: 'full',
       repoVisibility: 'internal',
       ingestion: 'skip',
-      federated: false,
     });
+    expect(select).toHaveBeenCalledTimes(4);
   });
 
   it('calls select exactly 4 times for solo non-local ingestion', async () => {

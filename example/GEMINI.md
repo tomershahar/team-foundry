@@ -7,5 +7,7 @@ owner: Sarah
 
 # Gemini instructions
 
-Read `AGENTS.md` in full before answering questions or modifying files. It is the shared
-source for Clearline's identity, context routing, coach activation, and working constraints.
+@./AGENTS.md
+
+Clearline's identity, context routing, coach activation, and working constraints are
+imported from `AGENTS.md` above. Follow them before answering questions or modifying files.

@@ -123,7 +123,9 @@ Why it matters: month-end duration is the #1 complaint in NPS verbatims.
 
 ## How it works
 
-One person runs `npx create-team-foundry` in the shared repo. The CLI generates `AGENTS.md` as the shared routing map plus compatible pointer files for the tools the team selects. Commit and push; teammates receive the same context through Git.
+One person runs `npx create-team-foundry` in the shared repo. The CLI generates `AGENTS.md`
+as the shared routing map plus documented adapters for the selected tools. Commit and push;
+teammates receive the same repository-owned context through Git.
 
 No cloud. No sync service. No accounts. Git is the sync.
 
@@ -131,14 +133,17 @@ No cloud. No sync service. No accounts. Git is the sync.
 
 ## Supported tools
 
-| Tool | Files generated |
+| Tool | Loading mechanism |
 |---|---|
-| Claude Code | `CLAUDE.md` (pointer) + `AGENTS.md` |
-| Gemini CLI | `GEMINI.md` (pointer) + `AGENTS.md` |
-| Cursor | `.cursor/rules/team-foundry.mdc` (pointer) + `AGENTS.md` |
-| GitHub Copilot | `.github/copilot-instructions.md` (pointer) + `AGENTS.md` |
-| Other tools with `AGENTS.md` support | `AGENTS.md` only - confirm support in your tool version |
-| All tools (Recommended) | All pointers + `AGENTS.md` |
+| Codex | Reads `AGENTS.md` natively |
+| Claude Code | `CLAUDE.md` imports `@AGENTS.md` |
+| Gemini CLI | `GEMINI.md` imports `@./AGENTS.md` |
+| Cursor | Root `AGENTS.md` plus an always-applied rule reference |
+| GitHub Copilot | Repository instructions ask Copilot to follow `AGENTS.md`; route requires surface-specific verification |
+| Other tools | `AGENTS.md` only - confirm support in your tool version |
+
+See the [evidence-labeled compatibility matrix](docs/compatibility.md) for official loading
+contracts, exact generated paths, and which tools have been exercised locally.
 
 ---
 
@@ -161,6 +166,7 @@ No cloud. No sync service. No accounts. Git is the sync.
 ## Learn more
 
 - [How it works](docs/how-it-works.md) — architecture, AGENTS.md primacy, pointer files, detect-and-merge, drift detection
+- [Tool compatibility](docs/compatibility.md) — native vs adapter loading, exact output matrix, and verification status
 - [Drift gate in CI](docs/ci.md) — `status --ci`, the GitHub Action, and what fails a build
 - [The coach](docs/coach.md) — drift detection patterns, trigger phrases, three modes, the flywheel
 - [Claude Code skills](docs/skills.md) — six slash commands and their file layout

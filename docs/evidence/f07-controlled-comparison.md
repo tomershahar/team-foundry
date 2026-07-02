@@ -99,7 +99,7 @@ doctor_fixture=$(mktemp -d /tmp/team-foundry-f07-doctor.XXXXXX)
 - **Tool/model:** Codex background agent, inherited session model (no model override;
   exact model ID was not exposed by the runner)
 - **Date:** 2026-07-02
-- **Fixture:** F07 working tree based on `e3fd421`; team-foundry routing and context excluded
+- **Fixture:** commit `d4b585c`; team-foundry routing and context excluded
 - **Response:**
 
 ```text
@@ -131,7 +131,7 @@ and background backfills.
 - **Tool/model:** Codex background agent, inherited session model (no model override;
   exact model ID was not exposed by the runner)
 - **Date:** 2026-07-02
-- **Fixture:** F07 working tree based on `e3fd421`; bundled playground SHA-256
+- **Fixture:** commit `d4b585c`; bundled playground SHA-256
   `ddac226668970cb86e2cd2fcaeed0353712cf99d772b23350c5858cf8a3a636f`
 - **Doctor capture date:** 2026-07-02
 - **Doctor command:** `node dist/index.js doctor` from a freshly generated playground

@@ -6,5 +6,7 @@ alwaysApply: true
 
 # team-foundry
 
-Read and follow `AGENTS.md` before answering questions or modifying files. It is the
-shared source for Clearline's identity, context routing, and working constraints.
+@AGENTS.md
+
+Read and follow `AGENTS.md` (imported above) — Clearline's identity, context routing,
+and working constraints — before answering questions or modifying files.

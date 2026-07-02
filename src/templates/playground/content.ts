@@ -7,7 +7,7 @@ export interface PlaygroundFile {
 export const PLAYGROUND_FILES: PlaygroundFile[] = [
   {
     "relativePath": ".cursor/rules/team-foundry.mdc",
-    "content": "---\ndescription: Team-foundry context loader for Cursor\nglobs: *\nalwaysApply: true\n---\n\n# team-foundry\n\nRead and follow `AGENTS.md` before answering questions or modifying files. It is the\nshared source for Clearline's identity, context routing, and working constraints.\n"
+    "content": "---\ndescription: Team-foundry context loader for Cursor\nglobs: *\nalwaysApply: true\n---\n\n# team-foundry\n\n@AGENTS.md\n\nRead and follow `AGENTS.md` (imported above) — Clearline's identity, context routing,\nand working constraints — before answering questions or modifying files.\n"
   },
   {
     "relativePath": ".github/copilot-instructions.md",
@@ -43,7 +43,7 @@ export const PLAYGROUND_FILES: PlaygroundFile[] = [
   },
   {
     "relativePath": "GEMINI.md",
-    "content": "---\npurpose: Root instruction pointer for Gemini CLI\nread_when: startup\nlast_updated: 2026-07-02\nowner: Sarah\n---\n\n# Gemini instructions\n\nRead `AGENTS.md` in full before answering questions or modifying files. It is the shared\nsource for Clearline's identity, context routing, coach activation, and working constraints.\n"
+    "content": "---\npurpose: Root instruction pointer for Gemini CLI\nread_when: startup\nlast_updated: 2026-07-02\nowner: Sarah\n---\n\n# Gemini instructions\n\n@./AGENTS.md\n\nClearline's identity, context routing, coach activation, and working constraints are\nimported from `AGENTS.md` above. Follow them before answering questions or modifying files.\n"
   },
   {
     "relativePath": "GETTING_STARTED.md",

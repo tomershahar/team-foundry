@@ -1,6 +1,7 @@
 import { intro, select, text, outro, isCancel } from '@clack/prompts';
 import type { ScaffoldOptions } from './types.js';
 import type { DetectedFile } from './detect.js';
+import { includesClaudeSkills } from './manifest.js';
 
 type PromptResult = Omit<ScaffoldOptions, 'targetDir' | 'date'>;
 
@@ -45,7 +46,7 @@ export async function runPrompts(): Promise<PromptResult> {
       { value: 'cursor', label: 'Cursor' },
       { value: 'copilot', label: 'GitHub Copilot  (.github/copilot-instructions.md)' },
       { value: 'both', label: 'Multiple (Claude Code + Gemini CLI)' },
-      { value: 'agents', label: 'Other  (any tool that reads AGENTS.md — Codex, Copilot CLI, Windsurf…)' },
+      { value: 'agents', label: 'AGENTS.md only  (verify that your tool supports it)' },
     ],
   });
   cancelIfNeeded(tool);
@@ -53,8 +54,8 @@ export async function runPrompts(): Promise<PromptResult> {
   const profile = await select({
     message: 'Team size?',
     options: [
-      { value: 'solo', label: '1–3 people  (solo profile  -  7 files)' },
-      { value: 'full', label: '4–15 people  (full profile  -  20 files)' },
+      { value: 'solo', label: '1–3 people  (solo profile)' },
+      { value: 'full', label: '4–15 people  (full profile)' },
     ],
   });
   cancelIfNeeded(profile);
@@ -70,7 +71,7 @@ export async function runPrompts(): Promise<PromptResult> {
   cancelIfNeeded(repoVisibility);
 
   let federated: boolean | undefined;
-  if (profile === 'full') {
+  if (profile === 'full' && includesClaudeSkills(tool as ScaffoldOptions['tool'])) {
     const federatedAnswer = await select({
       message: 'Context layout?',
       options: [

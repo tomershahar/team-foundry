@@ -197,11 +197,11 @@ describe('rootGeminiTemplate() — pointer', () => {
     ingestion: 'skip',
   };
 
-  it('contains [!IMPORTANT] callout instructing Gemini to read AGENTS.md', () => {
+  it('contains [!IMPORTANT] callout instructing Gemini to follow AGENTS.md', () => {
     const out = rootGeminiTemplate(baseCtx);
     expect(out).toContain('> [!IMPORTANT]');
-    expect(out).toContain('AGENTS.md');
-    expect(out).toContain('MUST read');
+    expect(out).toContain('@./AGENTS.md');
+    expect(out).toContain('Follow that shared context');
   });
 
   it('has YAML frontmatter with date interpolated', () => {
@@ -293,8 +293,8 @@ describe('Iteration 3  -  root routing and coach', () => {
 
   it('root-gemini is a pointer to AGENTS.md', () => {
     const output = rootGeminiTemplate(baseCtx);
-    expect(output).toContain('AGENTS.md');
-    expect(output).toContain('MUST read');
+    expect(output).toContain('@./AGENTS.md');
+    expect(output).toContain('imported from **AGENTS.md** above');
   });
 
   it('root-claude does NOT contain coach trigger table (moved to AGENTS.md)', () => {

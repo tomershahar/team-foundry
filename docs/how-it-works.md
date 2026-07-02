@@ -2,23 +2,31 @@
 
 # How it works
 
-One person runs `npx create-team-foundry` in the shared repo. The CLI generates `AGENTS.md` — the shared context foundation every AI tool reads — plus a thin pointer file for each tool your team uses. Commit and push. Teammates `git pull`. Their AI reads the same files automatically. No cloud, no sync service, no accounts.
+One person runs `npx create-team-foundry` in the shared repo. The CLI generates
+`AGENTS.md` as the shared context foundation plus the adapter files selected tools need.
+Commit and push. Teammates `git pull`; native tools and documented adapters receive the
+same repository-owned context. No cloud, no sync service, no accounts.
 
-If your repo already has `CLAUDE.md`, `AGENTS.md`, or cursor rules, the CLI detects them and asks before changing anything — merge, replace, or skip, per file.
+If your repo already has one of the instruction files team-foundry generates, the CLI
+detects it and asks before changing anything - merge, replace, or skip, per file.
 
 ---
 
 ## AGENTS.md and the pointer architecture
 
-`AGENTS.md` is the single source of truth: it holds the routing map, team identity, coach instructions, and coding conventions. Tool-specific files (`CLAUDE.md`, `GEMINI.md`, `.cursor/rules/team-foundry.mdc`) are thin pointers that load it.
+`AGENTS.md` is the single source of truth: it holds the routing map, team identity, coach
+instructions, and coding conventions. Tool-specific files are thin adapters.
 
 | Tool | Pointer mechanism |
 |---|---|
 | Claude Code | `@AGENTS.md` directive — content is injected directly |
-| Gemini CLI | `> [!IMPORTANT]` callout instructing Gemini to read `AGENTS.md` at session start |
-| Cursor | `.mdc` rule with `alwaysApply: true` and prose instruction |
+| Gemini CLI | `GEMINI.md` imports `@./AGENTS.md` |
+| Cursor | Root `AGENTS.md` plus an always-applied `.mdc` rule reference |
+| GitHub Copilot | `.github/copilot-instructions.md` asks Copilot to follow `AGENTS.md`; route needs surface-specific UAT |
+| Codex | Reads `AGENTS.md` natively; no adapter |
 
-This means your team context is written once and stays consistent regardless of which AI tool each person uses.
+This means team context is written once. See the [compatibility matrix](compatibility.md)
+for official mechanism links and local verification status.
 
 ---
 
@@ -45,7 +53,7 @@ Updates flow through git. When the coach drafts a fix and you confirm it, it com
 
 ```mermaid
 graph TD
-    repo["Your shared repo (GitHub / GitLab)\n───────────────────────\nAGENTS.md ← every tool reads this\nteam-foundry/\n  ├─ outcomes.md\n  ├─ customers.md\n  ├─ decisions/\n  └─ ..."]
+    repo["Your shared repo (GitHub / GitLab)\n───────────────────────\nAGENTS.md ← shared source\nTool adapters\nteam-foundry/ context"]
 
     pm["PM\nClaude Code"]
     eng["Engineer\nCursor"]
@@ -76,7 +84,8 @@ Pointer files (each should reference AGENTS.md):
   ✓  .cursor/rules/team-foundry.mdc           ok
 ```
 
-> **Warning:** A drifted pointer means that AI tool is no longer loading the shared context. Fix it by running `migrate --to v3.3` or manually restoring the `AGENTS.md` reference in the file.
+> **Warning:** A drifted adapter no longer provides its intended route to shared context.
+> Fix it by running `migrate --to v3.3` or manually restoring the `AGENTS.md` reference.
 
 ---
 

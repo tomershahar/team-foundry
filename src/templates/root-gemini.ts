@@ -12,9 +12,11 @@ owner:
 
 This repository uses **team-foundry** for shared AI context.
 
+@./AGENTS.md
+
 > [!IMPORTANT]
 > The primary routing map, team identity, coach activation, and coding conventions are
-> defined in **AGENTS.md**. You MUST read \`AGENTS.md\` in full at the start of your session
-> to orient yourself before answering any questions or modifying code.
+> imported from **AGENTS.md** above. Follow that shared context before answering questions
+> or modifying code.
 `;
 }

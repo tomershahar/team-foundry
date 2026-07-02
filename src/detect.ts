@@ -1,5 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { ALWAYS_ROOT_ENTRIES, rootEntries } from './manifest.js';
+import type { ScaffoldOptions } from './types.js';
 
 export interface DetectedFile {
   relativePath: string;
@@ -29,10 +31,16 @@ const ROOT_INSTRUCTION_PATHS = [
  *
  * Silently skips paths that don't exist.
  */
-export async function detectExistingFiles(targetDir: string): Promise<DetectedFile[]> {
+export async function detectExistingFiles(
+  targetDir: string,
+  tool?: ScaffoldOptions['tool'],
+): Promise<DetectedFile[]> {
   const results: DetectedFile[] = [];
+  const paths = tool
+    ? [...ALWAYS_ROOT_ENTRIES, ...rootEntries(tool)].map((entry) => entry.relativePath)
+    : ROOT_INSTRUCTION_PATHS;
 
-  for (const relPath of ROOT_INSTRUCTION_PATHS) {
+  for (const relPath of paths) {
     const fullPath = path.join(targetDir, relPath);
     try {
       const content = await fs.readFile(fullPath, 'utf-8');

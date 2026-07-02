@@ -4,7 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-team-foundry is an open-source Node CLI (`npx create-team-foundry`) that helps product teams articulate outcomes, customers, decisions, and quality bars into files that AI coding tools (Claude Code, Gemini CLI) read natively. It's a culture artifact first, AI context second.
+team-foundry is an open-source Node CLI (`npx create-team-foundry`) that helps product
+teams articulate outcomes, customers, decisions, and quality bars into repository files.
+Tools receive that context through native `AGENTS.md` support or generated adapters. It's
+a culture artifact first, AI context second.
 
 ## Status
 
@@ -15,7 +18,8 @@ Implemented: manifest-driven scaffolding, solo/full/federated layouts, multi-too
 ## Architecture
 
 - **Node CLI**  -  entry point is `npx create-team-foundry`; command routing lives in `src/index.ts`.
-- **Profiles**  -  solo (7 files) and full (20 files flat, 26 federated). Profile controls which files are materialized on disk.
+- **Profiles**  -  solo (7-17 files), full flat (23-33), and Claude-capable federated
+  (36-39). Profile and tool selection control which files are materialized on disk.
 - **Tools**  -  Claude Code, Gemini CLI, Cursor, GitHub Copilot, AGENTS.md-native tools, combined selections, and all tools.
 - **Manifest**  -  `src/manifest.ts` is the source of truth for generated and status-tracked files.
 - **No backend**  -  zero hosted services, API keys, or token costs. Everything runs on the user's own AI tool.
