@@ -27,6 +27,8 @@ npx create-team-foundry
 Local-first and MIT licensed — no backend, no API keys, no telemetry. Each tool's
 loading route is verified in the [compatibility matrix](docs/compatibility.md).
 
+![20-second demo: playground scaffolds a populated example team, then doctor scores its context health](assets/demo.gif)
+
 ## Controlled comparison
 
 On July 2, 2026, two fresh Codex background agents received the **same prompt**, runner
