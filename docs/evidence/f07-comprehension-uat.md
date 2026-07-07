@@ -1,7 +1,7 @@
 # F07 UAT — README comprehension test
 
 **Status:** pending — protocol ready, respondents not yet run
-**README commit under test:** `4811325` (update if the README changes before the run)
+**README commit under test:** `f028a76` (update if the README changes before the run)
 **Pass bar (per [spec](../action-plan/02-evidence-led-readme.md)):** at least 4 of 5 respondents pass all three questions without additional explanation.
 
 ## Protocol
