@@ -4,7 +4,7 @@
 
 Six slash commands ship with every Claude Code setup (`tool=claude`, `tool=both`, or `tool=all`). Each skill is a folder under `.claude/skills/` containing a `SKILL.md` — the layout Claude Code discovers automatically. The folder name becomes the slash command; the `description:` frontmatter tells Claude when to load the skill on its own. No extra configuration needed.
 
-> **Note:** These slash commands are Claude Code–only. For equivalent workflows in Cursor and Codex, see [`skill-parity.md`](../skill-parity.md).
+> **Note:** These slash commands are Claude Code–only. For equivalent workflows in Cursor and Codex, see [`skill-parity.md`](skill-parity.md).
 
 ---
 

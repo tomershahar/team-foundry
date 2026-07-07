@@ -23,3 +23,9 @@ docs/.DS_Store
 tasks/
 new_features_idea.md
 SPEC*.md
+
+# Raw external review inputs and dated working docs (kept locally, not documentation)
+*_feedback.md
+pre_feedback.md
+ux_and_product_review.md
+manual_test_plan.md

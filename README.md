@@ -1,22 +1,31 @@
 # team-foundry
 
-**Your coding agents know the code. They usually do not know which customer matters,
-what the team is optimizing for, or why a decision was made. team-foundry turns that
-missing product context into versioned files your team's AI tools can load from the repo.**
+**Your coding agents know the code. They do not know which customer matters, what the
+team decided, or what quality bar applies — so each teammate's AI gives different
+answers to the same question. team-foundry turns that missing product context into one
+shared, versioned layer that Claude Code, Cursor, Gemini CLI, and Codex all read from
+the repo.**
 
 [![npm](https://img.shields.io/npm/v/create-team-foundry)](https://www.npmjs.com/package/create-team-foundry)
 [![npm downloads](https://img.shields.io/npm/dw/create-team-foundry)](https://www.npmjs.com/package/create-team-foundry)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-```bash
-npx create-team-foundry
-```
+![Three teammates - PM on Claude Code, Engineer on Cursor, Designer on Gemini CLI - connected to a shared AGENTS.md](assets/hero.svg)
 
-Or try a populated fictional team without changing your repo:
+Try a populated fictional team in 10 seconds, without changing your repo:
 
 ```bash
 npx create-team-foundry playground
 ```
+
+Or set it up for your own team:
+
+```bash
+npx create-team-foundry
+```
+
+Local-first and MIT licensed — no backend, no API keys, no telemetry. Each tool's
+loading route is verified in the [compatibility matrix](docs/compatibility.md).
 
 ## Controlled comparison
 
@@ -70,8 +79,6 @@ This creates a populated example team in `team-foundry-playground/`. Open that f
 Instead of inferring answers from code, the AI can cite the team's outcomes, customers, risks, and decisions. The same example lives in [`example/`](example/) if you would rather browse it.
 
 ---
-
-![Three teammates - PM on Claude Code, Engineer on Cursor, Designer on Gemini CLI - connected to a shared AGENTS.md](assets/hero.svg)
 
 ## What gets generated
 
