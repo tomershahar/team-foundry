@@ -1,7 +1,8 @@
 # F07 UAT — README comprehension test
 
 **Status:** pending — protocol ready, respondents not yet run
-**README commit under test:** `1925ceb` (update if the README changes before the run)
+**README commit under test:** `48f17b4` (update if the README changes before the run)
+**Related:** a [simulated 5-persona probe](f07-comprehension-probe-simulated.md) passed 5/5 on 2026-07-08; its confusion fixes are already in the commit above.
 **Pass bar (per [spec](../action-plan/02-evidence-led-readme.md)):** at least 4 of 5 respondents pass all three questions without additional explanation.
 
 ## Protocol
