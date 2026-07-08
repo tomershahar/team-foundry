@@ -32,9 +32,11 @@ loading route is verified in the [compatibility matrix](docs/compatibility.md).
 ## Controlled comparison
 
 On July 2, 2026, two fresh Codex background agents received the **same prompt**, runner
-configuration, and Clearline repository snapshot, with no model override. The runner did
-not expose the exact model ID. The control could not read team-foundry context; the other
-could. We fixed the five-point scoring rubric before running either case.
+configuration, and repository snapshot of Clearline — the fictional team the playground
+generates. Both ran on the runner's default model (the runner does not report which);
+neither case used a model override, so the comparison is like-for-like. The control could
+not read team-foundry context; the other could. We fixed the five-point scoring rubric
+before running either case.
 
 > **Prompt:** Our deploys are slow. Should we automate database migrations in CI? Give
 > a recommendation and implementation constraints.
@@ -84,7 +86,7 @@ Instead of inferring answers from code, the AI can cite the team's outcomes, cus
 
 ## What gets generated
 
-A real, populated `AGENTS.md` looks like this. Tools that support `AGENTS.md` read it directly; team-foundry generates thin pointer files for tools with their own instruction format.
+A real, populated `AGENTS.md` looks like this. Tools that support `AGENTS.md` read it directly. For tools with their own instruction format, team-foundry generates a small adapter file (like `CLAUDE.md` or a Cursor rule) whose only job is routing that tool to `AGENTS.md`.
 
 ```markdown
 # Agents
@@ -148,7 +150,7 @@ No cloud. No sync service. No accounts. Git is the sync.
 | Claude Code | `CLAUDE.md` imports `@AGENTS.md` |
 | Gemini CLI | `GEMINI.md` imports `@./AGENTS.md` |
 | Cursor | Root `AGENTS.md` plus an always-applied rule reference |
-| GitHub Copilot | Repository instructions ask Copilot to follow `AGENTS.md`; route requires surface-specific verification |
+| GitHub Copilot | Repository instructions ask Copilot to follow `AGENTS.md` — not yet verified end-to-end ([help wanted](https://github.com/tomershahar/team-foundry/issues/2)) |
 | Other tools | `AGENTS.md` only - confirm support in your tool version |
 
 See the [evidence-labeled compatibility matrix](docs/compatibility.md) for official loading

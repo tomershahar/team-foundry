@@ -66,8 +66,8 @@
       "behavior": "Shows a reproducible before/after agent decision and real Doctor output above implementation details",
       "verification": "docs/action-plan/02-evidence-led-readme.md",
       "status": "active",
-      "evidence": "Controlled same-prompt capture scored 0/5 without context and 5/5 with context; raw responses and real 80/100 Doctor output are recorded; independent review findings resolved; user-reported npm test plus typecheck/lint/build and local-link checks pass; five-person comprehension UAT remains",
-      "testedAt": "2026-07-02"
+      "evidence": "Controlled same-prompt capture scored 0/5 without context and 5/5 with context; simulated 5-persona comprehension probe passed 5/5 on 2026-07-08 (docs/evidence/f07-comprehension-probe-simulated.md) and its 4 confusion fixes are applied; maintainer decision pending on whether the probe satisfies the human-UAT gate or the 5-person run still executes",
+      "testedAt": "2026-07-08"
     },
     {
       "id": "F08",
