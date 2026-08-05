@@ -32,30 +32,37 @@ export interface PointerFileStatus {
   relativePath: string;
   exists: boolean;
   /**
-   * true if the file exists but does not contain the string 'AGENTS.md'.
+   * true if the file exists but does not carry a valid reference to AGENTS.md
+   * for its tool (a standalone @-import line for Claude/Gemini/Cursor, or a
+   * backtick-quoted mention for Copilot, which has no import syntax).
    * Only meaningful when exists === true; always false when exists === false.
    */
   drifted: boolean;
 }
 
-const POINTER_FILE_PATHS = [
-  'CLAUDE.md',
-  'GEMINI.md',
-  '.cursor/rules/team-foundry.mdc',
-  '.github/copilot-instructions.md',
+// Each pattern must match the tool's actual load mechanism, not just the
+// substring 'AGENTS.md' appearing anywhere in the file (see issue #5).
+const POINTER_FILE_CHECKS: { relativePath: string; validReference: RegExp }[] = [
+  { relativePath: 'CLAUDE.md', validReference: /^@AGENTS\.md\s*$/m },
+  { relativePath: 'GEMINI.md', validReference: /^@\.\/AGENTS\.md\s*$/m },
+  { relativePath: '.cursor/rules/team-foundry.mdc', validReference: /^@AGENTS\.md\s*$/m },
+  // Copilot has no native import syntax — this is pointer/instruction
+  // integrity (does the file tell the reader to go read AGENTS.md), not a
+  // verified runtime load, per the compatibility matrix.
+  { relativePath: '.github/copilot-instructions.md', validReference: /`AGENTS\.md`/ },
 ];
 
 export async function checkPointerFiles(targetDir: string): Promise<PointerFileStatus[]> {
-  return Promise.all(POINTER_FILE_PATHS.map(async (relPath): Promise<PointerFileStatus> => {
+  return Promise.all(POINTER_FILE_CHECKS.map(async ({ relativePath, validReference }): Promise<PointerFileStatus> => {
     try {
-      const content = await fs.readFile(path.join(targetDir, relPath), 'utf-8');
+      const content = await fs.readFile(path.join(targetDir, relativePath), 'utf-8');
       return {
-        relativePath: relPath,
+        relativePath,
         exists: true,
-        drifted: !content.includes('AGENTS.md'),
+        drifted: !validReference.test(content),
       };
     } catch {
-      return { relativePath: relPath, exists: false, drifted: false };
+      return { relativePath, exists: false, drifted: false };
     }
   }));
 }
