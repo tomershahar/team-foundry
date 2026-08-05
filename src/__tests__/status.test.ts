@@ -363,21 +363,64 @@ describe('checkPointerFiles()', () => {
     expect(claude.drifted).toBe(true);
   });
 
-  it('checks GEMINI.md for AGENTS.md reference', async () => {
-    await fs.writeFile(path.join(tmpDir, 'GEMINI.md'), 'read AGENTS.md', 'utf-8');
+  it('checks GEMINI.md for a valid @./AGENTS.md import', async () => {
+    await fs.writeFile(path.join(tmpDir, 'GEMINI.md'), 'intro\n\n@./AGENTS.md\n', 'utf-8');
     const results = await checkPointerFiles(tmpDir);
     const gemini = results.find((r) => r.relativePath === 'GEMINI.md')!;
     expect(gemini.exists).toBe(true);
     expect(gemini.drifted).toBe(false);
   });
 
-  it('checks .cursor/rules/team-foundry.mdc for AGENTS.md reference', async () => {
+  it('marks GEMINI.md as drifted when it only mentions AGENTS.md in prose', async () => {
+    await fs.writeFile(path.join(tmpDir, 'GEMINI.md'), 'read AGENTS.md', 'utf-8');
+    const results = await checkPointerFiles(tmpDir);
+    const gemini = results.find((r) => r.relativePath === 'GEMINI.md')!;
+    expect(gemini.exists).toBe(true);
+    expect(gemini.drifted).toBe(true);
+  });
+
+  it('checks .cursor/rules/team-foundry.mdc for a valid @AGENTS.md import', async () => {
+    const dir = path.join(tmpDir, '.cursor', 'rules');
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(path.join(dir, 'team-foundry.mdc'), 'intro\n\n@AGENTS.md\n', 'utf-8');
+    const results = await checkPointerFiles(tmpDir);
+    const cursor = results.find((r) => r.relativePath === '.cursor/rules/team-foundry.mdc')!;
+    expect(cursor.exists).toBe(true);
+    expect(cursor.drifted).toBe(false);
+  });
+
+  it('marks .cursor rule as drifted when it only mentions AGENTS.md in prose', async () => {
     const dir = path.join(tmpDir, '.cursor', 'rules');
     await fs.mkdir(dir, { recursive: true });
     await fs.writeFile(path.join(dir, 'team-foundry.mdc'), 'read AGENTS.md always', 'utf-8');
     const results = await checkPointerFiles(tmpDir);
     const cursor = results.find((r) => r.relativePath === '.cursor/rules/team-foundry.mdc')!;
     expect(cursor.exists).toBe(true);
-    expect(cursor.drifted).toBe(false);
+    expect(cursor.drifted).toBe(true);
+  });
+
+  it('regression: a broken @DOES-NOT-EXIST.md import is not credited just because AGENTS.md appears elsewhere in the file (issue #5)', async () => {
+    await fs.writeFile(
+      path.join(tmpDir, 'CLAUDE.md'),
+      '@DOES-NOT-EXIST.md\n\nThis should import AGENTS.md but the filename above is wrong.',
+      'utf-8'
+    );
+    const results = await checkPointerFiles(tmpDir);
+    const claude = results.find((r) => r.relativePath === 'CLAUDE.md')!;
+    expect(claude.exists).toBe(true);
+    expect(claude.drifted).toBe(true);
+  });
+
+  it('marks .github/copilot-instructions.md as ok when it mentions AGENTS.md in backticks', async () => {
+    await fs.mkdir(path.join(tmpDir, '.github'), { recursive: true });
+    await fs.writeFile(
+      path.join(tmpDir, '.github', 'copilot-instructions.md'),
+      'Read `AGENTS.md` before answering.',
+      'utf-8'
+    );
+    const results = await checkPointerFiles(tmpDir);
+    const copilot = results.find((r) => r.relativePath === '.github/copilot-instructions.md')!;
+    expect(copilot.exists).toBe(true);
+    expect(copilot.drifted).toBe(false);
   });
 });
