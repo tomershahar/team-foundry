@@ -1,6 +1,6 @@
 {
   "name": "create-team-foundry",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "description": "One shared context layer for Claude Code, Cursor, Gemini CLI, and Codex - so the whole team's AI tools build from the same outcomes, decisions, and quality bar",
   "license": "MIT",
   "type": "module",

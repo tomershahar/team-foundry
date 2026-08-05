@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.6.1]  -  2026-08-05
+
+### Fixed
+
+- `doctor`'s tool-routing check no longer gives false-positive credit to a broken pointer file. Previously it matched the substring `AGENTS.md` anywhere in the file, so a mistyped import like `@DOES-NOT-EXIST.md` could still score 15/15 as long as the text "AGENTS.md" appeared elsewhere (e.g. in surrounding prose). The check now validates the actual load mechanism per tool: a standalone `@AGENTS.md` import for Claude Code and Cursor, `@./AGENTS.md` for Gemini CLI, and a backtick-quoted mention for GitHub Copilot (which has no import syntax, so this is pointer/instruction integrity rather than a verified runtime load). ([#5](https://github.com/tomershahar/team-foundry/issues/5))
+
 ## [3.6.0]  -  2026-07-02
 
 ### What's new (Context health + verified tool routing)
